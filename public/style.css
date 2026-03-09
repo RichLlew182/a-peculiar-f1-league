@@ -1,0 +1,35 @@
+@font-face {
+    font-family: "Formula1-Bold";
+    src: url("./fonts/Formula1-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Formula1-Regular";
+    src: url("./fonts/Formula1-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+}
+
+body {
+    font-family: "Formula1-Regular", sans-serif;
+}
+
+h1,
+h2,
+h3 {
+    font-family: "Formula1-Bold", sans-serif;
+}
+
+.card:nth-child(1) .card-content img {
+    border: 10px solid #EFBF04;
+}
+
+.card:nth-child(2) .card-content img {
+    border: 10px solid #999B9B;
+}
+
+.card:nth-child(3) .card-content img {
+    border: 10px solid #A5673F;
+}

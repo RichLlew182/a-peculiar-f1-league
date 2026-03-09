@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="./images/favicon.png" type="image/x-icon">
     <title>A Peculiar F1 League</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
     <link rel="stylesheet" href="./style.css">
@@ -12,14 +13,24 @@
 
 <body>
 
-    <div class="container">
-        <div class="notification">
-            This container is <strong>centered</strong> on desktop.
-        </div>
-        <button class="button is-primary" type="button" onclick="fetchData()">Load League</button>
 
-        <pre id="output"></pre>
-    </div>
+
+    <main class="main has-background-light">
+        <div class="container is-max-desktop py-6">
+            <h1 class="title">A Peculiar F1 League</h1>
+            <div id="output">
+            </div>
+        </div>
+    </main>
+
+
+
+    <footer class="notification is-primary is-light mb-0">
+        <div class="container is-max-desktop">
+            <p id="lastUpdated">
+            </p>
+        </div>
+    </footer>
 
     <script src="./script.js"></script>
 

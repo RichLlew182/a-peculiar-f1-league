@@ -1,0 +1,16 @@
+{
+  "name": "a-peculiar-f1-league",
+  "version": "1.0.0",
+  "description": "Personal Project for family F1 Fantasy League",
+  "main": "script.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}

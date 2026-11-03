@@ -51,3 +51,14 @@ export function ago(d: Date, now = Date.now()): string {
   if (h < 24) return `${h} hr ago`
   return `${Math.round(h / 24)} days ago`
 }
+
+/** Black or white, whichever reads better on a #rrggbb background. */
+export function textOn(hex: string): string {
+  const n = parseInt(hex.slice(1), 16)
+  const lin = (v: number) => {
+    const c = v / 255
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
+  }
+  const lum = 0.2126 * lin((n >> 16) & 255) + 0.7152 * lin((n >> 8) & 255) + 0.0722 * lin(n & 255)
+  return lum > 0.179 ? '#0b0b0b' : '#ffffff'
+}

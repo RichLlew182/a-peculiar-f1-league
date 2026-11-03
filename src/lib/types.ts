@@ -18,6 +18,8 @@ export interface Pick {
 
 export interface Player {
   name: string
+  /** the player's own fantasy team name (blank if the sheet has none) */
+  teamName: string
   rank: number
   points: number
   /** points behind the player directly above (<= 0) */
@@ -49,8 +51,16 @@ export interface Race {
   moves: Record<string, number>
 }
 
+/** Hex colours from the sheet's Colours tab, keyed by code (FER, ANT, LL ...). */
+export interface Colours {
+  teams: Record<string, string>
+  drivers: Record<string, string>
+  chips: Partial<Record<ChipKey, string>>
+}
+
 export interface LeagueData {
   players: Player[]
+  colours: Colours
   races: Race[]
   /** completed races only */
   completed: Race[]

@@ -1,14 +1,22 @@
-import { fmt, money, signedFmt } from '../lib/format'
-import { CHIPS, type LeagueData, type Player } from '../lib/types'
+import type { CSSProperties } from 'react'
+import { fmt, money, signedFmt, textOn } from '../lib/format'
+import { CHIPS, type Colours, type LeagueData, type Player } from '../lib/types'
 
-function Chips({ player }: { player: Player }) {
+const swatch = (hex?: string) => (hex ? ({ '--c': hex } as CSSProperties) : undefined)
+
+function Chips({ player, colours }: { player: Player; colours: Colours }) {
   const used = CHIPS.filter((c) => player.chips[c.key]).length
   return (
     <ul className="chips" aria-label={`Chips used: ${used} of ${CHIPS.length}`}>
       {CHIPS.map((c) => {
         const isUsed = player.chips[c.key]
+        const hex = colours.chips[c.key]
         return (
-          <li key={c.key} className={isUsed ? 'chip used' : 'chip'} title={`${c.name}: ${isUsed ? 'used' : 'available'}`}>
+          <li
+            key={c.key}
+            className={isUsed ? 'chip used' : 'chip'}
+            style={hex ? ({ '--chip': hex, '--chip-ink': textOn(hex) } as CSSProperties) : undefined}
+            title={`${c.name}: ${isUsed ? 'used' : 'available'}`}>
             {c.short}
             <span className="sr-only">
               {' '}
@@ -21,12 +29,12 @@ function Chips({ player }: { player: Player }) {
   )
 }
 
-function Team({ player }: { player: Player }) {
+function Team({ player, colours }: { player: Player; colours: Colours }) {
   return (
     <div className="team">
       <ul className="picks" aria-label="Constructors">
         {player.constructors.map((c) => (
-          <li key={c.code} className="pick constructor">
+          <li key={c.code} className="pick constructor" style={swatch(colours.teams[c.code])}>
             <b>{c.code}</b>
             <span>{money(c.price)}</span>
           </li>
@@ -34,7 +42,7 @@ function Team({ player }: { player: Player }) {
       </ul>
       <ul className="picks" aria-label="Drivers">
         {player.drivers.map((d) => (
-          <li key={d.code} className={d.boosted ? 'pick boosted' : 'pick'}>
+          <li key={d.code} className={d.boosted ? 'pick boosted' : 'pick'} style={swatch(colours.drivers[d.code])}>
             <b>{d.code}</b>
             {d.boosted && <em title="Double points driver">2×</em>}
             <span>{money(d.price)}</span>
@@ -42,7 +50,7 @@ function Team({ player }: { player: Player }) {
         ))}
       </ul>
       <p className="team-meta">
-        Value {money(player.value)} · Cap {money(player.cap)}
+        Value {money(player.value)} · Cap {money(player.cap)} · Budget {money(player.budget)}
       </p>
     </div>
   )
@@ -100,6 +108,7 @@ export function Standings({ data }: { data: LeagueData }) {
               </span>
               <span className="who" role="cell">
                 <strong>{p.name}</strong>
+                {p.teamName && <span className="team-name">{p.teamName}</span>}
                 <span className="who-sub">
                   <Move move={move} />
                   {gained !== undefined && (
@@ -119,10 +128,10 @@ export function Standings({ data }: { data: LeagueData }) {
                 {p.rank === 1 ? <span className="muted-text">–</span> : `+${fmt(Math.abs(p.leaderGap))}`}
               </span>
               <span className="chips-cell" role="cell">
-                <Chips player={p} />
+                <Chips player={p} colours={data.colours} />
               </span>
               <span className="team-cell" role="cell">
-                <Team player={p} />
+                <Team player={p} colours={data.colours} />
               </span>
             </div>
           )

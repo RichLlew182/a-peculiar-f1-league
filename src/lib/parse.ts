@@ -1,5 +1,5 @@
 import { isBlankRow, parseCsv, parseMoney, parseNum } from './csv'
-import { CHIPS, type ChipKey, type LeagueData, type Pick, type Player, type Race } from './types'
+import { CHIPS, type ChipKey, type Colours, type LeagueData, type Pick, type Player, type Race } from './types'
 
 function colIndex(header: string[], label: string): number {
   return header.findIndex((h) => h.trim().toLowerCase() === label.toLowerCase())
@@ -25,6 +25,7 @@ export function parseLeaderboard(csv: string): Player[] {
   const iValue = colIndex(header, 'Value')
   const iCap = colIndex(header, 'Cap')
   const iBudget = colIndex(header, 'Budget')
+  const iTeamName = colIndex(header, 'Team Name')
   if (iName < 0 || iPoints < 0 || iTeam < 0) {
     throw new Error('Leaderboard sheet is missing expected columns (Player, Points, Team 1)')
   }
@@ -47,6 +48,7 @@ export function parseLeaderboard(csv: string): Player[] {
 
     players.push({
       name,
+      teamName: iTeamName >= 0 ? (row[iTeamName] ?? '').trim() : '',
       rank: 0,
       points,
       gap: 0,
@@ -164,9 +166,39 @@ export function parseHistory(csv: string, leaderboardNames: string[]): Race[] {
   return races
 }
 
-export function parseLeague(leaderboardCsv: string, historyCsv: string): LeagueData {
+const HEX = /^#[0-9a-f]{6}$/i
+
+/**
+ * Colours tab: blocks headed "Teams", "Drivers" and "Chips", each a code column
+ * followed by a hex column. A "Chips Unused" block may follow; it is ignored,
+ * because unused chips are drawn as an outline of the chip's own colour.
+ */
+export function parseColours(csv: string): Colours {
+  const out: Colours = { teams: {}, drivers: {}, chips: {} }
+  const rows = parseCsv(csv)
+  const headerRow = rows.find((r) => r.some((c) => c.trim() === 'Teams'))
+  if (!headerRow) return out
+  const col = (label: string) => headerRow.findIndex((c) => c.trim() === label)
+  const blocks: [number, (code: string, hex: string) => void][] = [
+    [col('Teams'), (c, h) => void (out.teams[c] = h)],
+    [col('Drivers'), (c, h) => void (out.drivers[c] = h)],
+    [col('Chips'), (c, h) => void (CHIPS.some((x) => x.key === c) && (out.chips[c as ChipKey] = h))],
+  ]
+  for (const row of rows.slice(rows.indexOf(headerRow) + 1)) {
+    for (const [i, set] of blocks) {
+      if (i < 0) continue
+      const code = (row[i] ?? '').trim().toUpperCase()
+      const hex = (row[i + 1] ?? '').trim()
+      if (code && HEX.test(hex)) set(code, hex)
+    }
+  }
+  return out
+}
+
+export function parseLeague(leaderboardCsv: string, historyCsv: string, coloursCsv = ''): LeagueData {
   const players = parseLeaderboard(leaderboardCsv)
   const playerNames = players.map((p) => p.name)
   const races = parseHistory(historyCsv, playerNames)
-  return { players, races, completed: races.filter((r) => r.complete), playerNames }
+  const colours = coloursCsv ? parseColours(coloursCsv) : { teams: {}, drivers: {}, chips: {} }
+  return { players, colours, races, completed: races.filter((r) => r.complete), playerNames }
 }

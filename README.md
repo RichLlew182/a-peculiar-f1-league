@@ -43,12 +43,13 @@ The workflow also rebuilds once a day to refresh the bundled fallback. To refres
 
 ## How the sheets are read
 
-The two published CSV links live in `src/data/sources.json`.
+The published CSV links live in `src/data/sources.json`.
 
 | Sheet | What the app expects |
 | --- | --- |
-| Leaderboard | Header row with `Player`, `Points`, `LL WC FF AP NN 3X` (TRUE = chip used), then `Team 1` followed by 2 constructors and 5 drivers as code/price column pairs (the first driver is the 2x pick), then `Value`, `Cap`, `Budget`. |
+| Leaderboard | Header row with `Player`, an optional `Team Name`, `Points`, `LL WC FF AP NN 3X` (TRUE = chip used), then `Team 1` followed by 2 constructors and 5 drivers as code/price column pairs (the first driver is the 2x pick), then `Value`, `Cap`, `Budget`. |
 | History | A `Races` column, then for each player a cumulative-total column followed by a race-score column. Races with no scores yet are treated as upcoming. `(Sp)` after a race name marks a sprint weekend. |
+| Colours | Optional. Blocks headed `Teams`, `Drivers` and `Chips`, each a code column followed by a hex colour. Used for the swatches on picks and the chip colours. |
 
 Positions, gaps and movement are calculated from the points, so the rank columns in the sheet aren't used. Players can be added or removed in the sheet and the app follows. If a name differs between the two sheets by a suffix (for example `Richard` and `Richard L`) the app matches them when it's the only unmatched pair.
 

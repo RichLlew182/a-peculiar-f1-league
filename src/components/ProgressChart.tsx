@@ -129,7 +129,7 @@ export function ProgressChart({ data }: { data: LeagueData }) {
   // ---- geometry -------------------------------------------------------
   const W = Math.max(wrapW, 760)
   const H = 440
-  const m = { top: 18, right: wrapW < 560 ? 84 : 108, bottom: 44, left: 40 }
+  const m = { top: 18, right: wrapW < 560 ? 84 : 108, bottom: 44, left: 48 }
   const plotW = W - m.left - m.right
   const plotH = H - m.top - m.bottom
   const step = races.length > 1 ? plotW / (races.length - 1) : plotW
@@ -159,7 +159,7 @@ export function ProgressChart({ data }: { data: LeagueData }) {
       : Array.from({ length: niceMax / tickStep + 1 }, (_, i) => ({
           v: i * tickStep,
           y: yBehind(i * tickStep),
-          label: i === 0 ? '0' : fmt(i * tickStep),
+          label: i === 0 ? '0' : signedFmt(-i * tickStep),
         }))
 
   const series = names.map((name) => {
@@ -428,14 +428,14 @@ export function ProgressChart({ data }: { data: LeagueData }) {
           caption={
             metric === 'rank'
               ? 'Championship position after each race'
-              : 'Points behind the leader after each race (0 means leading)'
+              : 'Gap to the leader after each race (0 means leading)'
           }
           corner="Race"
           columns={names}
           rows={done.map((r) => ({
             label: r.name + (r.sprint ? ' (sprint)' : ''),
             cells: names.map((nm) =>
-              r.ranks[nm] === undefined ? '–' : metric === 'rank' ? r.ranks[nm] : behindOf(r.round - 1, nm),
+              r.ranks[nm] === undefined ? '–' : metric === 'rank' ? r.ranks[nm] : signedFmt(-behindOf(r.round - 1, nm)),
             ),
           }))}
         />

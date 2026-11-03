@@ -21,7 +21,11 @@ export function RaceList({ data }: { data: LeagueData }) {
         {done.map((r) => {
           const gains = Object.entries(r.gains).sort((a, b) => b[1] - a[1])
           const leader = Object.entries(r.ranks).find(([, rk]) => rk === 1)?.[0]
-          const podium = gains.slice(0, 3)
+          const topPoints = gains[0]?.[1]
+          const topScorers = gains
+            .filter(([, g]) => g === topPoints)
+            .map(([name]) => name)
+            .sort((a, b) => a.localeCompare(b))
           return (
             <details key={r.name} className="race">
               <summary>
@@ -31,7 +35,8 @@ export function RaceList({ data }: { data: LeagueData }) {
                   {r.sprint && <span className="tag">Sprint</span>}
                 </span>
                 <span className="race-top">
-                  Top score: <b>{podium[0]?.[0]}</b> {podium[0] ? fmt(podium[0][1]) : ''}
+                  Top score: <b>{topScorers.join(', ')}</b> {topPoints !== undefined ? fmt(topPoints) : ''}
+                  {topScorers.length > 1 && <span className="tag">Joint</span>}
                 </span>
                 <span className="race-lead">
                   Leader: <b>{leader}</b>

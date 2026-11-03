@@ -86,7 +86,7 @@ export function highlights(data: LeagueData): Highlight[] {
     const tied = wins.filter((s) => s.raceWins === wins[0].raceWins)
     out.push({
       id: 'race-wins',
-      label: 'Most race wins',
+      label: 'Most race wins (joint included)',
       value: `${wins[0].raceWins} of ${done.length}`,
       detail: tied.map((s) => s.name).join(', '),
       players: tied.map((s) => s.name),

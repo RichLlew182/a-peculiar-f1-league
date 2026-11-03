@@ -81,10 +81,10 @@ export function Standings({ data }: { data: LeagueData }) {
             Points
           </span>
           <span role="columnheader" className="num">
-            Behind next
+            Gap to next
           </span>
           <span role="columnheader" className="num">
-            Behind leader
+            Gap to leader
           </span>
           <span role="columnheader">Chips</span>
           <span role="columnheader">Team</span>
@@ -112,11 +112,11 @@ export function Standings({ data }: { data: LeagueData }) {
               <span className="points num" role="cell">
                 {fmt(p.points)}
               </span>
-              <span className="gap g-next num" role="cell" data-label="Behind next">
-                {p.rank === 1 ? <span className="muted-text">Leader</span> : `+${fmt(Math.abs(p.gap))}`}
+              <span className="gap g-next num" role="cell" data-label="Gap to next">
+                {p.rank === 1 ? <span className="muted-text">Leader</span> : signedFmt(p.gap)}
               </span>
-              <span className="gap g-lead num" role="cell" data-label="Behind leader">
-                {p.rank === 1 ? <span className="muted-text">–</span> : `+${fmt(Math.abs(p.leaderGap))}`}
+              <span className="gap g-lead num" role="cell" data-label="Gap to leader">
+                {p.rank === 1 ? <span className="muted-text">–</span> : signedFmt(p.leaderGap)}
               </span>
               <span className="chips-cell" role="cell">
                 <Chips player={p} />

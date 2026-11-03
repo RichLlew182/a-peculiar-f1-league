@@ -5,14 +5,15 @@ import { DataTable } from './DataTable'
 
 type Metric = 'rank' | 'behind'
 
-/** Four colours are validated for lines; beyond that identity gets unreliable. */
+/** Highlighting more than a handful of lines stops being readable. */
 const MAX_SEL = 4
 const STORE = 'f1-fantasy:progress:v1'
-const SLOT_VAR = ['--s1', '--s2', '--s3', '--s4']
+/** Size of the colour palette. With more than 8 players some hues repeat. */
+const HUES = 8
 
 interface Stored {
   metric: Metric
-  slots: Record<string, number>
+  selected: string[]
 }
 
 function loadStored(): Stored | null {
@@ -20,7 +21,17 @@ function loadStored(): Stored | null {
     const raw = localStorage.getItem(STORE)
     if (!raw) return null
     const o = JSON.parse(raw)
-    if ((o.metric === 'rank' || o.metric === 'behind') && o.slots && typeof o.slots === 'object') return o
+    if (o.metric === 'rank' || o.metric === 'behind') {
+      // earlier versions stored { slots: { name: slot } }
+      const list: unknown = Array.isArray(o.selected)
+        ? o.selected
+        : o.slots && typeof o.slots === 'object'
+          ? Object.keys(o.slots)
+          : null
+      if (Array.isArray(list)) {
+        return { metric: o.metric, selected: list.filter((s): s is string => typeof s === 'string') }
+      }
+    }
   } catch {
     /* ignore */
   }
@@ -69,19 +80,22 @@ function spread(ys: number[], gap: number, lo: number, hi: number): number[] {
 export function ProgressChart({ data }: { data: LeagueData }) {
   const names = data.playerNames
   const [metric, setMetric] = useState<Metric>(() => loadStored()?.metric ?? 'rank')
-  const [slots, setSlots] = useState<Record<string, number>>(() => {
-    const st = loadStored()?.slots
-    if (st && Object.keys(st).length > 0) return st
-    return Object.fromEntries(names.slice(0, 3).map((n, i) => [n, i]))
+  const [selectedRaw, setSelected] = useState<string[]>(() => {
+    const st = loadStored()?.selected
+    return st && st.length > 0 ? st : names.slice(0, 3)
   })
   const [hover, setHover] = useState<number | null>(null)
   const [wrapRef, wrapW] = useWidth<HTMLDivElement>()
 
-  const sel = useMemo(
-    () => Object.fromEntries(Object.entries(slots).filter(([n, s]) => names.includes(n) && s >= 0 && s < MAX_SEL)),
-    [slots, names],
-  )
-  useEffect(() => saveStored({ metric, slots: sel }), [metric, sel])
+  const selected = useMemo(() => selectedRaw.filter((n) => names.includes(n)).slice(0, MAX_SEL), [selectedRaw, names])
+  const isSel = (name: string) => selected.includes(name)
+  useEffect(() => saveStored({ metric, selected }), [metric, selected])
+
+  // Every player keeps one hue for good. Alphabetical order keeps it from shifting as rankings change.
+  const hueOf = useMemo(() => {
+    const sorted = [...names].sort((a, b) => a.localeCompare(b))
+    return (name: string) => `var(--s${(sorted.indexOf(name) % HUES) + 1})`
+  }, [names])
 
   // On narrow screens the chart scrolls sideways; start at the latest race.
   const scrolled = useRef(false)
@@ -94,17 +108,9 @@ export function ProgressChart({ data }: { data: LeagueData }) {
   }, [wrapW, wrapRef])
 
   const toggle = (name: string) =>
-    setSlots(() => {
-      const cur = { ...sel }
-      if (name in cur) {
-        delete cur[name]
-        return cur
-      }
-      const used = new Set(Object.values(cur))
-      if (used.size >= MAX_SEL) return cur
-      let slot = 0
-      while (used.has(slot)) slot++
-      return { ...cur, [name]: slot }
+    setSelected(() => {
+      if (selected.includes(name)) return selected.filter((n) => n !== name)
+      return selected.length >= MAX_SEL ? selected : [...selected, name]
     })
 
   const races = data.races
@@ -162,10 +168,10 @@ export function ProgressChart({ data }: { data: LeagueData }) {
       if (races[i].complete && races[i].totals[name] !== undefined) pts.push({ i, x: xOf(i), y: yFor(i, name) })
     }
     const d = pts.map((p, k) => `${k === 0 ? 'M' : 'L'}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ')
-    return { name, pts, d, slot: sel[name] as number | undefined }
+    return { name, pts, d, on: isSel(name) }
   })
-  const muted = series.filter((s) => s.slot === undefined)
-  const picked = series.filter((s) => s.slot !== undefined)
+  const muted = series.filter((s) => !s.on)
+  const picked = series.filter((s) => s.on)
 
   // End labels: everyone in position mode (positions never collide), selected only otherwise.
   const labelled = metric === 'rank' ? series : picked
@@ -223,12 +229,11 @@ export function ProgressChart({ data }: { data: LeagueData }) {
       <p className="lede">{summary}</p>
 
       <div className="picker">
-        <p className="picker-help">Highlight up to {MAX_SEL} players. Everyone else stays grey.</p>
+        <p className="picker-help">Highlight up to {MAX_SEL} players. Everyone else is shown faded in their own colour.</p>
         <ul className="picker-list">
           {names.map((nm) => {
-            const slot = sel[nm]
-            const on = slot !== undefined
-            const full = !on && Object.keys(sel).length >= MAX_SEL
+            const on = isSel(nm)
+            const full = !on && selected.length >= MAX_SEL
             return (
               <li key={nm}>
                 <button
@@ -247,7 +252,8 @@ export function ProgressChart({ data }: { data: LeagueData }) {
                       y2="5"
                       strokeWidth={on ? 2 : 1.5}
                       strokeLinecap="round"
-                      stroke={on ? `var(${SLOT_VAR[slot]})` : 'var(--gray-line)'}
+                      stroke={hueOf(nm)}
+                      strokeOpacity={on ? 1 : 0.5}
                     />
                   </svg>
                   {nm}
@@ -259,7 +265,7 @@ export function ProgressChart({ data }: { data: LeagueData }) {
         <button
           type="button"
           className="link-btn"
-          onClick={() => setSlots(Object.fromEntries(names.slice(0, 3).map((nm, i) => [nm, i])))}
+          onClick={() => setSelected(names.slice(0, 3))}
         >
           Reset to top 3
         </button>
@@ -309,14 +315,23 @@ export function ProgressChart({ data }: { data: LeagueData }) {
 
             {/* context lines first, highlighted lines on top */}
             {muted.map((s) => (
-              <path key={s.name} d={s.d} fill="none" stroke="var(--gray-line)" strokeWidth="1.25" strokeLinejoin="round" strokeLinecap="round" />
+              <path
+                key={s.name}
+                d={s.d}
+                fill="none"
+                stroke={hueOf(s.name)}
+                strokeOpacity="0.4"
+                strokeWidth="1.5"
+                strokeLinejoin="round"
+                strokeLinecap="round"
+              />
             ))}
             {picked.map((s) => (
               <path
                 key={s.name}
                 d={s.d}
                 fill="none"
-                stroke={`var(${SLOT_VAR[s.slot as number]})`}
+                stroke={hueOf(s.name)}
                 strokeWidth="2"
                 strokeLinejoin="round"
                 strokeLinecap="round"
@@ -327,8 +342,14 @@ export function ProgressChart({ data }: { data: LeagueData }) {
             {picked.map((s) => {
               const p = s.pts[s.pts.length - 1]
               return p ? (
-                <circle key={s.name} cx={p.x} cy={p.y} r="4.5" fill={`var(${SLOT_VAR[s.slot as number]})`} stroke="var(--surface)" strokeWidth="2" />
+                <circle key={s.name} cx={p.x} cy={p.y} r="4.5" fill={hueOf(s.name)} stroke="var(--surface)" strokeWidth="2" />
               ) : null
+            })}
+
+            {/* small faded dots mark the end of every other line */}
+            {muted.map((s) => {
+              const p = s.pts[s.pts.length - 1]
+              return p ? <circle key={s.name} cx={p.x} cy={p.y} r="2.5" fill={hueOf(s.name)} opacity="0.5" /> : null
             })}
 
             {/* hover dots */}
@@ -336,7 +357,7 @@ export function ProgressChart({ data }: { data: LeagueData }) {
               picked.map((s) => {
                 const p = s.pts.find((q) => q.i === hover)
                 return p ? (
-                  <circle key={s.name} cx={p.x} cy={p.y} r="4.5" fill={`var(${SLOT_VAR[s.slot as number]})`} stroke="var(--surface)" strokeWidth="2" />
+                  <circle key={s.name} cx={p.x} cy={p.y} r="4.5" fill={hueOf(s.name)} stroke="var(--surface)" strokeWidth="2" />
                 ) : null
               })}
 
@@ -344,13 +365,13 @@ export function ProgressChart({ data }: { data: LeagueData }) {
             {labelled.map((s, k) => {
               const end = s.pts[s.pts.length - 1]
               if (!end) return null
-              const isSel = s.slot !== undefined
+              const on = s.on
               const ly = labelYs[k]
               const lx = end.x + 14
               return (
                 <g key={s.name} className="end-label" aria-hidden="true" onClick={() => toggle(s.name)}>
                   {Math.abs(ly - end.y) > 1 && <line x1={end.x + 4} y1={end.y} x2={lx - 3} y2={ly} stroke="var(--axis)" strokeWidth="1" />}
-                  <text x={lx} y={ly + 4} className={isSel ? 'label sel' : 'label'}>
+                  <text x={lx} y={ly + 4} className={on ? 'label sel' : 'label'}>
                     {s.name}
                   </text>
                 </g>
@@ -382,12 +403,11 @@ export function ProgressChart({ data }: { data: LeagueData }) {
               </p>
               <ul>
                 {hoverRows.map((r) => {
-                  const slot = sel[r.name]
-                  const on = slot !== undefined
+                  const on = isSel(r.name)
                   return (
                     <li key={r.name} className={on ? 'on' : ''}>
                       <svg width="14" height="8" aria-hidden="true">
-                        <line x1="1" x2="13" y1="4" y2="4" strokeWidth={on ? 2 : 1.25} strokeLinecap="round" stroke={on ? `var(${SLOT_VAR[slot]})` : 'var(--gray-line)'} />
+                        <line x1="1" x2="13" y1="4" y2="4" strokeWidth={on ? 2 : 1.5} strokeLinecap="round" stroke={hueOf(r.name)} strokeOpacity={on ? 1 : 0.5} />
                       </svg>
                       <span className="tip-rank">{ordinal(r.rank)}</span>
                       <span className="tip-name">{r.name}</span>

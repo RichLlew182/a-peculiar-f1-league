@@ -37,7 +37,7 @@ export function FormGuide({ data }: { data: LeagueData }) {
       <div className="section-head">
         <h2 id="form-h">Form guide</h2>
         <p className="legend-note">
-          Points scored each weekend, shaded by finishing position within the league (see key).
+          Points scored each weekend, shaded by finishing position within the league: green is higher, red is lower.
         </p>
       </div>
 

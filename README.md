@@ -1,6 +1,6 @@
 # A Peculiar F1 League
 
-A static web app that turns the league spreadsheet into a live leaderboard.
+A static web app that turns the peculiar league spreadsheet into a live leaderboard.
 
 - **Standings**: points, gaps to the player ahead and to the leader, movement since the last race, chips used, and each player's current team.
 - **Progress**: a line chart of position (or points behind the leader) after every race. Highlight up to four players; everyone else stays grey. Hover or use the arrow keys to inspect a race.

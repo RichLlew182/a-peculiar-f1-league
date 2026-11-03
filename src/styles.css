@@ -367,7 +367,7 @@ h3.spaced { margin-top: 24px; }
 .facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 0; border-top: 1px solid var(--hair); }
 .fact { padding: 16px 16px 16px 0; border-bottom: 1px solid var(--grid); display: grid; gap: 2px; align-content: start; }
 .fact dt { font-size: 13px; color: var(--ink-2); }
-.fact-value { font-size: 26px; font-weight: 750; letter-spacing: -0.02em; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.fact-value { font-family: var(--font-head); font-size: 26px; font-weight: 750; letter-spacing: -0.02em; line-height: 1.15; font-variant-numeric: tabular-nums; }
 .fact-detail { font-size: 13px; color: var(--ink-2); }
 .two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px; }
 .bars { display: grid; gap: 6px; }

@@ -27,13 +27,13 @@
   --gray-line: #b6b5ad;
 
   /* sequential blue: 7 bins, low to high, with the text colour each needs */
-  --h0: #cde2fb; --h0t: #0b0b0b;
-  --h1: #9ec5f4; --h1t: #0b0b0b;
-  --h2: #6da7ec; --h2t: #0b0b0b;
-  --h3: #3987e5; --h3t: #0b0b0b;
-  --h4: #256abf; --h4t: #ffffff;
-  --h5: #184f95; --h5t: #ffffff;
-  --h6: #0d366b; --h6t: #ffffff;
+  --h0: #c62f2f; --h0t: #ffffff;
+  --h1: #ec8f8a; --h1t: #0b0b0b;
+  --h2: #f5c9c5; --h2t: #0b0b0b;
+  --h3: #ecebe6; --h3t: #0b0b0b;
+  --h4: #c4e3c4; --h4t: #0b0b0b;
+  --h5: #6fbf6f; --h5t: #0b0b0b;
+  --h6: #167a16; --h6t: #ffffff;
 
   --shadow: 0 6px 24px rgba(11, 11, 11, 0.16);
   --font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -63,13 +63,13 @@
   --s7: #9085e9;
   --s8: #e66767;
     --gray-line: #5b5b56;
-    --h0: #0d366b; --h0t: #ffffff;
-    --h1: #104281; --h1t: #ffffff;
-    --h2: #184f95; --h2t: #ffffff;
-    --h3: #256abf; --h3t: #ffffff;
-    --h4: #3987e5; --h4t: #0b0b0b;
-    --h5: #6da7ec; --h5t: #0b0b0b;
-    --h6: #9ec5f4; --h6t: #0b0b0b;
+    --h0: #c24848; --h0t: #ffffff;
+    --h1: #8e3a3a; --h1t: #ffffff;
+    --h2: #5a3333; --h2t: #ffffff;
+    --h3: #383835; --h3t: #ffffff;
+    --h4: #30502f; --h4t: #ffffff;
+    --h5: #2f7d2f; --h5t: #ffffff;
+    --h6: #3eaa3e; --h6t: #0b0b0b;
     --shadow: 0 6px 24px rgba(0, 0, 0, 0.6);
   }
 }
@@ -97,13 +97,13 @@
   --s7: #9085e9;
   --s8: #e66767;
   --gray-line: #5b5b56;
-  --h0: #0d366b; --h0t: #ffffff;
-  --h1: #104281; --h1t: #ffffff;
-  --h2: #184f95; --h2t: #ffffff;
-  --h3: #256abf; --h3t: #ffffff;
-  --h4: #3987e5; --h4t: #0b0b0b;
-  --h5: #6da7ec; --h5t: #0b0b0b;
-  --h6: #9ec5f4; --h6t: #0b0b0b;
+  --h0: #c24848; --h0t: #ffffff;
+  --h1: #8e3a3a; --h1t: #ffffff;
+  --h2: #5a3333; --h2t: #ffffff;
+  --h3: #383835; --h3t: #ffffff;
+  --h4: #30502f; --h4t: #ffffff;
+  --h5: #2f7d2f; --h5t: #ffffff;
+  --h6: #3eaa3e; --h6t: #0b0b0b;
   --shadow: 0 6px 24px rgba(0, 0, 0, 0.6);
 }
 
@@ -332,6 +332,15 @@ h3.spaced { margin-top: 24px; }
 .heat-legend span:first-child { margin-right: 6px; }
 .heat-legend span:last-child { margin-left: 6px; }
 .heat-legend i { width: 22px; height: 12px; border-radius: 3px; display: inline-block; }
+/* Backup cue for red/green colour blindness: a corner mark on the best and worst shades. */
+.heat td { position: relative; }
+.heat td.h6::after, .heat-legend i.h6::after { content: '\25B2'; }
+.heat td.h0::after, .heat-legend i.h0::after { content: '\25BC'; }
+.heat td.h6::after, .heat td.h0::after, .heat-legend i.h6::after, .heat-legend i.h0::after {
+  position: absolute; top: 1px; right: 2px; font-size: 6px; line-height: 1; opacity: 0.85;
+}
+.heat-legend i { position: relative; }
+
 
 /* ---------- race list ---------- */
 .race-list { border-top: 1px solid var(--hair); }

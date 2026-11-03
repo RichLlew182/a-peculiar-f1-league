@@ -173,8 +173,8 @@ export function ProgressChart({ data }: { data: LeagueData }) {
   const muted = series.filter((s) => !s.on)
   const picked = series.filter((s) => s.on)
 
-  // End labels: everyone in position mode (positions never collide), selected only otherwise.
-  const labelled = metric === 'rank' ? series : picked
+  // End labels for everyone. Where lines bunch up, labels are spread apart and joined to their line.
+  const labelled = series
   const endYs = labelled.map((s) => s.pts[s.pts.length - 1]?.y ?? 0)
   const labelYs = spread(endYs, 14, m.top, m.top + plotH)
 
@@ -371,7 +371,12 @@ export function ProgressChart({ data }: { data: LeagueData }) {
               return (
                 <g key={s.name} className="end-label" aria-hidden="true" onClick={() => toggle(s.name)}>
                   {Math.abs(ly - end.y) > 1 && <line x1={end.x + 4} y1={end.y} x2={lx - 3} y2={ly} stroke="var(--axis)" strokeWidth="1" />}
-                  <text x={lx} y={ly + 4} className={on ? 'label sel' : 'label'}>
+                  <text
+                    x={lx}
+                    y={ly + 4}
+                    className={on ? 'label sel' : 'label'}
+                    style={{ fill: `color-mix(in srgb, ${hueOf(s.name)} ${on ? 80 : 62}%, var(--ink))` }}
+                  >
                     {s.name}
                   </text>
                 </g>

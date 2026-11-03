@@ -8,6 +8,7 @@ const sources = JSON.parse(await readFile(new URL('sources.json', root), 'utf8')
 const targets = [
   ['leaderboard', 'leaderboard.csv'],
   ['history', 'history.csv'],
+  ['colours', 'colours.csv'],
 ]
 
 // Fetch everything first so a failure leaves both files untouched.

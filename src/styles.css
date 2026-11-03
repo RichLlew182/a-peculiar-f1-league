@@ -20,6 +20,10 @@
   --s2: #eb6834;
   --s3: #1baf7a;
   --s4: #eda100;
+  --s5: #e87ba4;
+  --s6: #008300;
+  --s7: #6250d6;
+  --s8: #e34948;
   --gray-line: #b6b5ad;
 
   /* sequential blue: 7 bins, low to high, with the text colour each needs */
@@ -54,6 +58,10 @@
     --s2: #d95926;
     --s3: #199e70;
     --s4: #c98500;
+  --s5: #d55181;
+  --s6: #008300;
+  --s7: #9085e9;
+  --s8: #e66767;
     --gray-line: #5b5b56;
     --h0: #0d366b; --h0t: #ffffff;
     --h1: #104281; --h1t: #ffffff;
@@ -84,6 +92,10 @@
   --s2: #d95926;
   --s3: #199e70;
   --s4: #c98500;
+  --s5: #d55181;
+  --s6: #008300;
+  --s7: #9085e9;
+  --s8: #e66767;
   --gray-line: #5b5b56;
   --h0: #0d366b; --h0t: #ffffff;
   --h1: #104281; --h1t: #ffffff;

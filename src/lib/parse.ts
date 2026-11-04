@@ -1,5 +1,5 @@
 import { isBlankRow, parseCsv, parseMoney, parseNum } from './csv'
-import { CHIPS, type ChipKey, type Colours, type LeagueData, type Pick, type Player, type Race } from './types'
+import { CHIPS, type ChipKey, type ChipUse, type Colours, type LeagueData, type Pick, type Player, type Race } from './types'
 
 function colIndex(header: string[], label: string): number {
   return header.findIndex((h) => h.trim().toLowerCase() === label.toLowerCase())
@@ -195,10 +195,49 @@ export function parseColours(csv: string): Colours {
   return out
 }
 
-export function parseLeague(leaderboardCsv: string, historyCsv: string, coloursCsv = ''): LeagueData {
+/** Chip Usage tab: per player, each chip's TRUE/FALSE flag followed by the race it was played at. */
+export function parseChipUsage(csv: string, leaderboardNames: string[]): ChipUse[] {
+  const rows = parseCsv(csv)
+  const header = rows[0] ?? []
+  const iChange = colIndex(header, 'Change')
+  const cols = CHIPS.map((c) => ({ key: c.key, i: colIndex(header, c.key) })).filter((c) => c.i >= 0)
+  const nameMap = buildNameMap(
+    rows.slice(1).map((r) => (r[0] ?? '').trim()).filter(Boolean),
+    leaderboardNames,
+  )
+  const uses: ChipUse[] = []
+  for (const row of rows.slice(1)) {
+    const raw = (row[0] ?? '').trim()
+    if (!raw) continue
+    const player = nameMap.get(raw) ?? raw
+    for (const { key, i } of cols) {
+      if ((row[i] ?? '').trim().toUpperCase() !== 'TRUE') continue
+      const race = (row[i + 1] ?? '').trim()
+      if (!race) continue
+      const use: ChipUse = { player, chip: key, race }
+      if (key === 'FF' && iChange >= 0) {
+        const [out, inn] = (row[iChange] ?? '').split('>').map((x) => x.trim().toUpperCase())
+        if (out && inn) {
+          use.out = out
+          use.in = inn
+        }
+      }
+      uses.push(use)
+    }
+  }
+  return uses
+}
+
+export function parseLeague(leaderboardCsv: string, historyCsv: string, coloursCsv = '', chipsCsv = ''): LeagueData {
   const players = parseLeaderboard(leaderboardCsv)
   const playerNames = players.map((p) => p.name)
   const races = parseHistory(historyCsv, playerNames)
   const colours = coloursCsv ? parseColours(coloursCsv) : { teams: {}, drivers: {}, chips: {} }
-  return { players, colours, races, completed: races.filter((r) => r.complete), playerNames }
+  let chipUses: ChipUse[] = []
+  try {
+    chipUses = chipsCsv ? parseChipUsage(chipsCsv, playerNames) : []
+  } catch {
+    /* the chip tab is optional */
+  }
+  return { players, colours, races, completed: races.filter((r) => r.complete), playerNames, chipUses }
 }

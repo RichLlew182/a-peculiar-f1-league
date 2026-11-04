@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Recap } from './components/Recap'
 import { FormGuide } from './components/FormGuide'
 import { ProgressChart } from './components/ProgressChart'
 import { RaceList } from './components/RaceList'
@@ -144,6 +145,7 @@ export default function App() {
         {tab === 'progress' && <ProgressChart data={data} />}
         {tab === 'races' && (
           <>
+            <Recap data={data} />
             <FormGuide data={data} />
             <RaceList data={data} />
           </>

@@ -58,6 +58,16 @@ export interface Colours {
   chips: Partial<Record<ChipKey, string>>
 }
 
+/** One chip played: who, which chip, at which race (and the driver swap for Final Fix). */
+export interface ChipUse {
+  player: string
+  chip: ChipKey
+  race: string
+  /** Final Fix only: driver swapped out and the driver brought in */
+  out?: string
+  in?: string
+}
+
 export interface LeagueData {
   players: Player[]
   colours: Colours
@@ -65,6 +75,8 @@ export interface LeagueData {
   /** completed races only */
   completed: Race[]
   playerNames: string[]
+  /** from the Chip Usage tab; empty if that tab isn't available */
+  chipUses: ChipUse[]
 }
 
 export interface Highlight {

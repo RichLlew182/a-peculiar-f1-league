@@ -73,15 +73,18 @@ export function Recap({ data }: { data: LeagueData }) {
   const changed =
     r.leaderBefore.length > 0 && r.leaderAfter.join() !== r.leaderBefore.join();
   const marginNow = r.leadMargin;
-  const leadLine = changed
-    ? `${list(r.leaderAfter)} took the lead from ${list(r.leaderBefore)}${marginNow !== null ? `, by ${fmt(marginNow)} points` : ""}.`
-    : r.leaderBefore.length === 0
-      ? `${list(r.leaderAfter)} led after the opening race${marginNow !== null ? ` by ${fmt(marginNow)} points` : ""}.`
-      : `${list(r.leaderAfter)} stayed in front${
-          marginNow !== null && r.leadMarginBefore !== null
-            ? `, ${marginNow === r.leadMarginBefore ? "with the lead unchanged at" : marginNow > r.leadMarginBefore ? "extending the lead to" : "with the lead down to"} ${fmt(marginNow)} points`
-            : ""
-        }.`;
+  const tied = r.leaderAfter.length > 1;
+  const leadLine = tied
+    ? `${r.leaderAfter.length === 2 ? "They are" : "They are all"} level at the top of the table.`
+    : changed
+      ? `${list(r.leaderAfter)} took the lead from ${list(r.leaderBefore)}${marginNow !== null ? `, by ${fmt(marginNow)} points` : ""}.`
+      : r.leaderBefore.length === 0
+        ? `${list(r.leaderAfter)} led after the opening race${marginNow !== null ? ` by ${fmt(marginNow)} points` : ""}.`
+        : `${list(r.leaderAfter)} stayed in front${
+            marginNow !== null && r.leadMarginBefore !== null
+              ? `, ${marginNow === r.leadMarginBefore ? "with the lead unchanged at" : marginNow > r.leadMarginBefore ? "extending the lead to" : "with the lead down to"} ${fmt(marginNow)} points`
+              : ""
+          }.`;
 
   return (
     <section aria-labelledby="recap-h" className="recap">
@@ -128,7 +131,11 @@ export function Recap({ data }: { data: LeagueData }) {
           {r.climbers.length ? (
             <Movers rows={r.climbers} up />
           ) : (
-            <p className="recap-none">Nobody moved up.</p>
+            <p className="recap-none">
+              {race.round === 1
+                ? "First race of the season."
+                : "Nobody moved up."}
+            </p>
           )}
         </div>
         <div className="recap-block">
@@ -136,7 +143,11 @@ export function Recap({ data }: { data: LeagueData }) {
           {r.fallers.length ? (
             <Movers rows={r.fallers} up={false} />
           ) : (
-            <p className="recap-none">Nobody moved down.</p>
+            <p className="recap-none">
+              {race.round === 1
+                ? "First race of the season."
+                : "Nobody moved down."}
+            </p>
           )}
         </div>
       </div>

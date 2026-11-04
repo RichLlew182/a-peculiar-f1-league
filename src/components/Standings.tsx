@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react'
-import { fmt, money, signedFmt, textOn } from '../lib/format'
-import { CHIPS, type Colours, type LeagueData, type Player } from '../lib/types'
+import { fmt, money, ordinal, signedFmt, textOn } from '../lib/format'
+import { CHIPS, type Colours, type LeagueData, type Player, type Race } from '../lib/types'
 
 const swatch = (hex?: string) => (hex ? ({ '--c': hex } as CSSProperties) : undefined)
 
@@ -79,9 +79,61 @@ function Move({ move }: { move: number }) {
   )
 }
 
+/** The top three laid out like a podium: 2nd on the left, 1st in the middle, 3rd on the right. */
+function Podium({ players, colours, latest }: { players: Player[]; colours: Colours; latest?: Race }) {
+  return (
+    <ol className="podium" aria-label="Top three">
+      {players.map((p, i) => {
+        const move = latest?.moves[p.name] ?? 0
+        const gained = latest?.gains[p.name]
+        const lead = p.rank === 1
+        return (
+          <li key={p.name} className={`podium-slot place-${i + 1}`}>
+            <div className="podium-card">
+              <div className="podium-top">
+                <span className="podium-place" aria-hidden="true">
+                  {ordinal(p.rank)}
+                </span>
+                {gained !== undefined && (
+                  <span className="podium-gained" title={`Points scored at ${latest?.name}`}>
+                    {signedFmt(gained)} <span className="muted-text">{latest?.name}</span>
+                  </span>
+                )}
+                <Move move={move} />
+              </div>
+              <h3 className="podium-name">
+                <span className="sr-only">{ordinal(p.rank)}: </span>
+                {p.name}
+              </h3>
+              {p.teamName && <p className="podium-team">{p.teamName}</p>}
+              <p className="podium-points">
+                {fmt(p.points)} <span>pts</span>
+              </p>
+              <p className="podium-gaps">
+                <span>
+                  Gap to next <b>{lead ? 'Leader' : signedFmt(p.gap)}</b>
+                </span>
+                <span>
+                  Gap to leader <b>{lead ? '–' : signedFmt(p.leaderGap)}</b>
+                </span>
+              </p>
+              <Chips player={p} colours={colours} />
+              <Team player={p} colours={colours} />
+            </div>
+            <div className="podium-step" aria-hidden="true">
+              {p.rank}
+            </div>
+          </li>
+        )
+      })}
+    </ol>
+  )
+}
+
 export function Standings({ data }: { data: LeagueData }) {
   const latest = data.completed[data.completed.length - 1]
   const raceLabel = latest ? latest.name : 'last race'
+  const rest = data.players.slice(3)
 
   return (
     <section aria-labelledby="standings-h">
@@ -92,7 +144,10 @@ export function Standings({ data }: { data: LeagueData }) {
         </p>
       </div>
 
-      <div className="tower" role="table" aria-label="League standings">
+      <Podium players={data.players.slice(0, 3)} colours={data.colours} latest={latest} />
+
+      {rest.length > 0 && (
+      <div className="tower" role="table" aria-label="Rest of the league standings">
         <div className="tower-head" role="row">
           <span role="columnheader">Pos</span>
           <span role="columnheader" title="Places gained or lost at the last race">
@@ -112,7 +167,7 @@ export function Standings({ data }: { data: LeagueData }) {
           <span role="columnheader">Team</span>
         </div>
 
-        {data.players.map((p) => {
+        {rest.map((p) => {
           const gained = latest?.gains[p.name]
           const move = latest?.moves[p.name] ?? 0
           return (
@@ -153,6 +208,7 @@ export function Standings({ data }: { data: LeagueData }) {
           )
         })}
       </div>
+      )}
     </section>
   )
 }

@@ -261,6 +261,7 @@ export function chipHighlights(data: LeagueData): Highlight[] {
     const best = Math.max(...uses.map((u) => u.margin))
     const topUses = uses.filter((u) => u.margin === best)
     out.push({
+      chip,
       id: `best-${chip}`,
       label: `Best use of ${names[chip]}`,
       value: `${sgn(best)} pts`,
@@ -271,6 +272,7 @@ export function chipHighlights(data: LeagueData): Highlight[] {
       const worst = Math.min(...uses.map((u) => u.margin))
       const lowUses = uses.filter((u) => u.margin === worst)
       out.push({
+        chip,
         id: `worst-${chip}`,
         label: `Worst use of ${names[chip]}`,
         value: `${sgn(worst)} pts`,
@@ -290,6 +292,7 @@ export function chipHighlights(data: LeagueData): Highlight[] {
     const top = Math.max(...[...counts.values()].map((v) => v.length))
     const races = [...counts.entries()].filter(([, v]) => v.length === top)
     out.push({
+      chip,
       id: `popular-${chip}`,
       label: `Most popular ${names[chip]} race`,
       value: joinNames(races.map(([r]) => r)),
@@ -307,6 +310,7 @@ export function chipHighlights(data: LeagueData): Highlight[] {
     const top = Math.max(...[...swaps.values()].map((v) => v.length))
     const picked = [...swaps.entries()].filter(([, v]) => v.length === top)
     out.push({
+      chip: 'FF',
       id: 'ff-in',
       label: 'Favourite Final Fix signing',
       value: joinNames(picked.map(([code]) => driverName(code))),

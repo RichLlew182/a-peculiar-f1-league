@@ -81,6 +81,32 @@ export function highlights(data: LeagueData): Highlight[] {
     players: [bestScore.player],
   })
 
+  // Best single race with no chip played by that player at that race
+  if (data.chipUses.length > 0) {
+    let clean = { player: '', race: '', points: -Infinity }
+    for (const r of done) {
+      const aided = new Set(data.chipUses.filter((u) => sameRace(u.race, r.name)).map((u) => u.player))
+      for (const [player, g] of Object.entries(r.gains)) {
+        if (!aided.has(player) && g > clean.points) clean = { player, race: r.name, points: g }
+      }
+    }
+    if (clean.points > -Infinity) {
+      const same = done.flatMap((r) => {
+        const aided = new Set(data.chipUses.filter((u) => sameRace(u.race, r.name)).map((u) => u.player))
+        return Object.entries(r.gains)
+          .filter(([player, g]) => !aided.has(player) && g === clean.points)
+          .map(([player]) => ({ player, race: r.name }))
+      })
+      out.push({
+        id: 'best-clean-race',
+        label: 'Best single race with no chip',
+        value: `${fmt(clean.points)} pts`,
+        detail: same.map((x) => `${x.player} at ${x.race}`).join(', '),
+        players: same.map((x) => x.player),
+      })
+    }
+  }
+
   // Most race wins
   const wins = [...stats].sort((a, b) => b.raceWins - a.raceWins)
   if (wins[0] && wins[0].raceWins > 0) {

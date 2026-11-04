@@ -502,6 +502,6 @@ h3.spaced { margin-top: 24px; }
 /* ---------- chip stats grouped by chip ---------- */
 .chip-group { margin-top: 18px; }
 .chip-group-title { display: flex; align-items: center; gap: 10px; font-family: var(--font-head); font-size: 16px; font-weight: 750; margin: 0 0 4px; }
-.chip-group .facts { border-top: 1px solid var(--hair); }
+.chip-group .facts { border-top: 0; }
 /* chip colour mixed toward the text colour so it stays readable in light and dark */
 .chip-value { color: color-mix(in srgb, var(--chip, var(--ink)) 78%, var(--ink)); }

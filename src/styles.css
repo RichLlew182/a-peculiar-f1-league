@@ -193,7 +193,7 @@ h3.spaced { margin-top: 24px; }
 .tower { border-top: 1px solid var(--hair); }
 .tower-head, .tower-row {
   display: grid;
-  grid-template-columns: 44px minmax(120px, 1.1fr) 84px 92px 104px 190px minmax(260px, 2.2fr);
+  grid-template-columns: 44px 68px minmax(120px, 0.9fr) 84px 92px 104px 190px minmax(300px, 2.4fr);
   align-items: center; column-gap: 14px; padding: 10px 12px 10px 0;
 }
 .tower-head { font-size: 12px; color: var(--ink-2); padding-top: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--axis); }
@@ -207,6 +207,17 @@ h3.spaced { margin-top: 24px; }
 .who-sub { display: flex; gap: 10px; align-items: baseline; font-size: 12px; color: var(--ink-2); flex-wrap: wrap; }
 .points { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
 .gap { font-size: 14px; color: var(--ink-2); }
+.movecell { display: flex; justify-content: center; }
+.badge {
+  display: inline-flex; align-items: center; justify-content: center; gap: 4px; min-width: 46px;
+  padding: 4px 9px; border-radius: 999px; font-size: 15px; font-weight: 750; line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.badge b { font-weight: 750; }
+.badge-arrow { font-size: 10px; }
+.badge.up { background: var(--good); color: var(--surface); }
+.badge.down { background: var(--bad); color: var(--surface); }
+.badge.flat { background: var(--wash); color: var(--muted); font-weight: 600; }
 .move { display: inline-flex; gap: 2px; align-items: baseline; font-weight: 650; font-variant-numeric: tabular-nums; }
 .move.up { color: var(--good); }
 .move.down { color: var(--bad); }
@@ -231,16 +242,17 @@ h3.spaced { margin-top: 24px; }
 @media (max-width: 1020px) {
   .tower-head { display: none; }
   .tower-row {
-    grid-template-columns: 36px 1fr 1fr;
+    grid-template-columns: 52px 1fr 1fr;
     grid-template-areas:
       'pos who points'
-      'pos next lead'
+      'move next lead'
       '.   chips chips'
       '.   team team';
     row-gap: 8px; padding: 14px 8px 14px 0;
   }
   .pos { grid-area: pos; align-self: start; padding-top: 2px; }
   .who { grid-area: who; }
+  .movecell { grid-area: move; justify-content: flex-start; padding-left: 2px; }
   .points { grid-area: points; }
   .g-next { grid-area: next; }
   .g-lead { grid-area: lead; }

@@ -458,3 +458,24 @@ h3.spaced { margin-top: 24px; }
 .podium-card .pick { background: var(--surface); box-shadow: inset 0 0 0 1px var(--hair); font-size: 14px; padding: 3px 8px 3px 6px; }
 .podium-card .pick.constructor { box-shadow: inset 0 0 0 1px var(--axis); }
 .podium-card .team-meta { color: var(--ink); }
+
+/* ---------- weekend recap ---------- */
+.recap { margin-bottom: 36px; }
+.recap-pick { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; }
+.recap-pick select { font: inherit; font-size: 14px; color: var(--ink); background: var(--surface); border: 1px solid var(--axis); border-radius: 8px; padding: 6px 10px; }
+.recap-headline { font-size: 16px; line-height: 1.55; max-width: 70ch; margin-bottom: 18px; }
+.recap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; margin-bottom: 14px; }
+.recap-block { border: 1px solid var(--hair); border-radius: 10px; padding: 14px 16px; background: var(--surface); }
+.recap-block h3 { font-family: var(--font-head); font-size: 14px; font-weight: 750; margin: 0 0 10px; }
+.recap-rows { display: grid; gap: 8px; list-style: none; padding: 0; margin: 0; }
+.recap-rows li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
+.recap-name { font-weight: 600; }
+.recap-num { font-variant-numeric: tabular-nums; }
+.recap-sub { font-size: 12px; color: var(--ink-2); }
+.recap-none { font-size: 13px; color: var(--ink-2); }
+.recap-chip-row { align-items: flex-start; flex-wrap: nowrap; gap: 12px; }
+.recap-chip-text { display: grid; gap: 2px; }
+.recap-use { font-size: 14px; }
+.recap-note { font-size: 12px; color: var(--muted); margin-top: 10px; }
+.recap-chip-row .chip { flex: none; }
+.recap-uses { display: flex; flex-wrap: wrap; gap: 2px 18px; }

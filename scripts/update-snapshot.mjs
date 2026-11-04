@@ -9,6 +9,7 @@ const targets = [
   ['leaderboard', 'leaderboard.csv'],
   ['history', 'history.csv'],
   ['colours', 'colours.csv'],
+  ['chips', 'chipusage.csv'],
 ]
 
 // Fetch everything first so a failure leaves both files untouched.

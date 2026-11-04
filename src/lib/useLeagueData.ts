@@ -3,6 +3,7 @@ import sources from '../data/sources.json'
 import bundledLeaderboard from '../data/leaderboard.csv?raw'
 import bundledHistory from '../data/history.csv?raw'
 import bundledColours from '../data/colours.csv?raw'
+import bundledChips from '../data/chipusage.csv?raw'
 import { parseLeague } from './parse'
 import type { LeagueData } from './types'
 
@@ -31,6 +32,7 @@ interface Raw {
   leaderboard: string
   history: string
   colours: string
+  chips: string
 }
 
 function readCache(): Raw | null {
@@ -39,7 +41,9 @@ function readCache(): Raw | null {
     if (!v) return null
     const o = JSON.parse(v)
     return typeof o?.leaderboard === 'string' && typeof o?.history === 'string'
-      ? { leaderboard: o.leaderboard, history: o.history, colours: typeof o.colours === 'string' ? o.colours : bundledColours }
+      ? { leaderboard: o.leaderboard, history: o.history, colours: typeof o.colours === 'string' ? o.colours : bundledColours,
+          chips: typeof o.chips === 'string' ? o.chips : bundledChips,
+        }
       : null
   } catch {
     return null
@@ -67,7 +71,7 @@ async function fetchCsv(url: string): Promise<string> {
 
 function tryParse(raw: Raw): LeagueData | null {
   try {
-    const d = parseLeague(raw.leaderboard, raw.history, raw.colours)
+    const d = parseLeague(raw.leaderboard, raw.history, raw.colours, raw.chips)
     return d.players.length > 0 ? d : null
   } catch {
     return null
@@ -75,7 +79,7 @@ function tryParse(raw: Raw): LeagueData | null {
 }
 
 export function useLeagueData(): LeagueState {
-  const bundled: Raw = { leaderboard: bundledLeaderboard, history: bundledHistory, colours: bundledColours }
+  const bundled: Raw = { leaderboard: bundledLeaderboard, history: bundledHistory, colours: bundledColours, chips: bundledChips }
   const initial = useRef<{ raw: Raw; data: LeagueData | null; source: SourceState }>()
   if (!initial.current) {
     const cached = readCache()
@@ -104,20 +108,22 @@ export function useLeagueData(): LeagueState {
     lastRun.current = Date.now()
     setChecking(true)
     try {
-      const [leaderboard, history, colours] = await Promise.all([
+      const [leaderboard, history, colours, chips] = await Promise.all([
         fetchCsv(sources.leaderboard),
         fetchCsv(sources.history),
         // Colours are optional: if that tab can't be read, keep the ones we already have.
         fetchCsv(sources.colours).catch(() => rawRef.current.colours),
+        fetchCsv(sources.chips).catch(() => rawRef.current.chips),
       ])
-      const next: Raw = { leaderboard, history, colours }
+      const next: Raw = { leaderboard, history, colours, chips }
       const parsed = tryParse(next)
       if (!parsed) throw new Error('Sheet changed shape and could not be read')
 
       const changed =
         next.leaderboard !== rawRef.current.leaderboard ||
         next.history !== rawRef.current.history ||
-        next.colours !== rawRef.current.colours
+        next.colours !== rawRef.current.colours ||
+        next.chips !== rawRef.current.chips
       setSource('live')
       setError(null)
       setLastChecked(new Date())

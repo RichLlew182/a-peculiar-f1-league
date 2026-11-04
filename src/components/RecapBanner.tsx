@@ -21,7 +21,8 @@ export function RecapBanner({ data }: { data: LeagueData }) {
   if (!latest || dismissed === latest.name) return null
 
   const r = buildRecap(data, latest)
-  const { win, lead } = recapSentences(r)
+  const { win, lead, leadChanged, podium, final } = recapSentences(r)
+  const news = [...(leadChanged && !final ? [{ kind: 'lead' as const, text: lead }] : []), ...(final ? [] : podium)]
 
   const close = () => {
     setDismissed(latest.name)
@@ -38,12 +39,24 @@ export function RecapBanner({ data }: { data: LeagueData }) {
         <span aria-hidden="true">×</span>
       </button>
       <h2 id="banner-h" className="banner-title">
-        {latest.name}
-        {latest.sprint ? ' sprint weekend' : ''} <span className="muted-text">· latest race</span>
+        {final ? 'Season complete' : latest.name}
+        {!final && latest.sprint ? ' sprint weekend' : ''}{' '}
+        <span className="muted-text">· {final ? `after ${latest.name}` : 'latest race'}</span>
       </h2>
-      <p className="banner-text">
-        {win} {lead}
-      </p>
+      {final && <p className="banner-big">{final}</p>}
+      {news.length > 0 && (
+        <ul className="banner-news">
+          {news.map((n) => (
+            <li key={n.text} className={`news-${n.kind}`}>
+              <span className="news-icon" aria-hidden="true">
+                {n.kind === 'in' ? '▲' : n.kind === 'out' ? '▼' : '★'}
+              </span>
+              {n.text}
+            </li>
+          ))}
+        </ul>
+      )}
+      <p className="banner-text">{leadChanged || final ? win : `${win} ${lead}`}</p>
       {r.chips.length > 0 && (
         <ul className="banner-chips" aria-label="Chips played">
           {r.chips.map((g) => {

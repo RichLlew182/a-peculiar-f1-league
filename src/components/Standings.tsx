@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react'
+import { RecapBanner } from './RecapBanner'
 import { fmt, money, ordinal, signedFmt, textOn } from '../lib/format'
 import { CHIPS, type Colours, type LeagueData, type Player, type Race } from '../lib/types'
 
@@ -145,6 +146,8 @@ export function Standings({ data }: { data: LeagueData }) {
           Chips: <span className="chip used">filled</span> used, <span className="chip">outlined</span> still available
         </p>
       </div>
+
+      <RecapBanner data={data} />
 
       <Podium players={data.players.slice(0, 3)} colours={data.colours} latest={latest} />
 

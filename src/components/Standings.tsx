@@ -112,10 +112,10 @@ function Podium({ players, colours, latest }: { players: Player[]; colours: Colo
               </p>
               {!lead && (
                 <p className="podium-gaps">
-                  <span>
+                  <span title={`${fmt(Math.abs(p.gap))} points behind ${players[i - 1]?.name ?? 'the player above'}`}>
                     Gap to next <b>{fmt(Math.abs(p.gap))}</b>
                   </span>
-                  <span>
+                  <span title={`${fmt(Math.abs(p.leaderGap))} points behind ${players[0]?.name ?? 'the leader'}`}>
                     Gap to leader <b>{fmt(Math.abs(p.leaderGap))}</b>
                   </span>
                 </p>
@@ -166,7 +166,9 @@ export function Standings({ data }: { data: LeagueData }) {
           <span role="columnheader" className="num" title="Points behind the player above / behind the leader">
             Gap to next / leader
           </span>
-          <span role="columnheader">Team</span>
+          <span role="columnheader" className="team-head">
+            Team
+          </span>
           <span role="columnheader">Chips</span>
         </div>
 
@@ -196,10 +198,18 @@ export function Standings({ data }: { data: LeagueData }) {
                 {fmt(p.points)}
               </span>
               <span className="gap-cell num" role="cell">
-                <span className="gap g-next" data-label="Next">
+                <span
+                  className="gap g-next"
+                  data-label="Next"
+                  title={`${fmt(Math.abs(p.gap))} points behind ${data.players[data.players.indexOf(p) - 1]?.name ?? 'the player above'}`}
+                >
                   {p.rank === 1 ? <span className="muted-text">Leader</span> : fmt(Math.abs(p.gap))}
                 </span>
-                <span className="gap g-lead" data-label="Leader">
+                <span
+                  className="gap g-lead"
+                  data-label="Leader"
+                  title={`${fmt(Math.abs(p.leaderGap))} points behind ${data.players[0]?.name ?? 'the leader'}`}
+                >
                   {p.rank === 1 ? <span className="muted-text">–</span> : fmt(Math.abs(p.leaderGap))}
                 </span>
               </span>

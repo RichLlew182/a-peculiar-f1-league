@@ -490,3 +490,10 @@ h3.spaced { margin-top: 24px; }
 .banner-link { font-size: 13px; font-weight: 600; justify-self: start; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
 .banner-close { position: absolute; top: 6px; right: 6px; width: 32px; height: 32px; border: 0; border-radius: 8px; background: none; color: var(--ink-2); font-size: 22px; line-height: 1; cursor: pointer; }
 .banner-close:hover { background: var(--grid); color: var(--ink); }
+.banner-big { font-family: var(--font-head); font-size: 20px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.3; margin: 0; }
+.banner-news { display: grid; gap: 6px; list-style: none; padding: 0; margin: 0; }
+.banner-news li { display: flex; gap: 10px; align-items: baseline; font-family: var(--font-head); font-size: 17px; font-weight: 750; line-height: 1.35; }
+.news-icon { font-size: 12px; flex: none; }
+.news-in .news-icon { color: var(--good); }
+.news-out .news-icon { color: var(--bad); }
+.news-lead .news-icon { color: var(--ink); font-size: 14px; }

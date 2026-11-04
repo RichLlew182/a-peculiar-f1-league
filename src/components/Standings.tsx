@@ -137,11 +137,12 @@ export function Standings({ data }: { data: LeagueData }) {
   const latest = data.completed[data.completed.length - 1]
   const raceLabel = latest ? latest.name : 'last race'
   const rest = data.players.slice(3)
+  const finished = data.completed.length > 0 && data.completed.length === data.races.length
 
   return (
     <section aria-labelledby="standings-h">
       <div className="section-head">
-        <h2 id="standings-h">Standings{latest ? ` after ${latest.name}` : ''}</h2>
+        <h2 id="standings-h">{finished ? 'Final standings' : `Standings${latest ? ` after ${latest.name}` : ''}`}</h2>
         <p className="legend-note">
           Chips: <span className="chip used">filled</span> used, <span className="chip">outlined</span> still available
         </p>

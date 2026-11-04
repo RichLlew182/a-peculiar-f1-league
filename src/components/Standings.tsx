@@ -109,16 +109,18 @@ function Podium({ players, colours, latest }: { players: Player[]; colours: Colo
               <p className="podium-points">
                 {fmt(p.points)} <span>pts</span>
               </p>
-              <p className="podium-gaps">
-                <span>
-                  Gap to next <b>{lead ? 'Leader' : fmt(Math.abs(p.gap))}</b>
-                </span>
-                <span>
-                  Gap to leader <b>{lead ? '–' : fmt(Math.abs(p.leaderGap))}</b>
-                </span>
-              </p>
-              <Chips player={p} colours={colours} />
+              {!lead && (
+                <p className="podium-gaps">
+                  <span>
+                    Gap to next <b>{fmt(Math.abs(p.gap))}</b>
+                  </span>
+                  <span>
+                    Gap to leader <b>{fmt(Math.abs(p.leaderGap))}</b>
+                  </span>
+                </p>
+              )}
               <Team player={p} colours={colours} />
+              <Chips player={p} colours={colours} />
             </div>
             <div className="podium-step" aria-hidden="true">
               {p.rank}

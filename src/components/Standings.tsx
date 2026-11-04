@@ -36,7 +36,6 @@ function Team({ player, colours }: { player: Player; colours: Colours }) {
         {player.constructors.map((c) => (
           <li key={c.code} className="pick constructor" style={swatch(colours.teams[c.code])}>
             <b>{c.code}</b>
-            <span>{money(c.price)}</span>
           </li>
         ))}
       </ul>
@@ -45,7 +44,6 @@ function Team({ player, colours }: { player: Player; colours: Colours }) {
           <li key={d.code} className={d.boosted ? 'pick boosted' : 'pick'} style={swatch(colours.drivers[d.code])}>
             <b>{d.code}</b>
             {d.boosted && <em title="Double points driver">2×</em>}
-            <span>{money(d.price)}</span>
           </li>
         ))}
       </ul>

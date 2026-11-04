@@ -206,6 +206,7 @@ h3.spaced { margin-top: 24px; }
 .team-name { font-size: 13px; color: var(--ink-2); overflow-wrap: anywhere; }
 .who-sub { display: flex; gap: 10px; align-items: baseline; font-size: 12px; color: var(--ink-2); flex-wrap: wrap; }
 .points { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+.team-cell { padding-left: 14px; }
 .gap-cell { display: grid; gap: 2px; font-size: 14px; font-variant-numeric: tabular-nums; }
 .gap-cell .g-next { color: var(--ink); font-weight: 600; }
 .gap-cell .g-lead { color: var(--ink-2); font-size: 13px; }
@@ -261,7 +262,7 @@ h3.spaced { margin-top: 24px; }
   .gap-cell .gap::before { content: 'Gap to ' attr(data-label) ' '; color: var(--muted); font-size: 12px; font-weight: 400; }
   .gap-cell.num { text-align: left; }
   .chips-cell { grid-area: chips; }
-  .team-cell { grid-area: team; }
+  .team-cell { grid-area: team; padding-left: 0; }
 }
 
 /* ---------- progress chart ---------- */

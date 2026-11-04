@@ -284,7 +284,7 @@ h3.spaced { margin-top: 24px; }
 
 .chart-wrap { overflow-x: auto; padding-bottom: 4px; }
 .chart-inner { position: relative; }
-.chart-inner svg { display: block; overflow: visible; touch-action: pan-y; }
+.chart-inner svg { display: block; overflow: visible; touch-action: pan-x pan-y pinch-zoom; }
 .chart-inner svg:focus-visible { outline-offset: 4px; }
 .tick { font-size: 11px; fill: var(--muted); font-variant-numeric: tabular-nums; font-family: var(--font); }
 .tick.xt { font-size: 10px; }

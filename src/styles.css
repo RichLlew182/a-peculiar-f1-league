@@ -461,8 +461,9 @@ h3.spaced { margin-top: 24px; }
 
 /* ---------- weekend recap ---------- */
 .recap { margin-bottom: 36px; }
-.recap-pick { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; }
-.recap-pick select { font: inherit; font-size: 14px; color: var(--ink); background: var(--surface); border: 1px solid var(--axis); border-radius: 8px; padding: 6px 10px; }
+.recap-pick { position: relative; display: inline-flex; align-items: center; gap: 8px; font-size: 13px; }
+.recap-pick select { appearance: none; -webkit-appearance: none; font: inherit; font-size: 14px; color: var(--ink); background: var(--surface); border: 1px solid var(--axis); border-radius: 8px; padding: 6px 34px 6px 12px; cursor: pointer; }
+.recap-pick::after { content: ''; position: absolute; right: 14px; bottom: 11px; width: 6px; height: 6px; border-right: 2px solid var(--ink-2); border-bottom: 2px solid var(--ink-2); transform: rotate(45deg); pointer-events: none; }
 .recap-headline { font-size: 16px; line-height: 1.55; max-width: 70ch; margin-bottom: 18px; }
 .recap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; margin-bottom: 14px; }
 .recap-block { border: 1px solid var(--hair); border-radius: 10px; padding: 14px 16px; background: var(--surface); }

@@ -54,14 +54,27 @@ function Team({ player, colours }: { player: Player; colours: Colours }) {
   )
 }
 
+/** Places gained or lost at the last race, as a badge that is easy to spot down the table. */
 function Move({ move }: { move: number }) {
-  if (!move) return null
+  if (!move) {
+    return (
+      <span className="badge flat">
+        <span aria-hidden="true">–</span>
+        <span className="sr-only">No change</span>
+      </span>
+    )
+  }
   const up = move > 0
+  const n = Math.abs(move)
   return (
-    <span className={up ? 'move up' : 'move down'}>
-      <span aria-hidden="true">{up ? '▲' : '▼'}</span>
-      {Math.abs(move)}
-      <span className="sr-only">{up ? ' places up' : ' places down'}</span>
+    <span className={up ? 'badge up' : 'badge down'}>
+      <span className="badge-arrow" aria-hidden="true">
+        {up ? '▲' : '▼'}
+      </span>
+      <b aria-hidden="true">{n}</b>
+      <span className="sr-only">
+        {n} {n === 1 ? 'place' : 'places'} {up ? 'up' : 'down'}
+      </span>
     </span>
   )
 }
@@ -82,6 +95,9 @@ export function Standings({ data }: { data: LeagueData }) {
       <div className="tower" role="table" aria-label="League standings">
         <div className="tower-head" role="row">
           <span role="columnheader">Pos</span>
+          <span role="columnheader" title="Places gained or lost at the last race">
+            Move
+          </span>
           <span role="columnheader">Player</span>
           <span role="columnheader" className="num">
             Points
@@ -104,11 +120,13 @@ export function Standings({ data }: { data: LeagueData }) {
               <span className="pos" role="cell">
                 {p.rank}
               </span>
+              <span className="movecell" role="cell">
+                <Move move={move} />
+              </span>
               <span className="who" role="cell">
                 <strong>{p.name}</strong>
                 {p.teamName && <span className="team-name">{p.teamName}</span>}
                 <span className="who-sub">
-                  <Move move={move} />
                   {gained !== undefined && (
                     <span title={`Points scored at ${raceLabel}`}>
                       {signedFmt(gained)} <span className="muted-text">{raceLabel}</span>

@@ -1,4 +1,5 @@
-import type { Highlight, LeagueData } from './types'
+import { driverName } from './names'
+import type { ChipKey, Highlight, LeagueData } from './types'
 
 const fmt = (n: number) => n.toLocaleString('en-GB')
 const signed = (n: number) => (n > 0 ? `+${fmt(n)}` : fmt(n))
@@ -212,3 +213,107 @@ export function ord(n: number): string {
 }
 
 export { signed, fmt }
+
+
+const sameRace = (a: string, b: string) => a.trim().toLowerCase() === b.trim().toLowerCase()
+const sgn = (n: number) => (n > 0 ? `+${fmt(n)}` : n < 0 ? `−${fmt(Math.abs(n))}` : '0')
+const joinNames = (xs: string[]) =>
+  xs.length <= 1 ? (xs[0] ?? '') : `${xs.slice(0, -1).join(', ')} and ${xs[xs.length - 1]}`
+
+/** Facts about how chips were used, from the Chip Usage tab. Empty if there is no chip data. */
+export function chipHighlights(data: LeagueData): Highlight[] {
+  const out: Highlight[] = []
+  if (data.chipUses.length === 0) return out
+
+  const names: Record<ChipKey, string> = {
+    LL: 'Limitless',
+    WC: 'Wildcard',
+    FF: 'Final Fix',
+    AP: 'Autopilot',
+    NN: 'No Negative',
+    '3X': 'Extra DRS',
+  }
+
+  // How much better (or worse) a player did at the race they played a chip than at their other races.
+  const impact = (chip: ChipKey) =>
+    data.chipUses
+      .filter((u) => u.chip === chip)
+      .flatMap((u) => {
+        const race = data.completed.find((r) => sameRace(r.name, u.race))
+        const points = race?.gains[u.player]
+        if (!race || points === undefined) return []
+        const others = data.completed
+          .filter((r) => r.name !== race.name)
+          .map((r) => r.gains[u.player])
+          .filter((g): g is number => g !== undefined)
+        if (others.length === 0) return []
+        const avg = others.reduce((a, b) => a + b, 0) / others.length
+        return [{ player: u.player, race: race.name, points, avg: Math.round(avg), uplift: Math.round(points - avg) }]
+      })
+
+  for (const chip of ['LL', '3X'] as const) {
+    const uses = impact(chip)
+    if (uses.length === 0) continue
+    const best = Math.max(...uses.map((u) => u.uplift))
+    const topUses = uses.filter((u) => u.uplift === best)
+    out.push({
+      id: `best-${chip}`,
+      label: `Best use of ${names[chip]}`,
+      value: `${sgn(best)} pts`,
+      detail: topUses
+        .map((u) => `${u.player} at ${u.race}: ${fmt(u.points)} pts against an average of ${fmt(u.avg)}`)
+        .join('; '),
+      players: topUses.map((u) => u.player),
+    })
+    if (uses.length > 1) {
+      const worst = Math.min(...uses.map((u) => u.uplift))
+      const lowUses = uses.filter((u) => u.uplift === worst)
+      out.push({
+        id: `worst-${chip}`,
+        label: `Worst use of ${names[chip]}`,
+        value: `${sgn(worst)} pts`,
+        detail: lowUses
+          .map((u) => `${u.player} at ${u.race}: ${fmt(u.points)} pts against an average of ${fmt(u.avg)}`)
+          .join('; '),
+        players: lowUses.map((u) => u.player),
+      })
+    }
+  }
+
+  // Most popular race for a chip
+  for (const chip of ['LL', '3X', 'NN'] as const) {
+    const counts = new Map<string, string[]>()
+    for (const u of data.chipUses.filter((x) => x.chip === chip)) {
+      counts.set(u.race, [...(counts.get(u.race) ?? []), u.player])
+    }
+    if (counts.size === 0) continue
+    const top = Math.max(...[...counts.values()].map((v) => v.length))
+    const races = [...counts.entries()].filter(([, v]) => v.length === top)
+    out.push({
+      id: `popular-${chip}`,
+      label: `Most popular ${names[chip]} race`,
+      value: joinNames(races.map(([r]) => r)),
+      detail: `${top} ${top === 1 ? 'player' : 'players'}${races.length > 1 ? ' each' : ''}`,
+      players: races.flatMap(([, v]) => v),
+    })
+  }
+
+  // Most common driver brought in with Final Fix
+  const swaps = new Map<string, string[]>()
+  for (const u of data.chipUses.filter((x) => x.chip === 'FF' && x.in)) {
+    swaps.set(u.in as string, [...(swaps.get(u.in as string) ?? []), u.player])
+  }
+  if (swaps.size > 0) {
+    const top = Math.max(...[...swaps.values()].map((v) => v.length))
+    const picked = [...swaps.entries()].filter(([, v]) => v.length === top)
+    out.push({
+      id: 'ff-in',
+      label: 'Favourite Final Fix signing',
+      value: joinNames(picked.map(([code]) => driverName(code))),
+      detail: `Brought in ${top} ${top === 1 ? 'time' : 'times'}${picked.length > 1 ? ' each' : ''}`,
+      players: picked.flatMap(([, v]) => v),
+    })
+  }
+
+  return out
+}

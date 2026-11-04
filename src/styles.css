@@ -497,3 +497,4 @@ h3.spaced { margin-top: 24px; }
 .news-in .news-icon { color: var(--good); }
 .news-out .news-icon { color: var(--bad); }
 .news-lead .news-icon { color: var(--ink); font-size: 14px; }
+.podium-champ { font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; background: var(--medal); color: var(--medal-ink); border-radius: 999px; padding: 3px 9px; }

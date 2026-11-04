@@ -1,5 +1,5 @@
 import { fmt, money } from '../lib/format'
-import { highlights, ownership, playerStats } from '../lib/stats'
+import { chipHighlights, highlights, ownership, playerStats } from '../lib/stats'
 import type { LeagueData } from '../lib/types'
 
 function Bars({ items, max, unit }: { items: { code: string; owners: number }[]; max: number; unit: string }) {
@@ -23,6 +23,7 @@ function Bars({ items, max, unit }: { items: { code: string; owners: number }[];
 export function Stats({ data }: { data: LeagueData }) {
   if (data.completed.length === 0) return <p className="empty">Stats appear after the first race is scored.</p>
   const hl = highlights(data)
+  const chipFacts = chipHighlights(data)
   const ps = playerStats(data).sort((a, b) => b.raceWins - a.raceWins || b.avgPerRace - a.avgPerRace)
   const own = ownership(data)
   const n = data.players.length
@@ -47,6 +48,24 @@ export function Stats({ data }: { data: LeagueData }) {
           ))}
         </dl>
       </section>
+
+      {chipFacts.length > 0 && (
+        <section aria-labelledby="chip-h">
+          <div className="section-head">
+            <h2 id="chip-h">Chips</h2>
+            <p className="legend-note">Best and worst compare the chip race with that player’s average at their other races</p>
+          </div>
+          <dl className="facts">
+            {chipFacts.map((h) => (
+              <div key={h.id} className="fact">
+                <dt>{h.label}</dt>
+                <dd className="fact-value">{h.value}</dd>
+                <dd className="fact-detail">{h.detail}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      )}
 
       <section aria-labelledby="pl-h">
         <div className="section-head">

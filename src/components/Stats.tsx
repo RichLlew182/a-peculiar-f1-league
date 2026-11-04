@@ -89,7 +89,9 @@ export function Stats({ data }: { data: LeagueData }) {
 
       <section aria-labelledby="own-h">
         <div className="section-head">
-          <h2 id="own-h">Who everyone picked</h2>
+          <h2 id="own-h">
+            Who everyone picked{data.completed.length > 0 ? ` in ${data.completed[data.completed.length - 1].name}` : ''}
+          </h2>
           <p className="legend-note">Current teams, out of {n} players</p>
         </div>
         <div className="two-col">

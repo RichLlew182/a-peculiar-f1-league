@@ -59,8 +59,8 @@ export function FormGuide({ data }: { data: LeagueData }) {
               </th>
               {done.map((r) => (
                 <th key={r.name} scope="col" title={r.name + (r.sprint ? ' (sprint weekend)' : '')}>
-                  {raceCode(r.name)}
                   {r.sprint && <span className="sp">Sp</span>}
+                  {raceCode(r.name)}
                 </th>
               ))}
               <th scope="col" className="total-col">

@@ -452,3 +452,9 @@ h3.spaced { margin-top: 24px; }
   .podium-slot.place-1 .podium-name { font-size: 26px; }
   .podium-slot.place-1 .podium-points { font-size: 42px; }
 }
+
+/* podium: make the team stand out from the tinted card */
+.podium-card .team { margin-top: 4px; padding-top: 12px; border-top: 1px solid color-mix(in srgb, var(--medal) 45%, var(--hair)); }
+.podium-card .pick { background: var(--surface); box-shadow: inset 0 0 0 1px var(--hair); font-size: 14px; padding: 3px 8px 3px 6px; }
+.podium-card .pick.constructor { box-shadow: inset 0 0 0 1px var(--axis); }
+.podium-card .team-meta { color: var(--ink); }

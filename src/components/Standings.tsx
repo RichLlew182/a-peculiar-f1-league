@@ -111,10 +111,10 @@ function Podium({ players, colours, latest }: { players: Player[]; colours: Colo
               </p>
               <p className="podium-gaps">
                 <span>
-                  Gap to next <b>{lead ? 'Leader' : signedFmt(p.gap)}</b>
+                  Gap to next <b>{lead ? 'Leader' : fmt(Math.abs(p.gap))}</b>
                 </span>
                 <span>
-                  Gap to leader <b>{lead ? '–' : signedFmt(p.leaderGap)}</b>
+                  Gap to leader <b>{lead ? '–' : fmt(Math.abs(p.leaderGap))}</b>
                 </span>
               </p>
               <Chips player={p} colours={colours} />
@@ -191,10 +191,10 @@ export function Standings({ data }: { data: LeagueData }) {
               </span>
               <span className="gap-cell num" role="cell">
                 <span className="gap g-next" data-label="Next">
-                  {p.rank === 1 ? <span className="muted-text">Leader</span> : signedFmt(p.gap)}
+                  {p.rank === 1 ? <span className="muted-text">Leader</span> : fmt(Math.abs(p.gap))}
                 </span>
                 <span className="gap g-lead" data-label="Leader">
-                  {p.rank === 1 ? <span className="muted-text">–</span> : signedFmt(p.leaderGap)}
+                  {p.rank === 1 ? <span className="muted-text">–</span> : fmt(Math.abs(p.leaderGap))}
                 </span>
               </span>
               <span className="team-cell" role="cell">

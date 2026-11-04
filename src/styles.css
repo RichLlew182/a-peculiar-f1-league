@@ -480,3 +480,13 @@ h3.spaced { margin-top: 24px; }
 .recap-note { font-size: 12px; color: var(--muted); margin-top: 10px; }
 .recap-chip-row .chip { flex: none; }
 .recap-uses { display: flex; flex-wrap: wrap; gap: 2px 18px; }
+
+/* ---------- latest-race banner ---------- */
+.banner { position: relative; display: grid; gap: 8px; margin: 0 0 22px; padding: 14px 44px 14px 16px; border: 1px solid var(--hair); border-radius: 10px; background: var(--wash); }
+.banner-title { font-family: var(--font-head); font-size: 15px; font-weight: 750; margin: 0; }
+.banner-text { font-size: 15px; line-height: 1.5; max-width: 75ch; }
+.banner-chips { display: flex; flex-wrap: wrap; gap: 6px 18px; list-style: none; padding: 0; margin: 0; font-size: 13px; color: var(--ink-2); }
+.banner-chips li { display: inline-flex; align-items: center; gap: 8px; }
+.banner-link { font-size: 13px; font-weight: 600; justify-self: start; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+.banner-close { position: absolute; top: 6px; right: 6px; width: 32px; height: 32px; border: 0; border-radius: 8px; background: none; color: var(--ink-2); font-size: 22px; line-height: 1; cursor: pointer; }
+.banner-close:hover { background: var(--grid); color: var(--ink); }

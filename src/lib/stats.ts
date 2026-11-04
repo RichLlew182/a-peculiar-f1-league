@@ -150,9 +150,7 @@ export function highlights(data: LeagueData): Highlight[] {
         id: 'most-improved',
         label: 'Most improved this season',
         value: `${moves[0].places} places`,
-        detail: tied
-          .map((m) => `${m.name}: ${ord(m.from)} after ${first.name} to ${ord(m.to)} now`)
-          .join('; '),
+        detail: tied.map((m) => `${m.name}: ${ord(m.from)} after ${first.name} to ${ord(m.to)} now`).join('; '),
         players: tied.map((m) => m.name),
       })
     }
@@ -214,7 +212,6 @@ export function ord(n: number): string {
 
 export { signed, fmt }
 
-
 const sameRace = (a: string, b: string) => a.trim().toLowerCase() === b.trim().toLowerCase()
 const sgn = (n: number) => (n > 0 ? `+${fmt(n)}` : n < 0 ? `−${fmt(Math.abs(n))}` : '0')
 const joinNames = (xs: string[]) =>
@@ -234,7 +231,7 @@ export function chipHighlights(data: LeagueData): Highlight[] {
     '3X': 'Extra DRS',
   }
 
-  // How far a chip race score was ahead of (or behind) the best score by anyone else that weekend.
+  // How far a chip race score was ahead of (or behind) the best score by a player without that chip that weekend.
   const impact = (chip: ChipKey) =>
     data.chipUses
       .filter((u) => u.chip === chip)
@@ -242,7 +239,11 @@ export function chipHighlights(data: LeagueData): Highlight[] {
         const race = data.completed.find((r) => sameRace(r.name, u.race))
         const points = race?.gains[u.player]
         if (!race || points === undefined) return []
-        const rivals = Object.entries(race.gains).filter(([name]) => name !== u.player)
+        // Only players who didn't play the same chip that weekend count as rivals.
+        const sameChip = new Set(
+          data.chipUses.filter((x) => x.chip === chip && sameRace(x.race, race.name)).map((x) => x.player),
+        )
+        const rivals = Object.entries(race.gains).filter(([name]) => !sameChip.has(name))
         if (rivals.length === 0) return []
         const [, rivalPoints] = rivals.reduce((a, c) => (c[1] > a[1] ? c : a))
         const tied = rivals.filter(([, g]) => g === rivalPoints).map(([n]) => n)
@@ -251,8 +252,8 @@ export function chipHighlights(data: LeagueData): Highlight[] {
 
   const describe = (u: ReturnType<typeof impact>[number]) =>
     u.margin >= 0
-      ? `${u.player} at ${u.race}: ${fmt(u.points)} pts, ${fmt(u.margin)} clear of the next best (${joinNames(u.rival)}, ${fmt(u.rivalPoints)})`
-      : `${u.player} at ${u.race}: ${fmt(u.points)} pts, ${fmt(Math.abs(u.margin))} behind the best score (${joinNames(u.rival)}, ${fmt(u.rivalPoints)})`
+      ? `${u.player} at ${u.race}: ${fmt(u.points)} pts, ${fmt(u.margin)} clear of the best score without the chip (${joinNames(u.rival)}, ${fmt(u.rivalPoints)})`
+      : `${u.player} at ${u.race}: ${fmt(u.points)} pts, ${fmt(Math.abs(u.margin))} behind the best score without the chip (${joinNames(u.rival)}, ${fmt(u.rivalPoints)})`
 
   for (const chip of ['LL', '3X'] as const) {
     const uses = impact(chip)

@@ -85,6 +85,7 @@ export function ProgressChart({ data }: { data: LeagueData }) {
     return st && st.length > 0 ? st : names.slice(0, 3)
   })
   const [hover, setHover] = useState<number | null>(null)
+  const touchStart = useRef<{ x: number; y: number } | null>(null)
   const [wrapRef, wrapW] = useWidth<HTMLDivElement>()
 
   const selected = useMemo(() => selectedRaw.filter((n) => names.includes(n)).slice(0, MAX_SEL), [selectedRaw, names])
@@ -271,7 +272,7 @@ export function ProgressChart({ data }: { data: LeagueData }) {
         </button>
       </div>
 
-      <div className="chart-wrap" ref={wrapRef}>
+      <div className="chart-wrap" ref={wrapRef} onScroll={() => setHover(null)}>
         <div className="chart-inner" style={{ width: W, height: H }}>
           <svg
             width={W}
@@ -390,9 +391,26 @@ export function ProgressChart({ data }: { data: LeagueData }) {
               width={plotW + 12}
               height={plotH + 20}
               fill="transparent"
-              onPointerMove={onMove}
-              onPointerDown={onMove}
-              onPointerLeave={() => setHover(null)}
+              // Mouse: follow the pointer. Touch: only a tap (little movement) shows the popup,
+              // so scrolling the chart with a finger doesn't.
+              onPointerMove={(e) => e.pointerType !== 'touch' && onMove(e)}
+              onPointerDown={(e) => {
+                if (e.pointerType !== 'touch') return onMove(e)
+                touchStart.current = { x: e.clientX, y: e.clientY }
+              }}
+              onPointerUp={(e) => {
+                if (e.pointerType !== 'touch' || !touchStart.current) return
+                const moved = Math.hypot(e.clientX - touchStart.current.x, e.clientY - touchStart.current.y)
+                touchStart.current = null
+                if (moved > 10) return
+                const box = e.currentTarget.ownerSVGElement!.getBoundingClientRect()
+                const i = clampIdx(Math.round((e.clientX - box.left - m.left) / step))
+                setHover((h) => (h === i ? null : i))
+              }}
+              onPointerCancel={() => {
+                touchStart.current = null
+              }}
+              onPointerLeave={(e) => e.pointerType !== 'touch' && setHover(null)}
             />
           </svg>
 

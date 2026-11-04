@@ -215,8 +215,8 @@ h3.spaced { margin-top: 24px; }
 }
 .badge b { font-weight: 750; }
 .badge-arrow { font-size: 10px; }
-.badge.up { background: var(--good); color: var(--surface); }
-.badge.down { background: var(--bad); color: var(--surface); }
+.badge.up { background: color-mix(in srgb, var(--good) 16%, var(--surface)); color: var(--good); }
+.badge.down { background: color-mix(in srgb, var(--bad) 16%, var(--surface)); color: var(--bad); }
 .badge.flat { background: var(--wash); color: var(--muted); font-weight: 600; }
 .move { display: inline-flex; gap: 2px; align-items: baseline; font-weight: 650; font-variant-numeric: tabular-nums; }
 .move.up { color: var(--good); }

@@ -74,7 +74,7 @@ export default function App() {
   if (!data) {
     return (
       <main className="page">
-        <h1 className="title">A Peculiar F1 League</h1>
+        <h1 className="title">A Peculiar F1 League 2026</h1>
         <p className="empty" role="alert">
           The league data couldn’t be read. {state.error} Check that both sheets are published as CSV.
         </p>
@@ -98,7 +98,7 @@ export default function App() {
     <div className="page">
       <header className="masthead">
         <div>
-          <h1 className="title">A Peculiar F1 League</h1>
+          <h1 className="title">A Peculiar F1 League 2026</h1>
           <p className="subtitle">
             {latest ? `After ${latest.name}, round ${latest.round} of ${data.races.length}` : 'Season not started'}
             {next ? `. Next up: ${next.name}.` : '.'}

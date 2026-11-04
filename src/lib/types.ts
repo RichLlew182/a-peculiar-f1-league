@@ -86,4 +86,6 @@ export interface Highlight {
   detail: string
   /** player names involved, used for colouring */
   players: string[]
+  /** set for chip facts, so they can be grouped and coloured by chip */
+  chip?: ChipKey
 }

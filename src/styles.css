@@ -497,3 +497,11 @@ h3.spaced { margin-top: 24px; }
 .news-in .news-icon { color: var(--good); }
 .news-out .news-icon { color: var(--bad); }
 .news-lead .news-icon { color: var(--ink); font-size: 14px; }
+.podium-champ { font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; background: var(--medal); color: var(--medal-ink); border-radius: 999px; padding: 3px 9px; }
+
+/* ---------- chip stats grouped by chip ---------- */
+.chip-group { margin-top: 18px; }
+.chip-group-title { display: flex; align-items: center; gap: 10px; font-family: var(--font-head); font-size: 16px; font-weight: 750; margin: 0 0 4px; }
+.chip-group .facts { border-top: 0; }
+/* chip colour mixed toward the text colour so it stays readable in light and dark */
+.chip-value { color: color-mix(in srgb, var(--chip, var(--ink)) 78%, var(--ink)); }

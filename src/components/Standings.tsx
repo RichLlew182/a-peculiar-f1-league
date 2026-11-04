@@ -81,7 +81,17 @@ function Move({ move }: { move: number }) {
 }
 
 /** The top three laid out like a podium: 2nd on the left, 1st in the middle, 3rd on the right. */
-function Podium({ players, colours, latest }: { players: Player[]; colours: Colours; latest?: Race }) {
+function Podium({
+  players,
+  colours,
+  latest,
+  finished,
+}: {
+  players: Player[]
+  colours: Colours
+  latest?: Race
+  finished: boolean
+}) {
   return (
     <ol className="podium" aria-label="Top three">
       {players.map((p, i) => {
@@ -95,6 +105,7 @@ function Podium({ players, colours, latest }: { players: Player[]; colours: Colo
                 <span className="podium-place" aria-hidden="true">
                   {ordinal(p.rank)}
                 </span>
+                {finished && p.rank === 1 && <span className="podium-champ">Champion</span>}
                 {gained !== undefined && (
                   <span className="podium-gained" title={`Points scored at ${latest?.name}`}>
                     {signedFmt(gained)} <span className="muted-text">{latest?.name}</span>
@@ -150,7 +161,7 @@ export function Standings({ data }: { data: LeagueData }) {
 
       <RecapBanner data={data} />
 
-      <Podium players={data.players.slice(0, 3)} colours={data.colours} latest={latest} />
+      <Podium players={data.players.slice(0, 3)} colours={data.colours} latest={latest} finished={finished} />
 
       {rest.length > 0 && (
       <div className="tower" role="table" aria-label="Rest of the league standings">

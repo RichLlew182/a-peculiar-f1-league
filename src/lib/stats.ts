@@ -234,7 +234,7 @@ export function chipHighlights(data: LeagueData): Highlight[] {
     '3X': 'Extra DRS',
   }
 
-  // How much better (or worse) a player did at the race they played a chip than at their other races.
+  // How far a chip race score was ahead of (or behind) the best score by anyone else that weekend.
   const impact = (chip: ChipKey) =>
     data.chipUses
       .filter((u) => u.chip === chip)
@@ -242,39 +242,38 @@ export function chipHighlights(data: LeagueData): Highlight[] {
         const race = data.completed.find((r) => sameRace(r.name, u.race))
         const points = race?.gains[u.player]
         if (!race || points === undefined) return []
-        const others = data.completed
-          .filter((r) => r.name !== race.name)
-          .map((r) => r.gains[u.player])
-          .filter((g): g is number => g !== undefined)
-        if (others.length === 0) return []
-        const avg = others.reduce((a, b) => a + b, 0) / others.length
-        return [{ player: u.player, race: race.name, points, avg: Math.round(avg), uplift: Math.round(points - avg) }]
+        const rivals = Object.entries(race.gains).filter(([name]) => name !== u.player)
+        if (rivals.length === 0) return []
+        const [, rivalPoints] = rivals.reduce((a, c) => (c[1] > a[1] ? c : a))
+        const tied = rivals.filter(([, g]) => g === rivalPoints).map(([n]) => n)
+        return [{ player: u.player, race: race.name, points, rival: tied, rivalPoints, margin: points - rivalPoints }]
       })
+
+  const describe = (u: ReturnType<typeof impact>[number]) =>
+    u.margin >= 0
+      ? `${u.player} at ${u.race}: ${fmt(u.points)} pts, ${fmt(u.margin)} clear of the next best (${joinNames(u.rival)}, ${fmt(u.rivalPoints)})`
+      : `${u.player} at ${u.race}: ${fmt(u.points)} pts, ${fmt(Math.abs(u.margin))} behind the best score (${joinNames(u.rival)}, ${fmt(u.rivalPoints)})`
 
   for (const chip of ['LL', '3X'] as const) {
     const uses = impact(chip)
     if (uses.length === 0) continue
-    const best = Math.max(...uses.map((u) => u.uplift))
-    const topUses = uses.filter((u) => u.uplift === best)
+    const best = Math.max(...uses.map((u) => u.margin))
+    const topUses = uses.filter((u) => u.margin === best)
     out.push({
       id: `best-${chip}`,
       label: `Best use of ${names[chip]}`,
       value: `${sgn(best)} pts`,
-      detail: topUses
-        .map((u) => `${u.player} at ${u.race}: ${fmt(u.points)} pts against an average of ${fmt(u.avg)}`)
-        .join('; '),
+      detail: topUses.map(describe).join('; '),
       players: topUses.map((u) => u.player),
     })
     if (uses.length > 1) {
-      const worst = Math.min(...uses.map((u) => u.uplift))
-      const lowUses = uses.filter((u) => u.uplift === worst)
+      const worst = Math.min(...uses.map((u) => u.margin))
+      const lowUses = uses.filter((u) => u.margin === worst)
       out.push({
         id: `worst-${chip}`,
         label: `Worst use of ${names[chip]}`,
         value: `${sgn(worst)} pts`,
-        detail: lowUses
-          .map((u) => `${u.player} at ${u.race}: ${fmt(u.points)} pts against an average of ${fmt(u.avg)}`)
-          .join('; '),
+        detail: lowUses.map(describe).join('; '),
         players: lowUses.map((u) => u.player),
       })
     }

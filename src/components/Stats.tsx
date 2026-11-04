@@ -53,7 +53,7 @@ export function Stats({ data }: { data: LeagueData }) {
         <section aria-labelledby="chip-h">
           <div className="section-head">
             <h2 id="chip-h">Chips</h2>
-            <p className="legend-note">Best and worst compare the chip race with that player’s average at their other races</p>
+            <p className="legend-note">Best and worst compare the chip score with the best score by anyone else that weekend</p>
           </div>
           <dl className="facts">
             {chipFacts.map((h) => (

@@ -56,7 +56,7 @@ export function Recap({ data }: { data: LeagueData }) {
   const r = buildRecap(data, race)
   const isLatest = race.name === latest.name
 
-  const { win: winLine, lead: leadLine } = recapSentences(r)
+  const { win: winLine, avg: avgLine, lead: leadLine } = recapSentences(r)
 
   return (
     <section aria-labelledby="recap-h" className="recap">
@@ -81,7 +81,7 @@ export function Recap({ data }: { data: LeagueData }) {
           {race.sprint ? ' sprint weekend' : ''}
         </b>
         {isLatest ? ' · latest race. ' : '. '}
-        {winLine} {leadLine}
+        {winLine} {avgLine} {leadLine}
       </p>
 
       <div className="recap-grid">

@@ -113,11 +113,12 @@ const list = (xs: string[]) =>
   xs.length <= 1 ? (xs[0] ?? '') : `${xs.slice(0, -1).join(', ')} and ${xs[xs.length - 1]}`
 
 /** Two plain sentences: who scored best, and what happened at the top of the table. */
-export function recapSentences(r: Recap): { win: string; lead: string } {
+export function recapSentences(r: Recap): { win: string; avg: string; lead: string } {
   const joint = r.topNames.length > 1
   const win = `${list(r.topNames)} ${joint ? 'shared the top score' : 'had the top score'} with ${fmt(r.topPoints)} points${
     joint ? ' each' : ''
-  }. The average was ${fmt(r.average)}.`
+  }.`
+  const avg = `The average was ${fmt(r.average)}.`
   const changed = r.leaderBefore.length > 0 && r.leaderAfter.join() !== r.leaderBefore.join()
   const now = r.leadMargin
   const lead =
@@ -132,5 +133,5 @@ export function recapSentences(r: Recap): { win: string; lead: string } {
                 ? `, ${now === r.leadMarginBefore ? 'with the lead unchanged at' : now > r.leadMarginBefore ? 'extending the lead to' : 'with the lead down to'} ${fmt(now)} points`
                 : ''
             }.`
-  return { win, lead }
+  return { win, avg, lead }
 }

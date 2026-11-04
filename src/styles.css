@@ -193,8 +193,8 @@ h3.spaced { margin-top: 24px; }
 .tower { border-top: 1px solid var(--hair); }
 .tower-head, .tower-row {
   display: grid;
-  grid-template-columns: 44px 68px minmax(120px, 0.9fr) 84px 92px 104px 190px minmax(300px, 2.4fr);
-  align-items: center; column-gap: 14px; padding: 10px 12px 10px 0;
+  grid-template-columns: 34px 56px minmax(120px, 1fr) 76px 92px minmax(330px, 1.5fr) 196px;
+  align-items: center; column-gap: 12px; padding: 10px 12px 10px 0;
 }
 .tower-head { font-size: 12px; color: var(--ink-2); padding-top: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--axis); }
 .tower-head .num { text-align: right; }
@@ -206,7 +206,9 @@ h3.spaced { margin-top: 24px; }
 .team-name { font-size: 13px; color: var(--ink-2); overflow-wrap: anywhere; }
 .who-sub { display: flex; gap: 10px; align-items: baseline; font-size: 12px; color: var(--ink-2); flex-wrap: wrap; }
 .points { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
-.gap { font-size: 14px; color: var(--ink-2); }
+.gap-cell { display: grid; gap: 2px; font-size: 14px; font-variant-numeric: tabular-nums; }
+.gap-cell .g-next { color: var(--ink); font-weight: 600; }
+.gap-cell .g-lead { color: var(--ink-2); font-size: 13px; }
 .movecell { display: flex; justify-content: center; }
 .badge {
   display: inline-flex; align-items: center; justify-content: center; gap: 4px; min-width: 46px;
@@ -223,6 +225,7 @@ h3.spaced { margin-top: 24px; }
 .move.down { color: var(--bad); }
 
 .chips { display: flex; gap: 4px; flex-wrap: wrap; }
+.chips-cell .chips { flex-wrap: nowrap; }
 .chip {
   display: inline-block; min-width: 28px; text-align: center; font-size: 11px; font-weight: 700; line-height: 1;
   padding: 5px 4px; border-radius: 5px; border: 1.5px solid color-mix(in srgb, var(--chip, var(--axis)) 80%, var(--ink)); color: var(--ink-2);
@@ -245,19 +248,18 @@ h3.spaced { margin-top: 24px; }
     grid-template-columns: 52px 1fr 1fr;
     grid-template-areas:
       'pos who points'
-      'move next lead'
-      '.   chips chips'
-      '.   team team';
+      'move gap gap'
+      '.   team team'
+      '.   chips chips';
     row-gap: 8px; padding: 14px 8px 14px 0;
   }
   .pos { grid-area: pos; align-self: start; padding-top: 2px; }
   .who { grid-area: who; }
   .movecell { grid-area: move; justify-content: flex-start; padding-left: 2px; }
   .points { grid-area: points; }
-  .g-next { grid-area: next; }
-  .g-lead { grid-area: lead; }
-  .gap::before { content: attr(data-label) ' '; color: var(--muted); font-size: 12px; }
-  .gap.num { text-align: left; }
+  .gap-cell { grid-area: gap; display: flex; gap: 4px 18px; flex-wrap: wrap; }
+  .gap-cell .gap::before { content: 'Gap to ' attr(data-label) ' '; color: var(--muted); font-size: 12px; font-weight: 400; }
+  .gap-cell.num { text-align: left; }
   .chips-cell { grid-area: chips; }
   .team-cell { grid-area: team; }
 }

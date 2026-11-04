@@ -157,14 +157,11 @@ export function Standings({ data }: { data: LeagueData }) {
           <span role="columnheader" className="num">
             Points
           </span>
-          <span role="columnheader" className="num">
-            Gap to next
+          <span role="columnheader" className="num" title="Points behind the player above / behind the leader">
+            Gap to next / leader
           </span>
-          <span role="columnheader" className="num">
-            Gap to leader
-          </span>
-          <span role="columnheader">Chips</span>
           <span role="columnheader">Team</span>
+          <span role="columnheader">Chips</span>
         </div>
 
         {rest.map((p) => {
@@ -192,17 +189,19 @@ export function Standings({ data }: { data: LeagueData }) {
               <span className="points num" role="cell">
                 {fmt(p.points)}
               </span>
-              <span className="gap g-next num" role="cell" data-label="Gap to next">
-                {p.rank === 1 ? <span className="muted-text">Leader</span> : signedFmt(p.gap)}
-              </span>
-              <span className="gap g-lead num" role="cell" data-label="Gap to leader">
-                {p.rank === 1 ? <span className="muted-text">–</span> : signedFmt(p.leaderGap)}
-              </span>
-              <span className="chips-cell" role="cell">
-                <Chips player={p} colours={data.colours} />
+              <span className="gap-cell num" role="cell">
+                <span className="gap g-next" data-label="Next">
+                  {p.rank === 1 ? <span className="muted-text">Leader</span> : signedFmt(p.gap)}
+                </span>
+                <span className="gap g-lead" data-label="Leader">
+                  {p.rank === 1 ? <span className="muted-text">–</span> : signedFmt(p.leaderGap)}
+                </span>
               </span>
               <span className="team-cell" role="cell">
                 <Team player={p} colours={data.colours} />
+              </span>
+              <span className="chips-cell" role="cell">
+                <Chips player={p} colours={data.colours} />
               </span>
             </div>
           )

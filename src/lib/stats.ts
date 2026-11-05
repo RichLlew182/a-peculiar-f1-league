@@ -1,3 +1,4 @@
+import { money } from './format'
 import { driverName } from './names'
 import type { ChipKey, Highlight, LeagueData } from './types'
 
@@ -182,6 +183,34 @@ export function highlights(data: LeagueData): Highlight[] {
     }
   }
 
+  // Fall from grace: furthest drop from a player's best position this season to where they are now
+  if (done.length > 1) {
+    const last = done[done.length - 1]
+    const falls = data.playerNames
+      .filter((nm) => last.ranks[nm] !== undefined)
+      .map((nm) => {
+        let peak = { rank: Infinity, race: '' }
+        for (const r of done) {
+          const k = r.ranks[nm]
+          if (k !== undefined && k < peak.rank) peak = { rank: k, race: r.name }
+        }
+        return { name: nm, peak, now: last.ranks[nm], places: last.ranks[nm] - peak.rank }
+      })
+      .sort((a, b) => b.places - a.places)
+    if (falls.length > 0 && falls[0].places > 0) {
+      const tied = falls.filter((f) => f.places === falls[0].places)
+      out.push({
+        id: 'fall-from-grace',
+        label: 'Biggest fall from grace',
+        value: `${falls[0].places} places`,
+        detail: tied
+          .map((f) => `${f.name}: ${ord(f.peak.rank)} after ${f.peak.race} to ${ord(f.now)} now`)
+          .join('; '),
+        players: tied.map((f) => f.name),
+      })
+    }
+  }
+
   // Biggest lead over second place
   let lead = { race: '', by: -Infinity, player: '' }
   for (const r of done) {
@@ -198,6 +227,21 @@ export function highlights(data: LeagueData): Highlight[] {
       value: `${fmt(lead.by)} pts`,
       detail: `${lead.player} after ${lead.race}`,
       players: [lead.player],
+    })
+  }
+
+  // Highest current budget (not for players whose Limitless chip makes the budget meaningless)
+  const unlimited = unlimitedPlayers(data)
+  const budgets = data.players.filter((p) => !unlimited.has(p.name) && Number.isFinite(p.budget))
+  if (budgets.length > 0) {
+    const top = Math.max(...budgets.map((p) => p.budget))
+    const richest = budgets.filter((p) => p.budget === top)
+    out.push({
+      id: 'highest-budget',
+      label: 'Highest budget',
+      value: money(top),
+      detail: richest.map((p) => p.name).join(', '),
+      players: richest.map((p) => p.name),
     })
   }
 
@@ -327,6 +371,18 @@ export function chipHighlights(data: LeagueData): Highlight[] {
     })
   }
 
+  // Best and worst Final Fix use need per-driver points, which are still to come.
+  for (const kind of ['Best', 'Worst']) {
+    out.push({
+      chip: 'FF',
+      id: `${kind.toLowerCase()}-FF`,
+      label: `${kind} use of Final Fix`,
+      value: 'TBC',
+      detail: 'Waiting on driver points data',
+      players: [],
+    })
+  }
+
   // Most common driver brought in with Final Fix
   const swaps = new Map<string, string[]>()
   for (const u of data.chipUses.filter((x) => x.chip === 'FF' && x.in)) {
@@ -346,4 +402,13 @@ export function chipHighlights(data: LeagueData): Highlight[] {
   }
 
   return out
+}
+
+/** Players whose Limitless chip is in play for the next unscored race, so their budget is unlimited. */
+export function unlimitedPlayers(data: LeagueData): Set<string> {
+  const next = data.races.find((r) => !r.complete)
+  if (!next) return new Set()
+  return new Set(
+    data.chipUses.filter((u) => u.chip === 'LL' && sameRace(u.race, next.name)).map((u) => u.player),
+  )
 }

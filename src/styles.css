@@ -505,3 +505,4 @@ h3.spaced { margin-top: 24px; }
 .chip-group .facts { border-top: 0; }
 /* chip colour mixed toward the text colour so it stays readable in light and dark */
 .chip-value { color: color-mix(in srgb, var(--chip, var(--ink)) 78%, var(--ink)); }
+.budget-inf { font-size: 1.25em; line-height: 1; font-weight: 700; vertical-align: -0.08em; }

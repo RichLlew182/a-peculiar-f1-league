@@ -166,7 +166,9 @@ export function PlayerPage({ data, name }: { data: LeagueData; name: string }) {
           ? data.players[1]
             ? `Leading by ${fmt(Math.abs(data.players[1].leaderGap))} over ${data.players[1].name}`
             : 'Leading'
-          : `${fmt(Math.abs(p.gap))} behind ${above?.name ?? 'the player above'}, ${fmt(Math.abs(p.leaderGap))} behind ${leader.name}`,
+          : above === leader
+            ? `${fmt(Math.abs(p.gap))} behind ${leader.name}, the leader`
+            : `${fmt(Math.abs(p.gap))} behind ${above?.name ?? 'the player above'}, ${fmt(Math.abs(p.leaderGap))} behind ${leader.name}`,
     },
     { label: 'Points', value: fmt(p.points), detail: `Average ${fmt(Math.round(prof.avgPoints))} per race` },
   ]

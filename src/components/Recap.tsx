@@ -4,13 +4,13 @@ import { driverName } from '../lib/names'
 import { buildRecap, recapSentences, type Mover, type Scorer } from '../lib/recap'
 import { CHIPS, type LeagueData } from '../lib/types'
 
-function Scorers({ rows }: { rows: Scorer[] }) {
+function Scorers({ rows, top }: { rows: Scorer[]; top?: number }) {
   return (
     <ol className="recap-rows">
       {rows.map((s) => (
         <li key={s.name}>
           <span className="recap-name">{s.name}</span>
-          <b className="recap-num">{fmt(s.points)}</b>
+          <b className={s.points === top ? 'recap-num top-score' : 'recap-num'}>{fmt(s.points)}</b>
           {s.vsAvg !== null && (
             <span className="recap-sub" title="Compared with their average at the other races">
               {s.vsAvg === 0
@@ -88,7 +88,7 @@ export function Recap({ data }: { data: LeagueData }) {
       <div className="recap-grid">
         <div className="recap-block">
           <h3>Best weekends</h3>
-          <Scorers rows={r.best} />
+          <Scorers rows={r.best} top={r.topPoints} />
         </div>
         <div className="recap-block">
           <h3>Toughest weekends</h3>

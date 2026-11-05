@@ -337,7 +337,7 @@ export function PlayerPage({ data, name }: { data: LeagueData; name: string }) {
                   <th scope="row">
                     {l.race}
                     {l.sprint && <span className="tag"> Sprint</span>}
-                    {l.weekendWinner && <span className="tag"> Top score</span>}
+                    {l.weekendWinner && <span className="tag purple"> Top score</span>}
                   </th>
                   <td className="num">{fmt(l.points)}</td>
                   <td className="num">

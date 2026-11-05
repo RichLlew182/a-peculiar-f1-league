@@ -35,7 +35,7 @@ export function RaceList({ data }: { data: LeagueData }) {
                   {r.sprint && <span className="tag">Sprint</span>}
                 </span>
                 <span className="race-top">
-                  Top score: <b>{topScorers.join(', ')}</b> {topPoints !== undefined ? fmt(topPoints) : ''}
+                  Top score: <b className="top-score">{topScorers.join(', ')}</b> {topPoints !== undefined ? fmt(topPoints) : ''}
                   {topScorers.length > 1 && <span className="tag">Joint</span>}
                 </span>
                 <span className="race-lead">

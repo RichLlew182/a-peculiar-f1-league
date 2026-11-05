@@ -544,3 +544,9 @@ h3.spaced { margin-top: 24px; }
 .num .move { margin-left: 4px; }
 .plain-table th[scope='row'] .tag { margin-left: 6px; }
 .team-sub { font-size: 13px; font-weight: 650; color: var(--ink-2); margin: 14px 0 8px; }
+
+/* whole row / card opens the player page */
+.clickable { cursor: pointer; transition: background-color 0.12s, box-shadow 0.12s; }
+.tower-row.clickable:hover, .tower-row.clickable:focus-within { background: color-mix(in srgb, var(--ink) 5%, var(--surface)); }
+.podium-card.clickable:hover, .podium-card.clickable:focus-within { box-shadow: 0 0 0 2px color-mix(in srgb, var(--medal) 70%, transparent); }
+.player-link:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }

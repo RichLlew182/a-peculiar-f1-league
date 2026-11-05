@@ -6,6 +6,13 @@ import { CHIPS, type Colours, type LeagueData, type Player, type Race } from '..
 
 const playerHref = (name: string) => `#player/${encodeURIComponent(name)}`
 
+/** Clicking anywhere on a row or card opens the player's page (the name stays the real, keyboard-friendly link). */
+const openPlayer = (name: string) => (e: React.MouseEvent) => {
+  if ((e.target as HTMLElement).closest('a')) return
+  if (window.getSelection()?.toString()) return // the user is selecting text
+  window.location.hash = playerHref(name).slice(1)
+}
+
 const swatch = (hex?: string) => (hex ? ({ '--c': hex } as CSSProperties) : undefined)
 
 function Chips({ player, colours }: { player: Player; colours: Colours }) {
@@ -20,7 +27,8 @@ function Chips({ player, colours }: { player: Player; colours: Colours }) {
             key={c.key}
             className={isUsed ? 'chip used' : 'chip'}
             style={hex ? ({ '--chip': hex, '--chip-ink': textOn(hex) } as CSSProperties) : undefined}
-            title={`${c.name}: ${isUsed ? 'used' : 'available'}`}>
+            title={`${c.name}: ${isUsed ? 'used' : 'available'}`}
+          >
             {c.short}
             <span className="sr-only">
               {' '}
@@ -113,7 +121,7 @@ function Podium({
         const lead = p.rank === 1
         return (
           <li key={p.name} className={`podium-slot place-${i + 1}`}>
-            <div className="podium-card">
+            <div className="podium-card clickable" onClick={openPlayer(p.name)}>
               <div className="podium-top">
                 <span className="podium-place" aria-hidden="true">
                   {ordinal(p.rank)}
@@ -178,83 +186,94 @@ export function Standings({ data }: { data: LeagueData }) {
 
       <RecapBanner data={data} />
 
-      <Podium players={data.players.slice(0, 3)} colours={data.colours} latest={latest} finished={finished} unlimited={unlimited} />
+      <Podium
+        players={data.players.slice(0, 3)}
+        colours={data.colours}
+        latest={latest}
+        finished={finished}
+        unlimited={unlimited}
+      />
 
       {rest.length > 0 && (
-      <div className="tower" role="table" aria-label="Rest of the league standings">
-        <div className="tower-head" role="row">
-          <span role="columnheader">Pos</span>
-          <span role="columnheader" title="Places gained or lost at the last race">
-            Move
-          </span>
-          <span role="columnheader">Player</span>
-          <span role="columnheader" className="num">
-            Points
-          </span>
-          <span role="columnheader" className="num" title="Points behind the player above / behind the leader">
-            Gap to next / leader
-          </span>
-          <span role="columnheader" className="team-head">
-            Team
-          </span>
-          <span role="columnheader">Chips</span>
-        </div>
+        <div className="tower" role="table" aria-label="Rest of the league standings">
+          <div className="tower-head" role="row">
+            <span role="columnheader">Pos</span>
+            <span role="columnheader" title="Places gained or lost at the last race">
+              Move
+            </span>
+            <span role="columnheader">Player</span>
+            <span role="columnheader" className="num">
+              Points
+            </span>
+            <span role="columnheader" className="num" title="Points behind the player above / behind the leader">
+              Gap to next / leader
+            </span>
+            <span role="columnheader" className="team-head">
+              Team
+            </span>
+            <span role="columnheader">Chips</span>
+          </div>
 
-        {rest.map((p) => {
-          const gained = latest?.gains[p.name]
-          const move = latest?.moves[p.name] ?? 0
-          return (
-            <div key={p.name} className={p.rank === 1 ? 'tower-row leader' : 'tower-row'} role="row">
-              <span className="pos" role="cell">
-                {p.rank}
-              </span>
-              <span className="movecell" role="cell">
-                <Move move={move} />
-              </span>
-              <span className="who" role="cell">
-                <strong>
-                  <a className="player-link" href={playerHref(p.name)}>
-                    {p.name}
-                  </a>
-                </strong>
-                {p.teamName && <span className="team-name">{p.teamName}</span>}
-                <span className="who-sub">
-                  {gained !== undefined && (
-                    <span title={`Points scored at ${raceLabel}`}>
-                      {signedFmt(gained)} <span className="muted-text">{raceLabel}</span>
-                    </span>
-                  )}
+          {rest.map((p) => {
+            const gained = latest?.gains[p.name]
+            const move = latest?.moves[p.name] ?? 0
+            return (
+              <div
+                key={p.name}
+                className={p.rank === 1 ? 'tower-row clickable leader' : 'tower-row clickable'}
+                role="row"
+                onClick={openPlayer(p.name)}
+              >
+                <span className="pos" role="cell">
+                  {p.rank}
                 </span>
-              </span>
-              <span className="points num" role="cell">
-                {fmt(p.points)}
-              </span>
-              <span className="gap-cell num" role="cell">
-                <span
-                  className="gap g-next"
-                  data-label="Next"
-                  title={`${fmt(Math.abs(p.gap))} points behind ${data.players[data.players.indexOf(p) - 1]?.name ?? 'the player above'}`}
-                >
-                  {p.rank === 1 ? <span className="muted-text">Leader</span> : fmt(Math.abs(p.gap))}
+                <span className="movecell" role="cell">
+                  <Move move={move} />
                 </span>
-                <span
-                  className="gap g-lead"
-                  data-label="Leader"
-                  title={`${fmt(Math.abs(p.leaderGap))} points behind ${data.players[0]?.name ?? 'the leader'}`}
-                >
-                  {p.rank === 1 ? <span className="muted-text">–</span> : fmt(Math.abs(p.leaderGap))}
+                <span className="who" role="cell">
+                  <strong>
+                    <a className="player-link" href={playerHref(p.name)}>
+                      {p.name}
+                    </a>
+                  </strong>
+                  {p.teamName && <span className="team-name">{p.teamName}</span>}
+                  <span className="who-sub">
+                    {gained !== undefined && (
+                      <span title={`Points scored at ${raceLabel}`}>
+                        {signedFmt(gained)} <span className="muted-text">{raceLabel}</span>
+                      </span>
+                    )}
+                  </span>
                 </span>
-              </span>
-              <span className="team-cell" role="cell">
-                <Team player={p} colours={data.colours} unlimited={unlimited.has(p.name)} />
-              </span>
-              <span className="chips-cell" role="cell">
-                <Chips player={p} colours={data.colours} />
-              </span>
-            </div>
-          )
-        })}
-      </div>
+                <span className="points num" role="cell">
+                  {fmt(p.points)}
+                </span>
+                <span className="gap-cell num" role="cell">
+                  <span
+                    className="gap g-next"
+                    data-label="Next"
+                    title={`${fmt(Math.abs(p.gap))} points behind ${data.players[data.players.indexOf(p) - 1]?.name ?? 'the player above'}`}
+                  >
+                    {p.rank === 1 ? <span className="muted-text">Leader</span> : fmt(Math.abs(p.gap))}
+                  </span>
+                  <span
+                    className="gap g-lead"
+                    data-label="Leader"
+                    title={`${fmt(Math.abs(p.leaderGap))} points behind ${data.players[0]?.name ?? 'the leader'}`}
+                  >
+                    {p.rank === 1 ? <span className="muted-text">–</span> : fmt(Math.abs(p.leaderGap))}
+                  </span>
+                </span>
+                <span className="team-cell" role="cell">
+                  <Team player={p} colours={data.colours} unlimited={unlimited.has(p.name)} />
+                </span>
+                <span className="chips-cell" role="cell">
+                  <Chips player={p} colours={data.colours} />
+                </span>
+              </div>
+            )
+          })}
+        </div>
       )}
     </section>
   )

@@ -1,9 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import sources from '../data/sources.json'
-import bundledLeaderboard from '../data/leaderboard.csv?raw'
-import bundledHistory from '../data/history.csv?raw'
-import bundledColours from '../data/colours.csv?raw'
-import bundledChips from '../data/chipusage.csv?raw'
+import { bundledFor, CURRENT_SEASON, getSeason } from './seasons'
 import { parseLeague } from './parse'
 import type { LeagueData } from './types'
 
@@ -11,7 +7,7 @@ import type { LeagueData } from './types'
 const POLL_MS = 5 * 60 * 1000
 /** Don't re-check more often than this when the tab regains focus. */
 const MIN_GAP_MS = 20 * 1000
-const CACHE_KEY = 'f1-fantasy:csv:v2'
+const cacheKey = (season: string) => `f1-fantasy:csv:v2:${season}`
 
 export type SourceState = 'snapshot' | 'cached' | 'live' | 'offline'
 
@@ -35,14 +31,14 @@ interface Raw {
   chips: string
 }
 
-function readCache(): Raw | null {
+function readCache(season: string, bundled: Raw): Raw | null {
   try {
-    const v = localStorage.getItem(CACHE_KEY)
+    const v = localStorage.getItem(cacheKey(season))
     if (!v) return null
     const o = JSON.parse(v)
     return typeof o?.leaderboard === 'string' && typeof o?.history === 'string'
-      ? { leaderboard: o.leaderboard, history: o.history, colours: typeof o.colours === 'string' ? o.colours : bundledColours,
-          chips: typeof o.chips === 'string' ? o.chips : bundledChips,
+      ? { leaderboard: o.leaderboard, history: o.history, colours: typeof o.colours === 'string' ? o.colours : bundled.colours,
+          chips: typeof o.chips === 'string' ? o.chips : bundled.chips,
         }
       : null
   } catch {
@@ -50,9 +46,9 @@ function readCache(): Raw | null {
   }
 }
 
-function writeCache(raw: Raw) {
+function writeCache(season: string, raw: Raw) {
   try {
-    localStorage.setItem(CACHE_KEY, JSON.stringify(raw))
+    localStorage.setItem(cacheKey(season), JSON.stringify(raw))
   } catch {
     /* storage unavailable: fine */
   }
@@ -78,11 +74,14 @@ function tryParse(raw: Raw): LeagueData | null {
   }
 }
 
-export function useLeagueData(): LeagueState {
-  const bundled: Raw = { leaderboard: bundledLeaderboard, history: bundledHistory, colours: bundledColours, chips: bundledChips }
+/** Live data for a season. Render with `key={season}` so switching season starts from a clean state. */
+export function useLeagueData(seasonId: string = CURRENT_SEASON): LeagueState {
+  const season = getSeason(seasonId)
+  const sources = season.sources
+  const bundled: Raw = bundledFor(season.id)
   const initial = useRef<{ raw: Raw; data: LeagueData | null; source: SourceState }>()
   if (!initial.current) {
-    const cached = readCache()
+    const cached = season.archived ? null : readCache(season.id, bundled)
     const cachedData = cached ? tryParse(cached) : null
     initial.current = cachedData
       ? { raw: cached as Raw, data: cachedData, source: 'cached' }
@@ -129,7 +128,7 @@ export function useLeagueData(): LeagueState {
       setLastChecked(new Date())
       if (changed) {
         rawRef.current = next
-        writeCache(next)
+        writeCache(season.id, next)
         setData(parsed)
         setLastUpdated(new Date())
         setJustUpdated(true)
@@ -143,9 +142,10 @@ export function useLeagueData(): LeagueState {
       inFlight.current = false
       setChecking(false)
     }
-  }, [])
+  }, [season.id])
 
   useEffect(() => {
+    if (season.archived) return // frozen: the bundled copy is the whole story
     void check(true)
     const timer = window.setInterval(() => void check(), POLL_MS)
     const onVisible = () => {
@@ -160,7 +160,7 @@ export function useLeagueData(): LeagueState {
       window.removeEventListener('focus', onVisible)
       window.removeEventListener('online', onVisible)
     }
-  }, [check])
+  }, [check, season.archived])
 
   const refresh = useCallback(() => void check(true), [check])
 

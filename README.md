@@ -41,6 +41,18 @@ Google publishes sheet changes to the CSV links with a short delay, so expect a 
 
 The workflow also rebuilds once a day to refresh the bundled fallback. To refresh it by hand, run `npm run snapshot` and commit the changed files in `src/data/`. GitHub pauses scheduled workflows on repositories with no activity for 60 days; the live refresh in the browser isn't affected.
 
+## Starting a new season
+
+Do these in order once the last race of the year has been scored.
+
+1. **Freeze the old season.** Run `npm run snapshot` and commit the changed files in `src/data/<year>/`, so the repo holds the final scores. Then set `"archived": true` for that year in `src/data/seasons.json`. From then on it is never fetched, so its sheet can be unpublished or deleted.
+2. **Make next year's sheet.** Copy the spreadsheet (so the tabs and column headings match), clear the scores, and publish the four tabs (leaderboard, history, colours, chip usage) as CSV.
+3. **Add it to the config.** In `src/data/seasons.json` add the new year under `seasons` with `"archived": false` and the four published links, and change `"current"` to the new year.
+4. **Bundle its first copy.** Run `npm run snapshot` again and commit. It creates `src/data/<new year>/` for the fallback copy.
+5. **Check the site.** The year in the masthead becomes a dropdown with both seasons. Links to the current season stay short (`#standings`); older seasons use the year (`#2025/standings`).
+
+The browser tab title in `index.html` still has a year in it; change it if you want.
+
 ## How the sheets are read
 
 The published CSV links live in `src/data/seasons.json`, one entry per season. Each season's bundled fallback CSVs live in `src/data/<season>/`. To archive a season, set `"archived": true` in `seasons.json`: it is then served from the bundled copy only and never fetched.

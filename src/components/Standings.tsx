@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react'
+import { unlimitedPlayers } from '../lib/stats'
 import { RecapBanner } from './RecapBanner'
 import { fmt, money, ordinal, signedFmt, textOn } from '../lib/format'
 import { CHIPS, type Colours, type LeagueData, type Player, type Race } from '../lib/types'
@@ -159,16 +160,8 @@ export function Standings({ data }: { data: LeagueData }) {
   const raceLabel = latest ? latest.name : 'last race'
   const rest = data.players.slice(3)
   const finished = data.completed.length > 0 && data.completed.length === data.races.length
-  // A Limitless chip lifts the budget limit, so the budget is meaningless while it is in play:
-  // that is the next race that hasn't been scored yet.
-  const nextRace = data.races.find((r) => !r.complete)
-  const unlimited = new Set(
-    nextRace
-      ? data.chipUses
-          .filter((u) => u.chip === 'LL' && u.race.trim().toLowerCase() === nextRace.name.trim().toLowerCase())
-          .map((u) => u.player)
-      : [],
-  )
+  // A Limitless chip lifts the budget limit, so the budget is meaningless while it is in play.
+  const unlimited = unlimitedPlayers(data)
 
   return (
     <section aria-labelledby="standings-h">

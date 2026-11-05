@@ -1,3 +1,4 @@
+import { money } from './format'
 import { driverName } from './names'
 import type { ChipKey, Highlight, LeagueData } from './types'
 
@@ -229,6 +230,21 @@ export function highlights(data: LeagueData): Highlight[] {
     })
   }
 
+  // Highest current budget (not for players whose Limitless chip makes the budget meaningless)
+  const unlimited = unlimitedPlayers(data)
+  const budgets = data.players.filter((p) => !unlimited.has(p.name) && Number.isFinite(p.budget))
+  if (budgets.length > 0) {
+    const top = Math.max(...budgets.map((p) => p.budget))
+    const richest = budgets.filter((p) => p.budget === top)
+    out.push({
+      id: 'highest-budget',
+      label: 'Highest budget',
+      value: money(top),
+      detail: richest.map((p) => p.name).join(', '),
+      players: richest.map((p) => p.name),
+    })
+  }
+
   // Sprint specialist: best total across sprint weekends
   const sprints = done.filter((r) => r.sprint)
   if (sprints.length > 0) {
@@ -374,4 +390,13 @@ export function chipHighlights(data: LeagueData): Highlight[] {
   }
 
   return out
+}
+
+/** Players whose Limitless chip is in play for the next unscored race, so their budget is unlimited. */
+export function unlimitedPlayers(data: LeagueData): Set<string> {
+  const next = data.races.find((r) => !r.complete)
+  if (!next) return new Set()
+  return new Set(
+    data.chipUses.filter((u) => u.chip === 'LL' && sameRace(u.race, next.name)).map((u) => u.player),
+  )
 }

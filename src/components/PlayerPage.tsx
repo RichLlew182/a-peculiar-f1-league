@@ -101,6 +101,35 @@ function ChartBox({ children }: { children: (width: number) => React.ReactNode }
   )
 }
 
+interface TeamRow {
+  key: string
+  code: string
+  name: string
+  price: number
+  hex?: string
+  boosted: boolean
+}
+
+function TeamList({ label, rows }: { label: string; rows: TeamRow[] }) {
+  if (rows.length === 0) return null
+  return (
+    <>
+      <h4 className="team-sub">{label}</h4>
+      <ul className="team-list" aria-label={label}>
+        {rows.map((r) => (
+          <li key={r.key} style={swatch(r.hex)} className="team-row">
+            <span className="team-row-name">
+              <b>{r.name}</b> <span className="muted-text">{r.code}</span>
+              {r.boosted && <em title="Double points driver">2×</em>}
+            </span>
+            <span className="team-row-price">{money(r.price)}</span>
+          </li>
+        ))}
+      </ul>
+    </>
+  )
+}
+
 export function PlayerPage({ data, name }: { data: LeagueData; name: string }) {
   const heading = useRef<HTMLHeadingElement>(null)
   useEffect(() => {
@@ -176,24 +205,22 @@ export function PlayerPage({ data, name }: { data: LeagueData; name: string }) {
     detail: `${CHIPS.length - usedCount} still to play`,
   })
 
-  const teamRows = [
-    ...p.constructors.map((c) => ({
-      key: `c-${c.code}`,
-      code: c.code,
-      name: TEAM_NAMES[c.code] ?? c.code,
-      price: c.price,
-      hex: data.colours.teams[c.code],
-      boosted: false,
-    })),
-    ...p.drivers.map((d) => ({
-      key: `d-${d.code}`,
-      code: d.code,
-      name: driverName(d.code),
-      price: d.price,
-      hex: data.colours.drivers[d.code],
-      boosted: !!d.boosted,
-    })),
-  ]
+  const constructorRows = p.constructors.map((c) => ({
+    key: `c-${c.code}`,
+    code: c.code,
+    name: TEAM_NAMES[c.code] ?? c.code,
+    price: c.price,
+    hex: data.colours.teams[c.code],
+    boosted: false,
+  }))
+  const driverRows = p.drivers.map((d) => ({
+    key: `d-${d.code}`,
+    code: d.code,
+    name: driverName(d.code),
+    price: d.price,
+    hex: data.colours.drivers[d.code],
+    boosted: !!d.boosted,
+  }))
 
   return (
     <section aria-labelledby="player-h" className="player-page">
@@ -219,17 +246,8 @@ export function PlayerPage({ data, name }: { data: LeagueData; name: string }) {
 
       <div className="player-block">
         <h3>Current team</h3>
-        <ul className="team-list">
-          {teamRows.map((r) => (
-            <li key={r.key} style={swatch(r.hex)} className="team-row">
-              <span className="team-row-name">
-                <b>{r.name}</b> <span className="muted-text">{r.code}</span>
-                {r.boosted && <em title="Double points driver">2×</em>}
-              </span>
-              <span className="team-row-price">{money(r.price)}</span>
-            </li>
-          ))}
-        </ul>
+        <TeamList label="Drivers" rows={driverRows} />
+        <TeamList label="Constructors" rows={constructorRows} />
         <p className="team-meta">
           Value {money(p.value)} · Cap {money(p.cap)} · Budget{' '}
           {unlimited ? (

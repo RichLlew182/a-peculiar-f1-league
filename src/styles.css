@@ -541,3 +541,4 @@ h3.spaced { margin-top: 24px; }
 @media (max-width: 800px) { .player-head h2 { font-size: 28px; } }
 .num .move { margin-left: 4px; }
 .plain-table th[scope='row'] .tag { margin-left: 6px; }
+.team-sub { font-size: 13px; font-weight: 650; color: var(--ink-2); margin: 14px 0 8px; }

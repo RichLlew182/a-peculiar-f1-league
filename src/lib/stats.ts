@@ -412,3 +412,21 @@ export function unlimitedPlayers(data: LeagueData): Set<string> {
     data.chipUses.filter((u) => u.chip === 'LL' && sameRace(u.race, next.name)).map((u) => u.player),
   )
 }
+
+/** Consecutive latest races where each player beat the league average; only streaks of 3+ are returned. */
+export function hotStreaks(data: LeagueData, minimum = 3): Map<string, number> {
+  const out = new Map<string, number>()
+  for (const name of data.playerNames) {
+    let n = 0
+    for (let i = data.completed.length - 1; i >= 0; i--) {
+      const r = data.completed[i]
+      const mine = r.gains[name]
+      const all = Object.values(r.gains)
+      if (mine === undefined || all.length === 0) break
+      if (mine > all.reduce((a, b) => a + b, 0) / all.length) n++
+      else break
+    }
+    if (n >= minimum) out.set(name, n)
+  }
+  return out
+}

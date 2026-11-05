@@ -179,22 +179,27 @@ export interface RecapSentences {
 
 export function recapSentences(r: Recap): RecapSentences {
   const joint = r.topNames.length > 1
-  const win = `${list(r.topNames)} ${joint ? 'shared the top score' : 'had the top score'} with ${fmt(r.topPoints)} points${
-    joint ? ' each' : ''
-  }.`
+  const margin = r.best.length > 1 ? r.best[0].points - r.best[1].points : 0
+  const win = joint
+    ? `${list(r.topNames)} shared the spoils with ${fmt(r.topPoints)} points each.`
+    : margin >= 75
+      ? `${list(r.topNames)} ran away with it, scoring ${fmt(r.topPoints)} points.`
+      : margin > 0 && margin <= 10
+        ? `${list(r.topNames)} just edged the top score with ${fmt(r.topPoints)} points.`
+        : `${list(r.topNames)} had the top score with ${fmt(r.topPoints)} points.`
   const avg = `The average was ${fmt(r.average)}.`
   const changed = r.leaderBefore.length > 0 && r.leaderAfter.join() !== r.leaderBefore.join()
   const now = r.leadMargin
   const lead =
     r.leaderAfter.length > 1
-      ? `${r.leaderAfter.length === 2 ? 'They are' : 'They are all'} level at the top of the table.`
+      ? `${r.leaderAfter.length === 2 ? 'They are' : 'They are all'} level at the top. Anyone's game!`
       : changed
-        ? `${list(r.leaderAfter)} took the lead from ${list(r.leaderBefore)}${now !== null ? `, by ${fmt(now)} points` : ''}.`
+        ? `${list(r.leaderAfter)} grabbed the lead from ${list(r.leaderBefore)}${now !== null ? `, by ${fmt(now)} points` : ''}!`
         : r.leaderBefore.length === 0
-          ? `${list(r.leaderAfter)} led after the opening race${now !== null ? ` by ${fmt(now)} points` : ''}.`
+          ? `${list(r.leaderAfter)} set the early pace, leading after the opening race${now !== null ? ` by ${fmt(now)} points` : ''}.`
           : `${list(r.leaderAfter)} stayed in front${
               now !== null && r.leadMarginBefore !== null
-                ? `, ${now === r.leadMarginBefore ? 'with the lead unchanged at' : now > r.leadMarginBefore ? 'extending the lead to' : 'with the lead down to'} ${fmt(now)} points`
+                ? `, ${now === r.leadMarginBefore ? 'with the lead unchanged at' : now > r.leadMarginBefore ? 'stretching the lead to' : 'though the lead is cut to'} ${fmt(now)} points`
                 : ''
             }.`
   const podium: RecapSentences['podium'] = [
@@ -216,7 +221,7 @@ export function recapSentences(r: Recap): RecapSentences {
   let final: string | null = null
   if (r.final && r.final.length > 0) {
     const [champ, ...rest] = r.final
-    final = `${list(champ.names)} ${champ.names.length > 1 ? 'are joint champions' : 'is the champion'} with ${fmt(champ.points)} points.`
+    final = `${list(champ.names)} ${champ.names.length > 1 ? 'are joint champions' : 'is the champion'} with ${fmt(champ.points)} points. What a season!`
     for (const p of rest) final += ` ${ordinal(p.rank)}: ${list(p.names)} (${fmt(p.points)}).`
   }
 

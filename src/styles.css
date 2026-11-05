@@ -13,6 +13,7 @@
   --accent: #e10600;
   --good: #006300;
   --bad: #c42f2f;
+  --purple: #7b2cbf;
   --focus: #2a78d6;
 
   /* categorical series, validated in order */
@@ -54,6 +55,7 @@
     --wash: rgba(255, 255, 255, 0.05);
     --good: #0ca30c;
     --bad: #ec6a6a;
+    --purple: #c38bf5;
     --focus: #6da7ec;
     --s1: #3987e5;
     --s2: #d95926;
@@ -88,6 +90,7 @@
   --wash: rgba(255, 255, 255, 0.05);
   --good: #0ca30c;
   --bad: #ec6a6a;
+  --purple: #c38bf5;
   --focus: #6da7ec;
   --s1: #3987e5;
   --s2: #d95926;
@@ -550,3 +553,22 @@ h3.spaced { margin-top: 24px; }
 .tower-row.clickable:hover, .tower-row.clickable:focus-within { background: color-mix(in srgb, var(--ink) 5%, var(--surface)); }
 .podium-card.clickable:hover, .podium-card.clickable:focus-within { box-shadow: 0 0 0 2px color-mix(in srgb, var(--medal) 70%, transparent); }
 .player-link:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+
+/* ---- fun touches ---- */
+.season-bar { position: relative; display: flex; align-items: center; max-width: 360px; height: 8px; margin-top: var(--s2, 8px); background: var(--wash); border-radius: 999px; }
+.season-fill { height: 100%; background: var(--accent); border-radius: 999px; transition: width 0.8s ease-out; }
+.season-bar svg { position: absolute; right: -4px; top: -12px; color: var(--ink); background: var(--surface); }
+.top-score { color: var(--purple); font-weight: 700; }
+.tag.purple { color: var(--purple); border-color: var(--purple); }
+.hot { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 700; color: var(--accent); }
+.hot svg { width: 14px; height: 14px; }
+.podium-champ svg { width: 14px; height: 14px; vertical-align: -2px; margin-right: 3px; }
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+  @keyframes grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+  .podium.enter .podium-card { animation: rise 0.6s ease-out backwards; }
+  .podium.enter .podium-step { transform-origin: bottom; animation: grow 0.6s ease-out backwards; }
+  .podium.enter .place-3 .podium-card, .podium.enter .place-3 .podium-step { animation-delay: 0s; }
+  .podium.enter .place-2 .podium-card, .podium.enter .place-2 .podium-step { animation-delay: 0.2s; }
+  .podium.enter .place-1 .podium-card, .podium.enter .place-1 .podium-step { animation-delay: 0.4s; }
+}

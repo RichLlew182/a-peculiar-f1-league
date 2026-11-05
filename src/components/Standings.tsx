@@ -1,6 +1,8 @@
-import type { CSSProperties } from 'react'
-import { unlimitedPlayers } from '../lib/stats'
+import { useEffect, useRef, type CSSProperties } from 'react'
+import { hotStreaks, unlimitedPlayers } from '../lib/stats'
+import { Flame, Trophy } from './icons'
 import { RecapBanner } from './RecapBanner'
+import { useCountUp } from '../lib/useCountUp'
 import { fmt, money, ordinal, signedFmt, textOn } from '../lib/format'
 import { CHIPS, type Colours, type LeagueData, type Player, type Race } from '../lib/types'
 
@@ -74,6 +76,28 @@ function Team({ player, colours, unlimited }: { player: Player; colours: Colours
   )
 }
 
+/** Shown for players who have beaten the league average at several races in a row. */
+function Hot({ n }: { n: number }) {
+  return (
+    <span className="hot" title={`Above the league average for the last ${n} races`}>
+      <Flame />
+      On fire
+    </span>
+  )
+}
+
+/** Points, counting up the first time the podium appears. */
+function PodiumPoints({ value, animate, delay }: { value: number; animate: boolean; delay: number }) {
+  const shown = useCountUp(value, animate, 1000, delay)
+  return (
+    <>
+      {fmt(shown)} <span>pts</span>
+    </>
+  )
+}
+
+let podiumPlayed = false
+
 /** Places gained or lost at the last race, as a badge that is easy to spot down the table. */
 function Move({ move }: { move: number }) {
   if (!move) {
@@ -106,15 +130,22 @@ function Podium({
   latest,
   finished,
   unlimited,
+  hot,
 }: {
   players: Player[]
   colours: Colours
   latest?: Race
   finished: boolean
   unlimited: Set<string>
+  hot: Map<string, number>
 }) {
+  const animate = useRef(!podiumPlayed).current
+  useEffect(() => {
+    podiumPlayed = true
+  }, [])
+  const topGain = latest ? Math.max(...Object.values(latest.gains)) : undefined
   return (
-    <ol className="podium" aria-label="Top three">
+    <ol className={animate ? 'podium enter' : 'podium'} aria-label="Top three">
       {players.map((p, i) => {
         const move = latest?.moves[p.name] ?? 0
         const gained = latest?.gains[p.name]
@@ -126,9 +157,17 @@ function Podium({
                 <span className="podium-place" aria-hidden="true">
                   {ordinal(p.rank)}
                 </span>
-                {finished && p.rank === 1 && <span className="podium-champ">Champion</span>}
+                {finished && p.rank === 1 && (
+                  <span className="podium-champ">
+                    <Trophy />
+                    Champion
+                  </span>
+                )}
                 {gained !== undefined && (
-                  <span className="podium-gained" title={`Points scored at ${latest?.name}`}>
+                  <span
+                    className={gained === topGain ? 'podium-gained top-score' : 'podium-gained'}
+                    title={gained === topGain ? `Top score of the weekend at ${latest?.name}` : `Points scored at ${latest?.name}`}
+                  >
                     {signedFmt(gained)} <span className="muted-text">{latest?.name}</span>
                   </span>
                 )}
@@ -142,8 +181,9 @@ function Podium({
               </h3>
               {p.teamName && <p className="podium-team">{p.teamName}</p>}
               <p className="podium-points">
-                {fmt(p.points)} <span>pts</span>
+                <PodiumPoints value={p.points} animate={animate} delay={[400, 200, 0][i] ?? 0} />
               </p>
+              {hot.has(p.name) && <Hot n={hot.get(p.name) as number} />}
               {!lead && (
                 <p className="podium-gaps">
                   <span title={`${fmt(Math.abs(p.gap))} points behind ${players[i - 1]?.name ?? 'the player above'}`}>
@@ -174,6 +214,8 @@ export function Standings({ data }: { data: LeagueData }) {
   const finished = data.completed.length > 0 && data.completed.length === data.races.length
   // A Limitless chip lifts the budget limit, so the budget is meaningless while it is in play.
   const unlimited = unlimitedPlayers(data)
+  const hot = hotStreaks(data)
+  const topGain = latest ? Math.max(...Object.values(latest.gains)) : undefined
 
   return (
     <section aria-labelledby="standings-h">
@@ -192,6 +234,7 @@ export function Standings({ data }: { data: LeagueData }) {
         latest={latest}
         finished={finished}
         unlimited={unlimited}
+        hot={hot}
       />
 
       {rest.length > 0 && (
@@ -239,10 +282,14 @@ export function Standings({ data }: { data: LeagueData }) {
                   {p.teamName && <span className="team-name">{p.teamName}</span>}
                   <span className="who-sub">
                     {gained !== undefined && (
-                      <span title={`Points scored at ${raceLabel}`}>
+                      <span
+                        className={gained === topGain ? 'top-score' : undefined}
+                        title={gained === topGain ? `Top score of the weekend at ${raceLabel}` : `Points scored at ${raceLabel}`}
+                      >
                         {signedFmt(gained)} <span className="muted-text">{raceLabel}</span>
                       </span>
                     )}
+                    {hot.has(p.name) && <Hot n={hot.get(p.name) as number} />}
                   </span>
                 </span>
                 <span className="points num" role="cell">

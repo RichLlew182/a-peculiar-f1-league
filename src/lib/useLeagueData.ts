@@ -33,6 +33,8 @@ interface Raw {
   history: string
   colours: string
   chips: string
+  /** optional, and never bundled: a stale snapshot must not claim a race week is under way */
+  status: string
 }
 
 function readCache(): Raw | null {
@@ -43,6 +45,7 @@ function readCache(): Raw | null {
     return typeof o?.leaderboard === 'string' && typeof o?.history === 'string'
       ? { leaderboard: o.leaderboard, history: o.history, colours: typeof o.colours === 'string' ? o.colours : bundledColours,
           chips: typeof o.chips === 'string' ? o.chips : bundledChips,
+          status: typeof o.status === 'string' ? o.status : '',
         }
       : null
   } catch {
@@ -71,7 +74,7 @@ async function fetchCsv(url: string): Promise<string> {
 
 function tryParse(raw: Raw): LeagueData | null {
   try {
-    const d = parseLeague(raw.leaderboard, raw.history, raw.colours, raw.chips)
+    const d = parseLeague(raw.leaderboard, raw.history, raw.colours, raw.chips, raw.status)
     return d.players.length > 0 ? d : null
   } catch {
     return null
@@ -79,7 +82,7 @@ function tryParse(raw: Raw): LeagueData | null {
 }
 
 export function useLeagueData(): LeagueState {
-  const bundled: Raw = { leaderboard: bundledLeaderboard, history: bundledHistory, colours: bundledColours, chips: bundledChips }
+  const bundled: Raw = { leaderboard: bundledLeaderboard, history: bundledHistory, colours: bundledColours, chips: bundledChips, status: '' }
   const initial = useRef<{ raw: Raw; data: LeagueData | null; source: SourceState }>()
   if (!initial.current) {
     const cached = readCache()
@@ -108,14 +111,15 @@ export function useLeagueData(): LeagueState {
     lastRun.current = Date.now()
     setChecking(true)
     try {
-      const [leaderboard, history, colours, chips] = await Promise.all([
+      const [leaderboard, history, colours, chips, status] = await Promise.all([
         fetchCsv(sources.leaderboard),
         fetchCsv(sources.history),
         // Colours are optional: if that tab can't be read, keep the ones we already have.
         fetchCsv(sources.colours).catch(() => rawRef.current.colours),
         fetchCsv(sources.chips).catch(() => rawRef.current.chips),
+        fetchCsv(sources.status).catch(() => rawRef.current.status),
       ])
-      const next: Raw = { leaderboard, history, colours, chips }
+      const next: Raw = { leaderboard, history, colours, chips, status }
       const parsed = tryParse(next)
       if (!parsed) throw new Error('Sheet changed shape and could not be read')
 
@@ -123,7 +127,8 @@ export function useLeagueData(): LeagueState {
         next.leaderboard !== rawRef.current.leaderboard ||
         next.history !== rawRef.current.history ||
         next.colours !== rawRef.current.colours ||
-        next.chips !== rawRef.current.chips
+        next.chips !== rawRef.current.chips ||
+        next.status !== rawRef.current.status
       setSource('live')
       setError(null)
       setLastChecked(new Date())

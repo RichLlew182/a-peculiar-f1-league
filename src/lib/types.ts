@@ -80,6 +80,10 @@ export interface LeagueData {
   playerNames: string[]
   /** from the Chip Usage tab; empty if that tab isn't available */
   chipUses: ChipUse[]
+  /** from the optional Status tab */
+  raceWeek: boolean
+  /** optional message shown with the race-week banner */
+  statusNote?: string
 }
 
 export interface Highlight {

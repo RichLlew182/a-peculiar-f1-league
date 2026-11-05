@@ -114,7 +114,7 @@ export default function App() {
             <h1 className="title">A Peculiar F1 League 2026</h1>
             <p className="subtitle">
               {latest ? `After ${latest.name}, round ${latest.round} of ${data.races.length}` : 'Season not started'}
-              {next ? `. Next up: ${next.name}.` : '.'}
+              {next ? (data.raceWeek ? `. ${next.name} weekend under way.` : `. Next up: ${next.name}.`) : '.'}
             </p>
           </div>
           <div className="status-col">

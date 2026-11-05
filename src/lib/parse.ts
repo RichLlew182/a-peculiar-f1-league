@@ -238,7 +238,27 @@ export function parseChipUsage(csv: string, leaderboardNames: string[]): ChipUse
   return uses
 }
 
-export function parseLeague(leaderboardCsv: string, historyCsv: string, coloursCsv = '', chipsCsv = ''): LeagueData {
+/**
+ * Status tab: a "Status" row (value "Race week" while a weekend is under way) and an optional "Note" row.
+ * Anything else, or no tab at all, means business as usual.
+ */
+export function parseStatus(csv: string): { raceWeek: boolean; note?: string } {
+  const rows = parseCsv(csv)
+  const find = (label: string) => {
+    const row = rows.find((r) => (r[0] ?? '').trim().toLowerCase() === label)
+    return (row?.[1] ?? '').trim()
+  }
+  const note = find('note')
+  return { raceWeek: /^race\s*week$/i.test(find('status')), note: note || undefined }
+}
+
+export function parseLeague(
+  leaderboardCsv: string,
+  historyCsv: string,
+  coloursCsv = '',
+  chipsCsv = '',
+  statusCsv = '',
+): LeagueData {
   const players = parseLeaderboard(leaderboardCsv)
   const playerNames = players.map((p) => p.name)
   const races = parseHistory(historyCsv, playerNames)
@@ -249,5 +269,20 @@ export function parseLeague(leaderboardCsv: string, historyCsv: string, coloursC
   } catch {
     /* the chip tab is optional */
   }
-  return { players, colours, races, completed: races.filter((r) => r.complete), playerNames, chipUses }
+  let status: ReturnType<typeof parseStatus> = { raceWeek: false }
+  try {
+    status = statusCsv ? parseStatus(statusCsv) : status
+  } catch {
+    /* the status tab is optional */
+  }
+  return {
+    players,
+    colours,
+    races,
+    completed: races.filter((r) => r.complete),
+    playerNames,
+    chipUses,
+    raceWeek: status.raceWeek,
+    statusNote: status.note,
+  }
 }

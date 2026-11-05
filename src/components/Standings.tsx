@@ -180,10 +180,12 @@ function Podium({
                 </a>
               </h3>
               {p.teamName && <p className="podium-team">{p.teamName}</p>}
-              <p className="podium-points">
-                <PodiumPoints value={p.points} animate={animate} delay={[400, 200, 0][i] ?? 0} />
-              </p>
-              {hot.has(p.name) && <Hot n={hot.get(p.name) as number} />}
+              <div className="podium-score">
+                <p className="podium-points">
+                  <PodiumPoints value={p.points} animate={animate} delay={[400, 200, 0][i] ?? 0} />
+                </p>
+                {hot.has(p.name) && <Hot n={hot.get(p.name) as number} />}
+              </div>
               {!lead && (
                 <p className="podium-gaps">
                   <span title={`${fmt(Math.abs(p.gap))} points behind ${players[i - 1]?.name ?? 'the player above'}`}>

@@ -1,7 +1,7 @@
 /* ---------- tokens ---------- */
 :root {
   color-scheme: light;
-  --page: #e8e7e2;
+  --page: #e6e7ea;
   --surface: #fcfcfb;
   --ink: #0b0b0b;
   --ink-2: #52514e;
@@ -223,7 +223,7 @@ h3.spaced { margin-top: 24px; }
 .who { display: grid; gap: 2px; min-width: 0; }
 .who strong { font-size: 16px; font-weight: 650; }
 .team-name { font-size: 13px; color: var(--ink-2); overflow-wrap: anywhere; }
-.who-sub { display: flex; gap: 10px; align-items: baseline; font-size: 12px; color: var(--ink-2); flex-wrap: wrap; }
+.who-sub { display: flex; gap: 10px; align-items: center; font-size: 12px; color: var(--ink-2); flex-wrap: wrap; }
 .points { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
 .team-cell, .tower-head .team-head { padding-left: 14px; }
 .gap-cell { display: grid; gap: 2px; font-size: 14px; font-variant-numeric: tabular-nums; }
@@ -586,3 +586,5 @@ h3.spaced { margin-top: 24px; }
   .podium.enter .place-2 .podium-card, .podium.enter .place-2 .podium-step { animation-delay: 0.2s; }
   .podium.enter .place-1 .podium-card, .podium.enter .place-1 .podium-step { animation-delay: 0.4s; }
 }
+
+.podium-score { display: flex; align-items: center; justify-content: space-between; gap: 8px; }

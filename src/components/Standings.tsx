@@ -150,6 +150,7 @@ function Podium({
         const move = latest?.moves[p.name] ?? 0
         const gained = latest?.gains[p.name]
         const lead = p.rank === 1
+        const chaser = lead ? players.find((q) => q.points < p.points) : undefined
         return (
           <li key={p.name} className={`podium-slot place-${i + 1}`}>
             <div className="podium-card clickable" onClick={openPlayer(p.name)}>
@@ -184,6 +185,17 @@ function Podium({
               <p className="podium-points">
                 <PodiumPoints value={p.points} animate={animate} delay={[400, 200, 0][i] ?? 0} />
               </p>
+              {lead && (
+                <p className="podium-gaps">
+                  {chaser ? (
+                    <span title={`${fmt(p.points - chaser.points)} points ahead of ${chaser.name}`}>
+                      Lead over {chaser.name} <b>{fmt(p.points - chaser.points)}</b>
+                    </span>
+                  ) : (
+                    <span>Level at the top</span>
+                  )}
+                </p>
+              )}
               {!lead && (
                 <p className="podium-gaps">
                   <span title={`${fmt(Math.abs(p.gap))} points behind ${players[i - 1]?.name ?? 'the player above'}`}>

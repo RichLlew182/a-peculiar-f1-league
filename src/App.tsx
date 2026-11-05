@@ -7,30 +7,10 @@ import { RaceList } from './components/RaceList'
 import { Standings } from './components/Standings'
 import { Stats } from './components/Stats'
 import { ago } from './lib/format'
+import { hashFor, parseHash, TABS, type Route, type Tab } from './lib/route'
+import { SeasonContext } from './lib/SeasonContext'
+import { getSeason, SEASONS } from './lib/seasons'
 import { useLeagueData } from './lib/useLeagueData'
-
-type Tab = 'standings' | 'progress' | 'races' | 'stats'
-const TABS: { id: Tab; label: string }[] = [
-  { id: 'standings', label: 'Standings' },
-  { id: 'progress', label: 'Progress' },
-  { id: 'races', label: 'Races' },
-  { id: 'stats', label: 'Stats' },
-]
-
-type Route = { tab: Tab; player?: string }
-
-const routeFromHash = (): Route => {
-  const h = window.location.hash.replace('#', '')
-  if (h.startsWith('player/')) {
-    try {
-      return { tab: 'standings', player: decodeURIComponent(h.slice('player/'.length)) }
-    } catch {
-      return { tab: 'standings' }
-    }
-  }
-  const t = h as Tab
-  return { tab: TABS.some((x) => x.id === t) ? t : 'standings' }
-}
 
 type Theme = 'system' | 'light' | 'dark'
 const THEME_KEY = 'f1-fantasy:theme'
@@ -60,33 +40,88 @@ function useTheme() {
 }
 
 export default function App() {
-  const state = useLeagueData()
-  const { data } = state
-  const [route, setRoute] = useState<Route>(routeFromHash)
-  const tab = route.tab
+  const [route, setRoute] = useState<Route>(() => parseHash(window.location.hash))
   const [theme, cycleTheme] = useTheme()
-  const [, setNow] = useState(0)
 
   useEffect(() => {
-    const onHash = () => setRoute(routeFromHash())
+    const onHash = () => setRoute(parseHash(window.location.hash))
     window.addEventListener('hashchange', onHash)
-    // keep "x min ago" fresh
-    const t = window.setInterval(() => setNow((n) => n + 1), 30_000)
-    return () => {
-      window.removeEventListener('hashchange', onHash)
-      window.clearInterval(t)
-    }
+    return () => window.removeEventListener('hashchange', onHash)
   }, [])
 
   const go = (t: Tab) => {
-    setRoute({ tab: t })
-    window.history.replaceState(null, '', `#${t}`)
+    setRoute({ season: route.season, tab: t })
+    window.history.replaceState(null, '', hashFor(route.season, t))
   }
+  const pickSeason = (id: string) => {
+    window.location.hash = hashFor(id, 'standings')
+  }
+
+  const season = getSeason(route.season)
+  const ctx = { id: season.id, href: (rest: string) => hashFor(season.id, rest) }
+  // key: switching season starts from a clean slate (its own data, polling and state)
+  return (
+    <SeasonContext.Provider value={ctx}>
+      <SeasonView
+        key={season.id}
+        seasonId={season.id}
+        route={route}
+        go={go}
+        pickSeason={pickSeason}
+        theme={theme}
+        cycleTheme={cycleTheme}
+      />
+    </SeasonContext.Provider>
+  )
+}
+
+/** The picker in the masthead: a plain year until there is more than one season. */
+function SeasonPicker({ current, onPick }: { current: string; onPick: (id: string) => void }) {
+  if (SEASONS.length < 2) return <>{current}</>
+  return (
+    <span className="season-pick">
+      <select value={current} onChange={(e) => onPick(e.target.value)} aria-label="Season">
+        {SEASONS.map((s) => (
+          <option key={s.id} value={s.id}>
+            {s.id}
+          </option>
+        ))}
+      </select>
+    </span>
+  )
+}
+
+function SeasonView({
+  seasonId,
+  route,
+  go,
+  pickSeason,
+  theme,
+  cycleTheme,
+}: {
+  seasonId: string
+  route: Route
+  go: (t: Tab) => void
+  pickSeason: (id: string) => void
+  theme: Theme
+  cycleTheme: () => void
+}) {
+  const season = getSeason(seasonId)
+  const state = useLeagueData(seasonId)
+  const { data } = state
+  const tab = route.tab
+  const [, setNow] = useState(0)
+
+  useEffect(() => {
+    // keep "x min ago" fresh
+    const t = window.setInterval(() => setNow((n) => n + 1), 30_000)
+    return () => window.clearInterval(t)
+  }, [])
 
   if (!data) {
     return (
       <main className="page">
-        <h1 className="title">A Peculiar F1 League 2026</h1>
+        <h1 className="title">A Peculiar F1 League {seasonId}</h1>
         <p className="empty" role="alert">
           The league data couldn’t be read. {state.error} Check that both sheets are published as CSV.
         </p>
@@ -97,8 +132,10 @@ export default function App() {
   const latest = data.completed[data.completed.length - 1]
   const next = data.races.find((r) => !r.complete)
 
-  const status =
-    state.source === 'live'
+  const finished = !next && !!latest
+  const status = season.archived
+    ? 'Archived season'
+    : state.source === 'live'
       ? `Synced ${state.lastChecked ? ago(state.lastChecked) : ''}`
       : state.source === 'offline'
         ? 'Couldn’t reach the sheet. Showing the last saved scores.'
@@ -111,10 +148,13 @@ export default function App() {
       <header className="masthead">
         <div className="masthead-inner">
           <div>
-            <h1 className="title">A Peculiar F1 League 2026</h1>
+            <h1 className="title">
+              A Peculiar F1 League <SeasonPicker current={seasonId} onPick={pickSeason} />
+            </h1>
             <p className="subtitle">
-              {latest ? `After ${latest.name}, round ${latest.round} of ${data.races.length}` : 'Season not started'}
-              {next ? `. Next up: ${next.name}.` : '.'}
+              {finished
+                ? `Final standings after ${latest.name}, all ${data.races.length} races done.`
+                : `${latest ? `After ${latest.name}, round ${latest.round} of ${data.races.length}` : 'Season not started'}${next ? `. Next up: ${next.name}.` : '.'}`}
             </p>
           </div>
           <div className="status-col">
@@ -123,9 +163,11 @@ export default function App() {
               {status}
             </p>
             <div className="status-actions">
-              <button type="button" className="link-btn" onClick={state.refresh} disabled={state.checking}>
-                {state.checking ? 'Checking…' : 'Check for new scores'}
-              </button>
+              {!season.archived && (
+                <button type="button" className="link-btn" onClick={state.refresh} disabled={state.checking}>
+                  {state.checking ? 'Checking…' : 'Check for new scores'}
+                </button>
+              )}
               <button
                 type="button"
                 className="link-btn"
@@ -177,7 +219,11 @@ export default function App() {
         </main>
 
         <footer className="foot">
-          <p>Scores come from the league spreadsheet and refresh every few minutes while this page is open.</p>
+          <p>
+            {season.archived
+              ? 'This season is archived, so these scores no longer change.'
+              : 'Scores come from the league spreadsheet and refresh every few minutes while this page is open.'}
+          </p>
         </footer>
       </div>
     </>

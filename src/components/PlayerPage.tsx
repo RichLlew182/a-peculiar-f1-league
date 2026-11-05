@@ -1,4 +1,5 @@
 import { useEffect, useRef, type CSSProperties } from 'react'
+import { useSeason } from '../lib/SeasonContext'
 import { fmt, money, ordinal, raceCode, signedFmt, textOn } from '../lib/format'
 import { driverName, TEAM_NAMES } from '../lib/names'
 import { chipUseFor, playerProfile, type RaceLine } from '../lib/playerProfile'
@@ -131,6 +132,7 @@ function TeamList({ label, rows }: { label: string; rows: TeamRow[] }) {
 }
 
 export function PlayerPage({ data, name }: { data: LeagueData; name: string }) {
+  const { href } = useSeason()
   const heading = useRef<HTMLHeadingElement>(null)
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -141,7 +143,7 @@ export function PlayerPage({ data, name }: { data: LeagueData; name: string }) {
   if (!prof) {
     return (
       <section>
-        <a className="back-link" href="#standings">
+        <a className="back-link" href={href('standings')}>
           ← Back to standings
         </a>
         <p className="empty">There’s nobody called “{name}” in the league.</p>
@@ -226,7 +228,7 @@ export function PlayerPage({ data, name }: { data: LeagueData; name: string }) {
 
   return (
     <section aria-labelledby="player-h" className="player-page">
-      <a className="back-link" href="#standings">
+      <a className="back-link" href={href('standings')}>
         ← Back to standings
       </a>
       <header className="player-head">

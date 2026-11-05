@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useSeason } from '../lib/SeasonContext'
+import { scopedKey } from '../lib/route'
 import { fmt, ordinal, raceCode, signedFmt } from '../lib/format'
 import { useWidth } from '../lib/useWidth'
 import type { LeagueData } from '../lib/types'
@@ -17,9 +19,9 @@ interface Stored {
   selected: string[]
 }
 
-function loadStored(): Stored | null {
+function loadStored(season: string): Stored | null {
   try {
-    const raw = localStorage.getItem(STORE)
+    const raw = localStorage.getItem(scopedKey(STORE, season))
     if (!raw) return null
     const o = JSON.parse(raw)
     if (o.metric === 'rank' || o.metric === 'behind') {
@@ -39,9 +41,9 @@ function loadStored(): Stored | null {
   return null
 }
 
-function saveStored(s: Stored) {
+function saveStored(season: string, s: Stored) {
   try {
-    localStorage.setItem(STORE, JSON.stringify(s))
+    localStorage.setItem(scopedKey(STORE, season), JSON.stringify(s))
   } catch {
     /* ignore */
   }
@@ -65,10 +67,11 @@ function spread(ys: number[], gap: number, lo: number, hi: number): number[] {
 }
 
 export function ProgressChart({ data }: { data: LeagueData }) {
+  const { id: season } = useSeason()
   const names = data.playerNames
-  const [metric, setMetric] = useState<Metric>(() => loadStored()?.metric ?? 'rank')
+  const [metric, setMetric] = useState<Metric>(() => loadStored(season)?.metric ?? 'rank')
   const [selectedRaw, setSelected] = useState<string[]>(() => {
-    const st = loadStored()?.selected
+    const st = loadStored(season)?.selected
     return st && st.length > 0 ? st : names.slice(0, 3)
   })
   const [hover, setHover] = useState<number | null>(null)
@@ -77,7 +80,7 @@ export function ProgressChart({ data }: { data: LeagueData }) {
 
   const selected = useMemo(() => selectedRaw.filter((n) => names.includes(n)).slice(0, MAX_SEL), [selectedRaw, names])
   const isSel = (name: string) => selected.includes(name)
-  useEffect(() => saveStored({ metric, selected }), [metric, selected])
+  useEffect(() => saveStored(season, { metric, selected }), [season, metric, selected])
 
   // Every player keeps one hue for good. Alphabetical order keeps it from shifting as rankings change.
   const hueOf = useMemo(() => {

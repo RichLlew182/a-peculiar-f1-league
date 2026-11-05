@@ -587,4 +587,4 @@ h3.spaced { margin-top: 24px; }
   .podium.enter .place-1 .podium-card, .podium.enter .place-1 .podium-step { animation-delay: 0.4s; }
 }
 
-.podium-score { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.who strong .hot, .podium-name .hot { margin-left: 8px; vertical-align: middle; font-weight: 700; }

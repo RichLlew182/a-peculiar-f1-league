@@ -178,14 +178,12 @@ function Podium({
                 <a className="player-link" href={playerHref(p.name)}>
                   {p.name}
                 </a>
+                {hot.has(p.name) && <Hot n={hot.get(p.name) as number} />}
               </h3>
               {p.teamName && <p className="podium-team">{p.teamName}</p>}
-              <div className="podium-score">
-                <p className="podium-points">
-                  <PodiumPoints value={p.points} animate={animate} delay={[400, 200, 0][i] ?? 0} />
-                </p>
-                {hot.has(p.name) && <Hot n={hot.get(p.name) as number} />}
-              </div>
+              <p className="podium-points">
+                <PodiumPoints value={p.points} animate={animate} delay={[400, 200, 0][i] ?? 0} />
+              </p>
               {!lead && (
                 <p className="podium-gaps">
                   <span title={`${fmt(Math.abs(p.gap))} points behind ${players[i - 1]?.name ?? 'the player above'}`}>
@@ -280,6 +278,7 @@ export function Standings({ data }: { data: LeagueData }) {
                     <a className="player-link" href={playerHref(p.name)}>
                       {p.name}
                     </a>
+                    {hot.has(p.name) && <Hot n={hot.get(p.name) as number} />}
                   </strong>
                   {p.teamName && <span className="team-name">{p.teamName}</span>}
                   <span className="who-sub">
@@ -291,7 +290,6 @@ export function Standings({ data }: { data: LeagueData }) {
                         {signedFmt(gained)} <span className="muted-text">{raceLabel}</span>
                       </span>
                     )}
-                    {hot.has(p.name) && <Hot n={hot.get(p.name) as number} />}
                   </span>
                 </span>
                 <span className="points num" role="cell">

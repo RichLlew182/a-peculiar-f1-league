@@ -61,7 +61,7 @@ export function Stats({ data }: { data: LeagueData }) {
               chip
             </p>
           </div>
-          {(['LL', '3X', 'NN', 'FF'] as const).map((key) => {
+          {(['LL', '3X', 'FF', 'NN'] as const).map((key) => {
             const facts = chipFacts.filter((f) => f.chip === key)
             if (facts.length === 0) return null
             const def = CHIPS.find((c) => c.key === key)!

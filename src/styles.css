@@ -256,7 +256,7 @@ h3.spaced { margin-top: 24px; }
   }
   .pos { grid-area: pos; align-self: start; padding-top: 2px; }
   .who { grid-area: who; }
-  .who strong { font-size: 20px; letter-spacing: -0.01em; }
+  .who strong { font-family: var(--font-head); font-size: 22px; font-weight: 750; letter-spacing: -0.015em; line-height: 1.15; }
   .who .team-name { font-size: 14px; }
   .movecell { grid-area: move; justify-content: flex-start; padding-left: 2px; }
   .points { grid-area: points; }

@@ -1,5 +1,6 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { fmt, ordinal, raceCode, signedFmt } from '../lib/format'
+import { useWidth } from '../lib/useWidth'
 import type { LeagueData } from '../lib/types'
 import { DataTable } from './DataTable'
 
@@ -46,20 +47,6 @@ function saveStored(s: Stored) {
   }
 }
 
-function useWidth<T extends HTMLElement>() {
-  const ref = useRef<T>(null)
-  const [w, setW] = useState(760)
-  useLayoutEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const update = () => setW(el.clientWidth || 760)
-    update()
-    const ro = new ResizeObserver(update)
-    ro.observe(el)
-    return () => ro.disconnect()
-  }, [])
-  return [ref, w] as const
-}
 
 /** Spread label positions so they keep a minimum gap, staying inside [lo, hi]. */
 function spread(ys: number[], gap: number, lo: number, hi: number): number[] {

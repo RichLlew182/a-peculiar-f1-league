@@ -30,7 +30,7 @@ function Chips({ player, colours }: { player: Player; colours: Colours }) {
   )
 }
 
-function Team({ player, colours }: { player: Player; colours: Colours }) {
+function Team({ player, colours, unlimited }: { player: Player; colours: Colours; unlimited?: boolean }) {
   return (
     <div className="team">
       <ul className="picks" aria-label="Constructors">
@@ -49,7 +49,15 @@ function Team({ player, colours }: { player: Player; colours: Colours }) {
         ))}
       </ul>
       <p className="team-meta">
-        Value {money(player.value)} · Cap {money(player.cap)} · Budget {money(player.budget)}
+        Value {money(player.value)} · Cap {money(player.cap)} · Budget{' '}
+        {unlimited ? (
+          <span className="budget-inf" title="Limitless chip this weekend, so no budget limit">
+            <span aria-hidden="true">∞</span>
+            <span className="sr-only">unlimited (Limitless chip this weekend)</span>
+          </span>
+        ) : (
+          money(player.budget)
+        )}
       </p>
     </div>
   )
@@ -86,11 +94,13 @@ function Podium({
   colours,
   latest,
   finished,
+  unlimited,
 }: {
   players: Player[]
   colours: Colours
   latest?: Race
   finished: boolean
+  unlimited: Set<string>
 }) {
   return (
     <ol className="podium" aria-label="Top three">
@@ -131,7 +141,7 @@ function Podium({
                   </span>
                 </p>
               )}
-              <Team player={p} colours={colours} />
+              <Team player={p} colours={colours} unlimited={unlimited.has(p.name)} />
               <Chips player={p} colours={colours} />
             </div>
             <div className="podium-step" aria-hidden="true">
@@ -149,6 +159,16 @@ export function Standings({ data }: { data: LeagueData }) {
   const raceLabel = latest ? latest.name : 'last race'
   const rest = data.players.slice(3)
   const finished = data.completed.length > 0 && data.completed.length === data.races.length
+  // A Limitless chip lifts the budget limit, so the budget is meaningless while it is in play:
+  // that is the next race that hasn't been scored yet.
+  const nextRace = data.races.find((r) => !r.complete)
+  const unlimited = new Set(
+    nextRace
+      ? data.chipUses
+          .filter((u) => u.chip === 'LL' && u.race.trim().toLowerCase() === nextRace.name.trim().toLowerCase())
+          .map((u) => u.player)
+      : [],
+  )
 
   return (
     <section aria-labelledby="standings-h">
@@ -161,7 +181,7 @@ export function Standings({ data }: { data: LeagueData }) {
 
       <RecapBanner data={data} />
 
-      <Podium players={data.players.slice(0, 3)} colours={data.colours} latest={latest} finished={finished} />
+      <Podium players={data.players.slice(0, 3)} colours={data.colours} latest={latest} finished={finished} unlimited={unlimited} />
 
       {rest.length > 0 && (
       <div className="tower" role="table" aria-label="Rest of the league standings">
@@ -225,7 +245,7 @@ export function Standings({ data }: { data: LeagueData }) {
                 </span>
               </span>
               <span className="team-cell" role="cell">
-                <Team player={p} colours={data.colours} />
+                <Team player={p} colours={data.colours} unlimited={unlimited.has(p.name)} />
               </span>
               <span className="chips-cell" role="cell">
                 <Chips player={p} colours={data.colours} />

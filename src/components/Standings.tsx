@@ -150,6 +150,7 @@ function Podium({
         const move = latest?.moves[p.name] ?? 0
         const gained = latest?.gains[p.name]
         const lead = p.rank === 1
+        const chaser = lead ? players.find((q) => q.points < p.points) : undefined
         return (
           <li key={p.name} className={`podium-slot place-${i + 1}`}>
             <div className="podium-card clickable" onClick={openPlayer(p.name)}>
@@ -178,12 +179,23 @@ function Podium({
                 <a className="player-link" href={playerHref(p.name)}>
                   {p.name}
                 </a>
+                {hot.has(p.name) && <Hot n={hot.get(p.name) as number} />}
               </h3>
               {p.teamName && <p className="podium-team">{p.teamName}</p>}
               <p className="podium-points">
                 <PodiumPoints value={p.points} animate={animate} delay={[400, 200, 0][i] ?? 0} />
               </p>
-              {hot.has(p.name) && <Hot n={hot.get(p.name) as number} />}
+              {lead && (
+                <p className="podium-gaps">
+                  {chaser ? (
+                    <span title={`${fmt(p.points - chaser.points)} points ahead of ${chaser.name}`}>
+                      Lead over {chaser.name} <b>{fmt(p.points - chaser.points)}</b>
+                    </span>
+                  ) : (
+                    <span>Level at the top</span>
+                  )}
+                </p>
+              )}
               {!lead && (
                 <p className="podium-gaps">
                   <span title={`${fmt(Math.abs(p.gap))} points behind ${players[i - 1]?.name ?? 'the player above'}`}>
@@ -278,6 +290,7 @@ export function Standings({ data }: { data: LeagueData }) {
                     <a className="player-link" href={playerHref(p.name)}>
                       {p.name}
                     </a>
+                    {hot.has(p.name) && <Hot n={hot.get(p.name) as number} />}
                   </strong>
                   {p.teamName && <span className="team-name">{p.teamName}</span>}
                   <span className="who-sub">
@@ -289,7 +302,6 @@ export function Standings({ data }: { data: LeagueData }) {
                         {signedFmt(gained)} <span className="muted-text">{raceLabel}</span>
                       </span>
                     )}
-                    {hot.has(p.name) && <Hot n={hot.get(p.name) as number} />}
                   </span>
                 </span>
                 <span className="points num" role="cell">

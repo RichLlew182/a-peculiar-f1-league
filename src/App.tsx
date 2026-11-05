@@ -107,69 +107,79 @@ export default function App() {
           : 'Showing saved scores'
 
   return (
-    <div className="page">
+    <>
       <header className="masthead">
-        <div>
-          <h1 className="title">A Peculiar F1 League 2026</h1>
-          <p className="subtitle">
-            {latest ? `After ${latest.name}, round ${latest.round} of ${data.races.length}` : 'Season not started'}
-            {next ? `. Next up: ${next.name}.` : '.'}
-          </p>
-        </div>
-        <div className="status-col">
-          <p className={`status ${state.source}`} role="status">
-            <span className="dot" aria-hidden="true" />
-            {status}
-          </p>
-          <div className="status-actions">
-            <button type="button" className="link-btn" onClick={state.refresh} disabled={state.checking}>
-              {state.checking ? 'Checking…' : 'Check for new scores'}
-            </button>
-            <button type="button" className="link-btn" onClick={cycleTheme} aria-label={`Colour theme: ${theme}. Change theme`}>
-              Theme: {theme}
-            </button>
+        <div className="masthead-inner">
+          <div>
+            <h1 className="title">A Peculiar F1 League 2026</h1>
+            <p className="subtitle">
+              {latest ? `After ${latest.name}, round ${latest.round} of ${data.races.length}` : 'Season not started'}
+              {next ? `. Next up: ${next.name}.` : '.'}
+            </p>
+          </div>
+          <div className="status-col">
+            <p className={`status ${state.source}`} role="status">
+              <span className="dot" aria-hidden="true" />
+              {status}
+            </p>
+            <div className="status-actions">
+              <button type="button" className="link-btn" onClick={state.refresh} disabled={state.checking}>
+                {state.checking ? 'Checking…' : 'Check for new scores'}
+              </button>
+              <button
+                type="button"
+                className="link-btn"
+                onClick={cycleTheme}
+                aria-label={`Colour theme: ${theme}. Change theme`}
+              >
+                Theme: {theme}
+              </button>
+            </div>
           </div>
         </div>
       </header>
-
-      {state.justUpdated && (
-        <p className="toast" role="status">
-          New scores found. The tables and charts have updated.
-        </p>
-      )}
-
-      <nav className="tabs" aria-label="Sections">
-        {TABS.map((t) => (
-          <button
-            key={t.id}
-            type="button"
-            className="tab"
-            aria-current={tab === t.id ? 'page' : undefined}
-            onClick={() => go(t.id)}
-          >
-            {t.label}
-          </button>
-        ))}
-      </nav>
-
-      <main className="sheet">
-        {route.player ? <PlayerPage data={data} name={route.player} /> : tab === 'standings' && <Standings data={data} />}
-        {tab === 'progress' && <ProgressChart data={data} />}
-        {tab === 'races' && (
-          <>
-            <Recap data={data} />
-            <FormGuide data={data} />
-            <RaceList data={data} />
-          </>
+      <div className="page">
+        {state.justUpdated && (
+          <p className="toast" role="status">
+            New scores found. The tables and charts have updated.
+          </p>
         )}
-        {tab === 'stats' && <Stats data={data} />}
-      </main>
 
-      <footer className="foot">
-        <p>
-          Scores come from the league spreadsheet and refresh every few minutes while this page is open.
-        </p>
-      </footer>
-    </div>
+        <nav className="tabs" aria-label="Sections">
+          {TABS.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              className="tab"
+              aria-current={tab === t.id ? 'page' : undefined}
+              onClick={() => go(t.id)}
+            >
+              {t.label}
+            </button>
+          ))}
+        </nav>
+
+        <main className="sheet">
+          {route.player ? (
+            <PlayerPage data={data} name={route.player} />
+          ) : (
+            tab === 'standings' && <Standings data={data} />
+          )}
+          {tab === 'progress' && <ProgressChart data={data} />}
+          {tab === 'races' && (
+            <>
+              <Recap data={data} />
+              <FormGuide data={data} />
+              <RaceList data={data} />
+            </>
+          )}
+          {tab === 'stats' && <Stats data={data} />}
+        </main>
+
+        <footer className="foot">
+          <p>Scores come from the league spreadsheet and refresh every few minutes while this page is open.</p>
+        </footer>
+      </div>
+    </>
   )
 }

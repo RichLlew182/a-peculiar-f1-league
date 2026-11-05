@@ -1,7 +1,7 @@
 /* ---------- tokens ---------- */
 :root {
   color-scheme: light;
-  --page: #e8e7e2;
+  --page: #e6e7ea;
   --surface: #fcfcfb;
   --ink: #0b0b0b;
   --ink-2: #52514e;
@@ -146,6 +146,22 @@ button { font: inherit; color: inherit; }
 .masthead { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px 32px; flex-wrap: wrap; margin-bottom: 20px; }
 .title { font-size: clamp(28px, 5vw, 40px); line-height: 1.05; font-weight: 750; letter-spacing: -0.03em; }
 .subtitle { margin-top: 6px; color: var(--ink-2); }
+
+/* Racing-stripe banner: always dark, so it reads the same in light and dark themes */
+.masthead {
+  background: #15151e; color: #fff; border-bottom: 4px solid var(--accent); display: block; margin-bottom: 0;
+}
+.masthead-inner {
+  display: flex; justify-content: space-between; align-items: center; gap: 16px 32px; flex-wrap: wrap;
+  max-width: 1160px; margin: 0 auto; padding: 36px 16px 40px;
+}
+.masthead .title { color: #fff; }
+.masthead .subtitle, .masthead .status { color: #c4c4d0; }
+.masthead .link-btn { color: #c4c4d0; text-decoration-color: #5b5b6b; }
+.masthead .link-btn:hover { color: #fff; }
+.masthead .dot { background: #8a8a98; }
+.masthead .status.live .dot { background: #3ddc3d; }
+.masthead .status.offline .dot { background: #ec835a; }
 .status-col { display: grid; gap: 4px; justify-items: end; text-align: right; }
 .status { display: flex; align-items: center; gap: 8px; color: var(--ink-2); font-size: 13px; }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex: none; }
@@ -205,9 +221,9 @@ h3.spaced { margin-top: 24px; }
 .tower-row.leader::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--accent); border-radius: 0 2px 2px 0; }
 .pos { font-weight: 750; font-size: 18px; text-align: center; font-variant-numeric: tabular-nums; }
 .who { display: grid; gap: 2px; min-width: 0; }
-.who strong { font-size: 16px; font-weight: 650; }
+.who strong { display: flex; align-items: center; flex-wrap: wrap; gap: 0 8px; font-size: 16px; font-weight: 650; }
 .team-name { font-size: 13px; color: var(--ink-2); overflow-wrap: anywhere; }
-.who-sub { display: flex; gap: 10px; align-items: baseline; font-size: 12px; color: var(--ink-2); flex-wrap: wrap; }
+.who-sub { display: flex; gap: 10px; align-items: center; font-size: 12px; color: var(--ink-2); flex-wrap: wrap; }
 .points { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
 .team-cell, .tower-head .team-head { padding-left: 14px; }
 .gap-cell { display: grid; gap: 2px; font-size: 14px; font-variant-numeric: tabular-nums; }
@@ -401,7 +417,8 @@ h3.spaced { margin-top: 24px; }
 
 @media (max-width: 560px) {
   .page { padding: 16px 0 32px; }
-  .masthead, .foot { padding: 0 16px; }
+  .foot { padding: 0 16px; }
+  .masthead-inner { padding: 24px 16px 28px; }
   .status-col { justify-items: start; text-align: left; }
   .sheet { border-radius: 0; border-left: 0; border-right: 0; padding: 20px 14px 28px; }
   .tabs { padding: 0 8px; }
@@ -557,7 +574,7 @@ h3.spaced { margin-top: 24px; }
 /* ---- fun touches ---- */
 .top-score { color: var(--purple); font-weight: 700; }
 .tag.purple { color: var(--purple); border-color: var(--purple); }
-.hot { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 700; color: var(--accent); }
+.hot { font-family: var(--font); letter-spacing: 0; line-height: 1; display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 700; color: var(--accent); }
 .hot svg { width: 14px; height: 14px; }
 .podium-champ svg { width: 14px; height: 14px; vertical-align: -2px; margin-right: 3px; }
 @media (prefers-reduced-motion: no-preference) {
@@ -569,3 +586,5 @@ h3.spaced { margin-top: 24px; }
   .podium.enter .place-2 .podium-card, .podium.enter .place-2 .podium-step { animation-delay: 0.2s; }
   .podium.enter .place-1 .podium-card, .podium.enter .place-1 .podium-step { animation-delay: 0.4s; }
 }
+
+.podium-name .hot { margin-left: 8px; vertical-align: middle; font-weight: 700; }

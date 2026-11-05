@@ -21,10 +21,3 @@ export const Trophy = (p: SVGProps<SVGSVGElement>) => (
     <path d="M7 3h10v2h3v3c0 2.2-1.7 4-3.9 4.2A5 5 0 0 1 13 14.9V17h3v2H8v-2h3v-2.1a5 5 0 0 1-3.1-2.7C5.7 12 4 10.2 4 8V5h3V3Zm0 4H6v1c0 1 .6 1.8 1.4 2.2A6 6 0 0 1 7 8V7Zm10 0v1c0 .8-.1 1.5-.4 2.2C17.4 9.8 18 9 18 8V7h-1ZM9 5v3.5a3 3 0 1 0 6 0V5H9Z" />
   </svg>
 )
-
-/** A small chequered flag. */
-export const Flag = (p: SVGProps<SVGSVGElement>) => (
-  <svg {...base(p)}>
-    <path d="M5 2h2v20H5V2Zm3 1h12v10H8V3Zm2 2v3h3V5h-3Zm6 0v3h2V5h-2Zm-3 3v3h3V8h-3Zm-3 3h0Zm6 0v2h2v-2h-2Z" />
-  </svg>
-)

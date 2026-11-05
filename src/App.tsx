@@ -6,7 +6,6 @@ import { ProgressChart } from './components/ProgressChart'
 import { RaceList } from './components/RaceList'
 import { Standings } from './components/Standings'
 import { Stats } from './components/Stats'
-import { Flag } from './components/icons'
 import { ago } from './lib/format'
 import { useLeagueData } from './lib/useLeagueData'
 
@@ -116,20 +115,6 @@ export default function App() {
             {latest ? `After ${latest.name}, round ${latest.round} of ${data.races.length}` : 'Season not started'}
             {next ? `. Next up: ${next.name}.` : '.'}
           </p>
-          {data.races.length > 0 && (
-            <div
-              className="season-bar"
-              role="progressbar"
-              aria-label="Season progress"
-              aria-valuemin={0}
-              aria-valuemax={data.races.length}
-              aria-valuenow={data.completed.length}
-              aria-valuetext={`${data.completed.length} of ${data.races.length} races done`}
-            >
-              <div className="season-fill" style={{ width: `${(data.completed.length / data.races.length) * 100}%` }} />
-              <Flag />
-            </div>
-          )}
         </div>
         <div className="status-col">
           <p className={`status ${state.source}`} role="status">

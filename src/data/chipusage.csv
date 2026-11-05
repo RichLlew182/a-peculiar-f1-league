@@ -1,15 +1,15 @@
-,LL,Race,WC,Race,FF,Race,Change,AP,Race,NN,Race,3x,Race
-Lewis,TRUE,China,TRUE,Miami,TRUE,Italy,NOR > ANT,TRUE,Australia,TRUE,Spain,TRUE,Singapore
-Antonia,TRUE,Great Britain,FALSE,,TRUE,Hungary,ANT > NOR,TRUE,United States,TRUE,Spain,TRUE,Singapore
-Richard F,TRUE,China,TRUE,Singapore,TRUE,Mexico,VER > HAM,TRUE,United States,TRUE,Azerbaijan,TRUE,Malaysia
-Richard L,TRUE,Great Britain,TRUE,Canada,TRUE,Malaysia,RUS > VER,TRUE,China,TRUE,Spain,TRUE,Singapore
-Scott,TRUE,Miami,TRUE,China,TRUE,Great Britain,HAM > ANT,FALSE,,TRUE,Netherlands,FALSE,
-Jack,TRUE,Netherlands,TRUE,Canada,TRUE,Hungary,ANT > LEC,TRUE,Malaysia,TRUE,Spain,FALSE,
-Michelle,TRUE,Great Britain,TRUE,Monaco,FALSE,,,TRUE,China,TRUE,Spain,TRUE,Singapore
-Martin,TRUE,Great Britain,FALSE,,FALSE,,,TRUE,United States,TRUE,Malaysia,TRUE,Singapore
-Katie,TRUE,Netherlands,TRUE,Barcelona,FALSE,,,TRUE,Mexico,TRUE,Spain,TRUE,Singapore
-Danielle,TRUE,Singapore,TRUE,China,TRUE,Mexico,ANT > HAM,TRUE,Spain,TRUE,Netherlands,TRUE,United States
-Sue,FALSE,,FALSE,,FALSE,,,FALSE,,TRUE,Netherlands,TRUE,Mexico
-Shirley,TRUE,Great Britain,FALSE,,FALSE,,,FALSE,,FALSE,,TRUE,Singapore
-Victoria,TRUE,Canada,FALSE,,FALSE,,,FALSE,,FALSE,,FALSE,
-Abigail,FALSE,,FALSE,,FALSE,,,FALSE,,FALSE,,FALSE,
+,LL,Race,WC,Race,FF,Race,Change,Replaced Driver Extra Pts,Replacement Driver Extra Pts,AP,Race,NN,Race,Points Saved,3x,Race
+Lewis,TRUE,China,TRUE,Miami,TRUE,Italy,NOR > ANT,60,178,TRUE,Australia,TRUE,Spain,,TRUE,Singapore
+Antonia,TRUE,Great Britain,FALSE,,TRUE,Hungary,ANT > NOR,42,54,TRUE,United States,TRUE,Spain,,TRUE,Singapore
+Richard F,TRUE,China,TRUE,Singapore,TRUE,Mexico,VER > HAM,84,56,TRUE,United States,TRUE,Azerbaijan,,TRUE,Malaysia
+Richard L,TRUE,Great Britain,TRUE,Canada,TRUE,Malaysia,RUS > VER,-5,94,TRUE,China,TRUE,Spain,,TRUE,Singapore
+Scott,TRUE,Miami,TRUE,China,TRUE,Great Britain,HAM > ANT,38,-6,FALSE,,TRUE,Netherlands,,FALSE,
+Jack,TRUE,Netherlands,TRUE,Canada,TRUE,Hungary,ANT > LEC,42,46,TRUE,Malaysia,TRUE,Spain,,FALSE,
+Michelle,TRUE,Great Britain,TRUE,Monaco,FALSE,,,,,TRUE,China,TRUE,Spain,,TRUE,Singapore
+Martin,TRUE,Great Britain,FALSE,,FALSE,,,,,TRUE,United States,TRUE,Malaysia,,TRUE,Singapore
+Katie,TRUE,Netherlands,TRUE,Barcelona,FALSE,,,,,TRUE,Mexico,TRUE,Spain,,TRUE,Singapore
+Danielle,TRUE,Singapore,TRUE,China,TRUE,Mexico,ANT > HAM,36,56,TRUE,Spain,TRUE,Netherlands,,TRUE,United States
+Sue,FALSE,,FALSE,,FALSE,,,,,FALSE,,TRUE,Netherlands,,TRUE,Mexico
+Shirley,TRUE,Great Britain,FALSE,,FALSE,,,,,FALSE,,FALSE,,,TRUE,Singapore
+Victoria,TRUE,Canada,FALSE,,FALSE,,,,,FALSE,,FALSE,,,FALSE,
+Abigail,FALSE,,FALSE,,FALSE,,,,,FALSE,,FALSE,,,FALSE,

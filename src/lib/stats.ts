@@ -371,16 +371,37 @@ export function chipHighlights(data: LeagueData): Highlight[] {
     })
   }
 
-  // Best and worst Final Fix use need per-driver points, which are still to come.
-  for (const kind of ['Best', 'Worst']) {
+  // Best and worst Final Fix use: points the replacement scored minus what the swapped-out driver would have.
+  const swapsScored = data.chipUses.flatMap((u) =>
+    u.chip === 'FF' && u.out && u.in && u.outPoints !== undefined && u.inPoints !== undefined
+      ? [{ ...u, net: u.inPoints - u.outPoints, outPoints: u.outPoints, inPoints: u.inPoints }]
+      : [],
+  )
+  const describeSwap = (u: (typeof swapsScored)[number]) =>
+    `${u.player} at ${u.race}: swapped ${driverName(u.out as string)} (${fmt(u.outPoints)} pts) for ${driverName(u.in as string)} (${fmt(u.inPoints)} pts)`
+  if (swapsScored.length > 0) {
+    const best = Math.max(...swapsScored.map((u) => u.net))
+    const topSwaps = swapsScored.filter((u) => u.net === best)
     out.push({
       chip: 'FF',
-      id: `${kind.toLowerCase()}-FF`,
-      label: `${kind} use of Final Fix`,
-      value: 'TBC',
-      detail: 'Waiting on driver points data',
-      players: [],
+      id: 'best-FF',
+      label: 'Best use of Final Fix',
+      value: `${sgn(best)} pts`,
+      detail: topSwaps.map(describeSwap).join('; '),
+      players: topSwaps.map((u) => u.player),
     })
+    if (swapsScored.length > 1) {
+      const worst = Math.min(...swapsScored.map((u) => u.net))
+      const lowSwaps = swapsScored.filter((u) => u.net === worst)
+      out.push({
+        chip: 'FF',
+        id: 'worst-FF',
+        label: 'Worst use of Final Fix',
+        value: `${sgn(worst)} pts`,
+        detail: lowSwaps.map(describeSwap).join('; '),
+        players: lowSwaps.map((u) => u.player),
+      })
+    }
   }
 
   // Most common driver brought in with Final Fix

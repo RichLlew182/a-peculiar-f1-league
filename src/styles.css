@@ -244,14 +244,15 @@ h3.spaced { margin-top: 24px; }
 .move.up { color: var(--good); }
 .move.down { color: var(--bad); }
 
-.chips { display: flex; gap: 4px; flex-wrap: wrap; }
+.chips { display: flex; gap: 5px; flex-wrap: wrap; }
 .chips-cell .chips { flex-wrap: nowrap; }
 .chip {
-  display: inline-block; min-width: 28px; text-align: center; font-size: 11px; font-weight: 700; line-height: 1;
-  padding: 5px 4px; border-radius: 5px; border: 1.5px solid color-mix(in srgb, var(--chip, var(--axis)) 80%, var(--ink)); color: var(--ink-2);
+  display: inline-flex; align-items: center; justify-content: center; flex: none; box-sizing: border-box;
+  width: 28px; height: 28px; font-size: 11px; font-weight: 700; line-height: 1; letter-spacing: 0; text-align: center;
+  padding: 0; border-radius: 50%; border: 1.5px solid color-mix(in srgb, var(--chip, var(--axis)) 80%, var(--ink)); color: var(--ink-2);
 }
 .chip.used { background: var(--chip, var(--ink)); border-color: var(--chip, var(--ink)); color: var(--chip-ink, var(--surface)); }
-.legend-note .chip { min-width: 0; padding: 3px 6px; margin: 0 2px; }
+.legend-note .chip { display: inline-block; width: auto; height: auto; padding: 3px 6px; margin: 0 2px; border-radius: 5px; }
 
 .team { display: grid; gap: 6px; }
 .picks { display: flex; flex-wrap: wrap; gap: 4px 6px; }

@@ -200,6 +200,12 @@ export function parseChipUsage(csv: string, leaderboardNames: string[]): ChipUse
   const rows = parseCsv(csv)
   const header = rows[0] ?? []
   const iChange = colIndex(header, 'Change')
+  const iOut = colIndex(header, 'Replaced Driver Extra Pts')
+  const iIn = colIndex(header, 'Replacement Driver Extra Pts')
+  const num = (v: string | undefined) => {
+    const t = (v ?? '').trim().replace(/,/g, '')
+    return t !== '' && Number.isFinite(Number(t)) ? Number(t) : undefined
+  }
   const cols = CHIPS.map((c) => ({ key: c.key, i: colIndex(header, c.key) })).filter((c) => c.i >= 0)
   const nameMap = buildNameMap(
     rows.slice(1).map((r) => (r[0] ?? '').trim()).filter(Boolean),
@@ -220,6 +226,10 @@ export function parseChipUsage(csv: string, leaderboardNames: string[]): ChipUse
         if (out && inn) {
           use.out = out
           use.in = inn
+        }
+        if (iOut >= 0 && iIn >= 0) {
+          use.outPoints = num(row[iOut])
+          use.inPoints = num(row[iIn])
         }
       }
       uses.push(use)

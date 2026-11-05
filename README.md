@@ -43,7 +43,7 @@ The workflow also rebuilds once a day to refresh the bundled fallback. To refres
 
 ## How the sheets are read
 
-The published CSV links live in `src/data/sources.json`.
+The published CSV links live in `src/data/seasons.json`, one entry per season. Each season's bundled fallback CSVs live in `src/data/<season>/`. To archive a season, set `"archived": true` in `seasons.json`: it is then served from the bundled copy only and never fetched.
 
 | Sheet | What the app expects |
 | --- | --- |
@@ -64,7 +64,7 @@ src/
   lib/parse.ts          CSV to typed league data
   lib/stats.ts          highlights and records
   lib/useLeagueData.ts  fetching, change detection, polling
-  data/                 sources.json and the bundled fallback CSVs
+  data/                 seasons.json and the bundled fallback CSVs per season
 scripts/update-snapshot.mjs
 .github/workflows/deploy.yml
 ```

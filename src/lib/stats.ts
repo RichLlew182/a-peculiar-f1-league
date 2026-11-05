@@ -182,6 +182,34 @@ export function highlights(data: LeagueData): Highlight[] {
     }
   }
 
+  // Fall from grace: furthest drop from a player's best position this season to where they are now
+  if (done.length > 1) {
+    const last = done[done.length - 1]
+    const falls = data.playerNames
+      .filter((nm) => last.ranks[nm] !== undefined)
+      .map((nm) => {
+        let peak = { rank: Infinity, race: '' }
+        for (const r of done) {
+          const k = r.ranks[nm]
+          if (k !== undefined && k < peak.rank) peak = { rank: k, race: r.name }
+        }
+        return { name: nm, peak, now: last.ranks[nm], places: last.ranks[nm] - peak.rank }
+      })
+      .sort((a, b) => b.places - a.places)
+    if (falls.length > 0 && falls[0].places > 0) {
+      const tied = falls.filter((f) => f.places === falls[0].places)
+      out.push({
+        id: 'fall-from-grace',
+        label: 'Biggest fall from grace',
+        value: `${falls[0].places} places`,
+        detail: tied
+          .map((f) => `${f.name}: ${ord(f.peak.rank)} after ${f.peak.race} to ${ord(f.now)} now`)
+          .join('; '),
+        players: tied.map((f) => f.name),
+      })
+    }
+  }
+
   // Biggest lead over second place
   let lead = { race: '', by: -Infinity, player: '' }
   for (const r of done) {

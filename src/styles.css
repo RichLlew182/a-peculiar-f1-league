@@ -221,7 +221,7 @@ h3.spaced { margin-top: 24px; }
 .tower-row.leader::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--accent); border-radius: 0 2px 2px 0; }
 .pos { font-weight: 750; font-size: 18px; text-align: center; font-variant-numeric: tabular-nums; }
 .who { display: grid; gap: 2px; min-width: 0; }
-.who strong { font-size: 16px; font-weight: 650; }
+.who strong { display: flex; align-items: center; flex-wrap: wrap; gap: 0 8px; font-size: 16px; font-weight: 650; }
 .team-name { font-size: 13px; color: var(--ink-2); overflow-wrap: anywhere; }
 .who-sub { display: flex; gap: 10px; align-items: center; font-size: 12px; color: var(--ink-2); flex-wrap: wrap; }
 .points { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
@@ -574,7 +574,7 @@ h3.spaced { margin-top: 24px; }
 /* ---- fun touches ---- */
 .top-score { color: var(--purple); font-weight: 700; }
 .tag.purple { color: var(--purple); border-color: var(--purple); }
-.hot { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 700; color: var(--accent); }
+.hot { font-family: var(--font); letter-spacing: 0; line-height: 1; display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 700; color: var(--accent); }
 .hot svg { width: 14px; height: 14px; }
 .podium-champ svg { width: 14px; height: 14px; vertical-align: -2px; margin-right: 3px; }
 @media (prefers-reduced-motion: no-preference) {
@@ -587,4 +587,4 @@ h3.spaced { margin-top: 24px; }
   .podium.enter .place-1 .podium-card, .podium.enter .place-1 .podium-step { animation-delay: 0.4s; }
 }
 
-.who strong .hot, .podium-name .hot { margin-left: 8px; vertical-align: middle; font-weight: 700; }
+.podium-name .hot { margin-left: 8px; vertical-align: middle; font-weight: 700; }

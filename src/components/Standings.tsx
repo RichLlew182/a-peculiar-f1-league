@@ -3,16 +3,15 @@ import { hotStreaks, unlimitedPlayers } from '../lib/stats'
 import { Flame, Trophy } from './icons'
 import { RecapBanner } from './RecapBanner'
 import { useCountUp } from '../lib/useCountUp'
+import { useSeason } from '../lib/SeasonContext'
 import { fmt, money, ordinal, signedFmt, textOn } from '../lib/format'
 import { CHIPS, type Colours, type LeagueData, type Player, type Race } from '../lib/types'
 
-const playerHref = (name: string) => `#player/${encodeURIComponent(name)}`
-
 /** Clicking anywhere on a row or card opens the player's page (the name stays the real, keyboard-friendly link). */
-const openPlayer = (name: string) => (e: React.MouseEvent) => {
+const openPlayer = (href: string) => (e: React.MouseEvent) => {
   if ((e.target as HTMLElement).closest('a')) return
   if (window.getSelection()?.toString()) return // the user is selecting text
-  window.location.hash = playerHref(name).slice(1)
+  window.location.hash = href.slice(1)
 }
 
 const swatch = (hex?: string) => (hex ? ({ '--c': hex } as CSSProperties) : undefined)
@@ -139,6 +138,8 @@ function Podium({
   unlimited: Set<string>
   hot: Map<string, number>
 }) {
+  const { href } = useSeason()
+  const playerHref = (name: string) => href(`player/${encodeURIComponent(name)}`)
   const animate = useRef(!podiumPlayed).current
   useEffect(() => {
     podiumPlayed = true
@@ -153,7 +154,7 @@ function Podium({
         const chaser = lead ? players.find((q) => q.points < p.points) : undefined
         return (
           <li key={p.name} className={`podium-slot place-${i + 1}`}>
-            <div className="podium-card clickable" onClick={openPlayer(p.name)}>
+            <div className="podium-card clickable" onClick={openPlayer(playerHref(p.name))}>
               <div className="podium-top">
                 <span className="podium-place" aria-hidden="true">
                   {ordinal(p.rank)}
@@ -220,6 +221,8 @@ function Podium({
 }
 
 export function Standings({ data }: { data: LeagueData }) {
+  const { href } = useSeason()
+  const playerHref = (name: string) => href(`player/${encodeURIComponent(name)}`)
   const latest = data.completed[data.completed.length - 1]
   const raceLabel = latest ? latest.name : 'last race'
   const rest = data.players.slice(3)
@@ -277,7 +280,7 @@ export function Standings({ data }: { data: LeagueData }) {
                 key={p.name}
                 className={p.rank === 1 ? 'tower-row clickable leader' : 'tower-row clickable'}
                 role="row"
-                onClick={openPlayer(p.name)}
+                onClick={openPlayer(playerHref(p.name))}
               >
                 <span className="pos" role="cell">
                   {p.rank}

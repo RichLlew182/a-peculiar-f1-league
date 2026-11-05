@@ -1,4 +1,6 @@
 import { useState, type CSSProperties } from 'react'
+import { useSeason } from '../lib/SeasonContext'
+import { scopedKey } from '../lib/route'
 import { textOn } from '../lib/format'
 import { driverName } from '../lib/names'
 import { buildRecap, recapSentences } from '../lib/recap'
@@ -6,9 +8,9 @@ import { CHIPS, type LeagueData } from '../lib/types'
 
 const KEY = 'f1-fantasy:recap-dismissed:v1'
 
-const readDismissed = (): string | null => {
+const readDismissed = (key: string): string | null => {
   try {
-    return localStorage.getItem(KEY)
+    return localStorage.getItem(key)
   } catch {
     return null
   }
@@ -16,8 +18,10 @@ const readDismissed = (): string | null => {
 
 /** A short summary of the latest race, shown on landing until dismissed. Returns for each new race. */
 export function RecapBanner({ data }: { data: LeagueData }) {
+  const { id, href } = useSeason()
+  const key = scopedKey(KEY, id)
   const latest = data.completed[data.completed.length - 1]
-  const [dismissed, setDismissed] = useState<string | null>(readDismissed)
+  const [dismissed, setDismissed] = useState<string | null>(() => readDismissed(key))
   if (!latest || dismissed === latest.name) return null
 
   const r = buildRecap(data, latest)
@@ -27,7 +31,7 @@ export function RecapBanner({ data }: { data: LeagueData }) {
   const close = () => {
     setDismissed(latest.name)
     try {
-      localStorage.setItem(KEY, latest.name)
+      localStorage.setItem(key, latest.name)
     } catch {
       /* storage unavailable: it will simply show again next visit */
     }
@@ -83,7 +87,7 @@ export function RecapBanner({ data }: { data: LeagueData }) {
           })}
         </ul>
       )}
-      <a className="banner-link" href="#races">
+      <a className="banner-link" href={href('races')}>
         See the full recap
       </a>
     </aside>

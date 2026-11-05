@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Recap } from './components/Recap'
+import { PlayerPage } from './components/PlayerPage'
 import { FormGuide } from './components/FormGuide'
 import { ProgressChart } from './components/ProgressChart'
 import { RaceList } from './components/RaceList'
@@ -16,9 +17,19 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'stats', label: 'Stats' },
 ]
 
-const tabFromHash = (): Tab => {
-  const h = window.location.hash.replace('#', '') as Tab
-  return TABS.some((t) => t.id === h) ? h : 'standings'
+type Route = { tab: Tab; player?: string }
+
+const routeFromHash = (): Route => {
+  const h = window.location.hash.replace('#', '')
+  if (h.startsWith('player/')) {
+    try {
+      return { tab: 'standings', player: decodeURIComponent(h.slice('player/'.length)) }
+    } catch {
+      return { tab: 'standings' }
+    }
+  }
+  const t = h as Tab
+  return { tab: TABS.some((x) => x.id === t) ? t : 'standings' }
 }
 
 type Theme = 'system' | 'light' | 'dark'
@@ -51,12 +62,13 @@ function useTheme() {
 export default function App() {
   const state = useLeagueData()
   const { data } = state
-  const [tab, setTab] = useState<Tab>(tabFromHash)
+  const [route, setRoute] = useState<Route>(routeFromHash)
+  const tab = route.tab
   const [theme, cycleTheme] = useTheme()
   const [, setNow] = useState(0)
 
   useEffect(() => {
-    const onHash = () => setTab(tabFromHash())
+    const onHash = () => setRoute(routeFromHash())
     window.addEventListener('hashchange', onHash)
     // keep "x min ago" fresh
     const t = window.setInterval(() => setNow((n) => n + 1), 30_000)
@@ -67,7 +79,7 @@ export default function App() {
   }, [])
 
   const go = (t: Tab) => {
-    setTab(t)
+    setRoute({ tab: t })
     window.history.replaceState(null, '', `#${t}`)
   }
 
@@ -141,7 +153,7 @@ export default function App() {
       </nav>
 
       <main className="sheet">
-        {tab === 'standings' && <Standings data={data} />}
+        {route.player ? <PlayerPage data={data} name={route.player} /> : tab === 'standings' && <Standings data={data} />}
         {tab === 'progress' && <ProgressChart data={data} />}
         {tab === 'races' && (
           <>

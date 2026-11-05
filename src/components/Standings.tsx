@@ -4,6 +4,8 @@ import { RecapBanner } from './RecapBanner'
 import { fmt, money, ordinal, signedFmt, textOn } from '../lib/format'
 import { CHIPS, type Colours, type LeagueData, type Player, type Race } from '../lib/types'
 
+const playerHref = (name: string) => `#player/${encodeURIComponent(name)}`
+
 const swatch = (hex?: string) => (hex ? ({ '--c': hex } as CSSProperties) : undefined)
 
 function Chips({ player, colours }: { player: Player; colours: Colours }) {
@@ -126,7 +128,9 @@ function Podium({
               </div>
               <h3 className="podium-name">
                 <span className="sr-only">{ordinal(p.rank)}: </span>
-                {p.name}
+                <a className="player-link" href={playerHref(p.name)}>
+                  {p.name}
+                </a>
               </h3>
               {p.teamName && <p className="podium-team">{p.teamName}</p>}
               <p className="podium-points">
@@ -208,7 +212,11 @@ export function Standings({ data }: { data: LeagueData }) {
                 <Move move={move} />
               </span>
               <span className="who" role="cell">
-                <strong>{p.name}</strong>
+                <strong>
+                  <a className="player-link" href={playerHref(p.name)}>
+                    {p.name}
+                  </a>
+                </strong>
                 {p.teamName && <span className="team-name">{p.teamName}</span>}
                 <span className="who-sub">
                   {gained !== undefined && (

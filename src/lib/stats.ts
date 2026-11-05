@@ -371,6 +371,18 @@ export function chipHighlights(data: LeagueData): Highlight[] {
     })
   }
 
+  // Best and worst Final Fix use need per-driver points, which are still to come.
+  for (const kind of ['Best', 'Worst']) {
+    out.push({
+      chip: 'FF',
+      id: `${kind.toLowerCase()}-FF`,
+      label: `${kind} use of Final Fix`,
+      value: 'TBC',
+      detail: 'Waiting on driver points data',
+      players: [],
+    })
+  }
+
   // Most common driver brought in with Final Fix
   const swaps = new Map<string, string[]>()
   for (const u of data.chipUses.filter((x) => x.chip === 'FF' && x.in)) {

@@ -66,6 +66,9 @@ export interface ChipUse {
   /** Final Fix only: driver swapped out and the driver brought in */
   out?: string
   in?: string
+  /** Final Fix only: points the swapped-out driver went on to score, and the driver brought in */
+  outPoints?: number
+  inPoints?: number
 }
 
 export interface LeagueData {

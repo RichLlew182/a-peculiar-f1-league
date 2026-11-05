@@ -57,8 +57,8 @@ export function Stats({ data }: { data: LeagueData }) {
           <div className="section-head">
             <h2 id="chip-h">Chips</h2>
             <p className="legend-note">
-              Best and worst compare the chip score with the best score that weekend by a player who didn’t play that
-              chip
+              Limitless and Extra DRS compare the chip score with the best score that weekend by a player who didn’t play
+              that chip. Final Fix compares the driver brought in with the one swapped out
             </p>
           </div>
           {(['LL', '3X', 'FF', 'NN'] as const).map((key) => {

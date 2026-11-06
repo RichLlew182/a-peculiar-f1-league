@@ -631,7 +631,9 @@ h3.spaced { margin-top: 24px; }
 
 /* ---------- chip stats grouped by chip ---------- */
 .chip-group { margin-top: 18px; }
-.chip-group-title { display: flex; align-items: center; gap: 10px; font-family: var(--font-head); font-size: 16px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 8px; }
+.stats-page { display: contents; }
+.stats-page .section-head h2 { font-size: 26px; }
+.chip-group-title { display: flex; align-items: center; gap: 12px; font-family: var(--font-head); font-size: 21px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 8px; }
 .chip-group .facts { border-top: 0; }
 .chip-group .fact { border-left-color: var(--chip, var(--accent)); }
 /* chip colour mixed toward the text colour so it stays readable in light and dark */

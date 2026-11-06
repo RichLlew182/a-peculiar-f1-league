@@ -249,6 +249,12 @@ button { font: inherit; color: inherit; }
 .tab:hover { color: #fff; }
 .tab[aria-current='page'] { background: var(--page); color: var(--ink); }
 
+/* Dark theme: the page is nearly as dark as the masthead, so invert the active tab to keep it obvious */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .tab[aria-current='page'] { background: #f1f1f4; color: #15151e; }
+}
+:root[data-theme='dark'] .tab[aria-current='page'] { background: #f1f1f4; color: #15151e; }
+
 /* ---------- sheet ---------- */
 .sheet {
   background: var(--surface); border: 1px solid var(--hair);

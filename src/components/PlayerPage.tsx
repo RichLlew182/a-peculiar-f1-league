@@ -173,6 +173,13 @@ export function PlayerPage({ data, name }: { data: LeagueData; name: string }) {
             : `${fmt(Math.abs(p.gap))} behind ${above?.name ?? 'the player above'}, ${fmt(Math.abs(p.leaderGap))} behind ${leader.name}`,
     },
     { label: 'Points', value: fmt(p.points), detail: `Average ${fmt(Math.round(prof.avgPoints))} per race` },
+    {
+      label: 'Budget',
+      value: unlimited ? '∞' : money(p.budget),
+      detail: unlimited
+        ? `Limitless chip this weekend, so no budget limit · Team value ${money(p.value)} · Cap ${money(p.cap)}`
+        : `Team value ${money(p.value)} · Cap ${money(p.cap)}`,
+    },
   ]
   if (prof.best && prof.worst) {
     facts.push(
@@ -252,16 +259,6 @@ export function PlayerPage({ data, name }: { data: LeagueData; name: string }) {
         <h3>Current team</h3>
         <TeamList label="Drivers" rows={driverRows} />
         <TeamList label="Constructors" rows={constructorRows} />
-        <p className="team-meta">
-          Value {money(p.value)} · Cap {money(p.cap)} · Budget{' '}
-          {unlimited ? (
-            <span className="budget-inf" title="Limitless chip this weekend, so no budget limit">
-              ∞<span className="sr-only"> unlimited (Limitless chip this weekend)</span>
-            </span>
-          ) : (
-            money(p.budget)
-          )}
-        </p>
       </div>
 
       <div className="player-block">

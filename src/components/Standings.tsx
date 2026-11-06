@@ -91,12 +91,16 @@ function Move({ move }: { move: number }) {
 /** The top three laid out like a podium: 2nd on the left, 1st in the middle, 3rd on the right. */
 function Podium({
   players,
+  names,
+  unlimited,
   colours,
   latest,
   finished,
   hot,
 }: {
   players: Player[]
+  names: string[]
+  unlimited: Set<string>
   colours: Colours
   latest?: Race
   finished: boolean
@@ -117,7 +121,11 @@ function Podium({
         const lead = p.rank === 1
         const chaser = lead ? players.find((q) => q.points < p.points) : undefined
         return (
-          <li key={p.name} className={`podium-slot place-${i + 1}`}>
+          <li
+            key={p.name}
+            className={`podium-slot place-${i + 1}`}
+            style={{ '--c': playerColour(names, p.name) } as CSSProperties}
+          >
             <div className="podium-card clickable" onClick={openPlayer(playerHref(p.name))}>
               <div className="podium-top">
                 <span className="podium-place" aria-hidden="true">
@@ -171,10 +179,27 @@ function Podium({
                   </span>
                 </p>
               )}
+              <p className="podium-gaps podium-budget">
+                <span>
+                  Budget{' '}
+                  <b>
+                    {unlimited.has(p.name) ? (
+                      <span title="Limitless chip this weekend, so no budget limit">
+                        ∞<span className="sr-only"> unlimited (Limitless chip this weekend)</span>
+                      </span>
+                    ) : (
+                      money(p.budget)
+                    )}
+                  </b>
+                </span>
+              </p>
               <Chips player={p} colours={colours} />
             </div>
             <div className="podium-step" aria-hidden="true">
-              {p.rank}
+              <span className="podium-rank">
+                {p.rank}
+                <span className="podium-suffix">{ordinal(p.rank).slice(String(p.rank).length)}</span>
+              </span>
             </div>
           </li>
         )
@@ -207,6 +232,8 @@ export function Standings({ data }: { data: LeagueData }) {
 
       <Podium
         players={data.players.slice(0, 3)}
+        names={data.playerNames}
+        unlimited={unlimited}
         colours={data.colours}
         latest={latest}
         finished={finished}

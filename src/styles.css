@@ -258,7 +258,7 @@ button { font: inherit; color: inherit; }
 /* ---------- sheet ---------- */
 .sheet {
   background: var(--surface); border: 1px solid var(--hair);
-  border-radius: 12px; padding: 24px 20px 32px; display: grid; gap: 40px;
+  border-radius: 0; padding: 24px 20px 32px; display: grid; gap: 40px;
   grid-template-columns: minmax(0, 1fr);
   min-height: 320px;
 }
@@ -327,21 +327,24 @@ h3.spaced { margin-top: 24px; }
 }
 .chip.used { background: var(--chip, var(--ink)); border-color: var(--chip, var(--ink)); color: var(--chip-ink, var(--surface)); }
 /* Slanted (parallelogram) chips in the standings; outlined ones draw their edge with an inset fill. */
-.tower-row .chip, .podium .chip {
+.tower-row .chip, .podium .chip, .banner .chip, .legend-note .chip {
   position: relative; isolation: isolate; border: 0; border-radius: 0; width: 36px; height: 26px; font-size: 11px;
-  background: color-mix(in srgb, var(--chip, var(--axis)) 80%, var(--ink));
+  background: color-mix(in srgb, var(--chip, var(--axis)) 40%, var(--surface));
   clip-path: polygon(22% 0, 100% 0, 78% 100%, 0 100%);
 }
-.tower-row .chip::before, .podium .chip::before {
+.tower-row .chip::before, .podium .chip::before, .banner .chip::before, .legend-note .chip::before {
   content: ''; position: absolute; inset: 1.5px; z-index: -1;
   background: color-mix(in srgb, var(--chip, var(--axis)) 10%, var(--surface));
   clip-path: polygon(22% 0, 100% 0, 78% 100%, 0 100%);
 }
-.tower-row .chip.used, .podium .chip.used { background: var(--chip, var(--ink)); }
-.tower-row .chip.used::before, .podium .chip.used::before { display: none; }
+.tower-row .chip.used, .podium .chip.used, .banner .chip.used, .legend-note .chip.used { background: var(--chip, var(--ink)); }
+.tower-row .chip.used::before, .podium .chip.used::before, .banner .chip.used::before, .legend-note .chip.used::before { display: none; }
 .tower-row .chips, .podium .chips { gap: 0; }
 .tower-row .chip + .chip, .podium .chip + .chip { margin-left: -5px; } /* tuck into the slant, leaving a ~3px visual gap */
-.legend-note .chip { display: inline-block; width: auto; height: auto; padding: 3px 6px; margin: 0 2px; border-radius: 5px; }
+.legend-note .chip { display: inline-block; width: auto; height: auto; padding: 3px 8px; margin: 0 2px; font-size: 11px; font-weight: 700; clip-path: none; border-radius: 0; }
+.legend-note .chip::before { display: none; }
+.legend-note .chip.used { background: var(--ink); color: var(--surface); }
+.legend-note .chip:not(.used) { background: transparent; border: 1px solid var(--axis); color: var(--ink-2); }
 
 .team { display: grid; gap: 6px; }
 .picks { display: flex; flex-wrap: wrap; gap: 4px 6px; }
@@ -539,13 +542,17 @@ h3.spaced { margin-top: 24px; }
 .podium-slot.place-3 { order: 3; --medal: #c48a5a; --medal-ink: #2d1907; }
 .podium-card {
   display: grid; gap: 8px; align-content: start; padding: 16px;
-  border: 1px solid var(--hair); border-top: 4px solid var(--medal); border-bottom: 0; border-radius: 12px 12px 0 0;
+  border: 1px solid var(--hair); border-top: 4px solid var(--medal); border-bottom: 0; border-radius: 0;
   background: color-mix(in srgb, var(--medal) 9%, var(--surface));
 }
 .podium-slot.place-1 .podium-card { padding-top: 20px; padding-bottom: 20px; }
 .podium-top { display: flex; align-items: center; gap: 10px; min-height: 30px; }
 .podium-top .badge { margin-left: auto; }
-.podium-place { display: none; font-weight: 800; font-size: 13px; background: var(--medal); color: var(--medal-ink); border-radius: 999px; padding: 3px 10px; }
+.podium-place {
+  display: none; font-family: var(--font-head); font-weight: 800; font-size: 15px; letter-spacing: 0.06em; text-transform: uppercase;
+  background: var(--c, var(--medal)); color: #fff; padding: 3px 18px 3px 10px;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+}
 .podium-gained { font-size: 12px; color: var(--ink-2); }
 .podium-name { margin: 0; font-size: 30px; line-height: 1.05; letter-spacing: 0.01em; text-transform: uppercase; font-weight: 800; }
 .podium-slot.place-1 .podium-name { font-size: 38px; }
@@ -558,8 +565,10 @@ h3.spaced { margin-top: 24px; }
 .podium-step {
   display: flex; align-items: center; justify-content: center; line-height: 1;
   font-family: var(--font-head); font-weight: 800; font-size: 40px;
-  background: var(--medal); color: var(--medal-ink); border-radius: 0 0 10px 10px;
+  background: var(--medal); color: var(--medal-ink); border-radius: 0;
 }
+.podium-rank { position: relative; line-height: 1; }
+.podium-suffix { position: absolute; left: 100%; top: 0.08em; margin-left: 2px; font-size: 0.4em; font-weight: 800; text-transform: lowercase; }
 .place-1 .podium-step { height: 84px; font-size: 52px; }
 .place-2 .podium-step { height: 60px; }
 .place-3 .podium-step { height: 42px; font-size: 32px; }
@@ -568,8 +577,8 @@ h3.spaced { margin-top: 24px; }
   .podium { grid-template-columns: minmax(0, 1fr); gap: 12px; }
   .podium-slot.place-1, .podium-slot.place-2, .podium-slot.place-3 { order: 0; }
   .podium-step { display: none; }
-  .podium-card, .podium-slot.place-1 .podium-card { border-bottom: 1px solid var(--hair); border-radius: 12px; padding: 16px; }
-  .podium-place { display: inline-block; }
+  .podium-card, .podium-slot.place-1 .podium-card { border-bottom: 1px solid var(--hair); border-radius: 0; padding: 16px; }
+  .podium-place { display: inline-block; } /* the steps are hidden here, so the tab carries the place */
   .podium-slot.place-1 .podium-name { font-size: 32px; }
   .podium-slot.place-1 .podium-points { font-size: 42px; }
 }
@@ -598,13 +607,16 @@ h3.spaced { margin-top: 24px; }
 .recap-uses { display: flex; flex-wrap: wrap; gap: 2px 18px; }
 
 /* ---------- latest-race banner ---------- */
-.banner { position: relative; display: grid; gap: 8px; margin: 0 0 22px; padding: 14px 44px 14px 16px; border: 1px solid var(--hair); border-radius: 10px; background: var(--wash); }
-.banner-title { font-family: var(--font-head); font-size: 18px; font-weight: 800; letter-spacing: 0.06em; margin: 0; }
+.banner { position: relative; display: grid; gap: 8px; margin: 0 0 22px; padding: 14px 44px 14px 16px; border: 1px solid var(--hair); border-left: 4px solid var(--accent); border-radius: 0; background: var(--wash); }
+.banner-title {
+  font-family: var(--font-head); font-size: 15px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; margin: 0; justify-self: start;
+  background: var(--ink); color: var(--surface); padding: 4px 22px 4px 12px; clip-path: polygon(0 0, 100% 0, calc(100% - 9px) 100%, 0 100%);
+}
 .banner-text { font-size: 15px; line-height: 1.5; max-width: 75ch; }
 .banner-chips { display: flex; flex-wrap: wrap; gap: 6px 18px; list-style: none; padding: 0; margin: 0; font-size: 13px; color: var(--ink-2); }
 .banner-chips li { display: inline-flex; align-items: center; gap: 8px; }
 .banner-link { font-size: 13px; font-weight: 600; justify-self: start; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
-.banner-close { position: absolute; top: 6px; right: 6px; width: 32px; height: 32px; border: 0; border-radius: 8px; background: none; color: var(--ink-2); font-size: 22px; line-height: 1; cursor: pointer; }
+.banner-close { position: absolute; top: 6px; right: 6px; width: 32px; height: 32px; border: 0; border-radius: 0; background: none; color: var(--ink-2); font-size: 22px; line-height: 1; cursor: pointer; }
 .banner-close:hover { background: var(--grid); color: var(--ink); }
 .banner-big { font-family: var(--font-head); font-size: 20px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.3; margin: 0; }
 .banner-news { display: grid; gap: 6px; list-style: none; padding: 0; margin: 0; }
@@ -613,7 +625,7 @@ h3.spaced { margin-top: 24px; }
 .news-in .news-icon { color: var(--good); }
 .news-out .news-icon { color: var(--bad); }
 .news-lead .news-icon { color: var(--ink); font-size: 14px; }
-.podium-champ { font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; background: var(--medal); color: var(--medal-ink); border-radius: 999px; padding: 3px 9px; }
+.podium-champ { font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; background: var(--medal); color: var(--medal-ink); border-radius: 0; padding: 3px 9px; clip-path: polygon(0 0, 100% 0, calc(100% - 6px) 100%, 0 100%); padding-right: 14px; }
 
 /* ---------- chip stats grouped by chip ---------- */
 .chip-group { margin-top: 18px; }
@@ -661,8 +673,9 @@ h3.spaced { margin-top: 24px; }
 
 /* whole row / card opens the player page */
 .clickable { cursor: pointer; transition: background-color 0.12s, box-shadow 0.12s; }
-.tower-row.clickable:hover, .tower-row.clickable:focus-within { background: color-mix(in srgb, var(--ink) 8%, var(--wash)); }
-.podium-card.clickable:hover, .podium-card.clickable:focus-within { box-shadow: 0 0 0 2px color-mix(in srgb, var(--medal) 70%, transparent); }
+.tower-row.clickable:hover, .tower-row.clickable:focus-within { background: color-mix(in srgb, var(--ink) 3.5%, var(--wash)); }
+.podium-card.clickable { transition: background 0.15s; }
+.podium-card.clickable:hover, .podium-card.clickable:focus-within { background: color-mix(in srgb, var(--medal) 17%, var(--surface)); }
 .player-link:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
 
 /* ---- fun touches ---- */

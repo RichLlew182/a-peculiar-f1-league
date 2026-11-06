@@ -284,7 +284,7 @@ h3.spaced { margin-top: 24px; }
   color: var(--ink-2); padding-top: 4px; padding-bottom: 8px;
 }
 .tower-head .num { text-align: right; white-space: nowrap; }
-.tower-row { background: var(--wash); min-height: 68px; margin-bottom: 6px; position: relative; }
+.tower-row { background: var(--wash); min-height: 68px; margin-bottom: 10px; position: relative; }
 .pos {
   align-self: stretch; display: grid; place-items: center; padding-right: 10px;
   background: var(--c, var(--ink)); color: #fff;
@@ -486,11 +486,11 @@ h3.spaced { margin-top: 24px; }
 
 /* ---------- race list ---------- */
 .race-list { border-top: 0; }
-.race { background: var(--wash); margin-bottom: 6px; }
+.race { background: var(--wash); margin-bottom: 10px; }
 .race summary { display: grid; grid-template-columns: 56px minmax(130px, 1fr) minmax(160px, 1fr) minmax(130px, 1fr); gap: 12px; align-items: center; padding: 12px 14px 12px 0; list-style: none; }
 .race summary::-webkit-details-marker { display: none; }
 .race summary:hover { background: color-mix(in srgb, var(--ink) 3.5%, var(--wash)); }
-.race-round { justify-self: start; align-self: stretch; display: flex; align-items: center; background: var(--ink); color: var(--surface); font-family: var(--font-head); font-weight: 800; font-size: 15px; letter-spacing: 0.04em; font-variant-numeric: tabular-nums; padding: 0 16px 0 10px; clip-path: polygon(0 0, 100% 0, calc(100% - 9px) 100%, 0 100%); }
+.race-round { justify-self: start; align-self: stretch; margin-block: -12px; display: flex; align-items: center; background: var(--ink); color: var(--surface); font-family: var(--font-head); font-weight: 800; font-size: 15px; letter-spacing: 0.04em; font-variant-numeric: tabular-nums; padding: 0 16px 0 10px; clip-path: polygon(0 0, 100% 0, calc(100% - 9px) 100%, 0 100%); }
 .race-name { font-family: var(--font-head); font-size: 21px; font-weight: 750; letter-spacing: 0.02em; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
 .race-top, .race-lead { font-size: 13px; color: var(--ink-2); }
 .race-top b, .race-lead b { color: var(--ink); font-weight: 650; }

@@ -327,18 +327,18 @@ h3.spaced { margin-top: 24px; }
 }
 .chip.used { background: var(--chip, var(--ink)); border-color: var(--chip, var(--ink)); color: var(--chip-ink, var(--surface)); }
 /* Slanted (parallelogram) chips in the standings; outlined ones draw their edge with an inset fill. */
-.tower-row .chip, .podium .chip, .banner .chip, .legend-note .chip {
+.tower-row .chip, .podium .chip, .banner .chip, .legend-note .chip, .chip-group-title .chip {
   position: relative; isolation: isolate; border: 0; border-radius: 0; width: 36px; height: 26px; font-size: 11px;
   background: color-mix(in srgb, var(--chip, var(--axis)) 40%, var(--surface));
   clip-path: polygon(22% 0, 100% 0, 78% 100%, 0 100%);
 }
-.tower-row .chip::before, .podium .chip::before, .banner .chip::before, .legend-note .chip::before {
+.tower-row .chip::before, .podium .chip::before, .banner .chip::before, .legend-note .chip::before, .chip-group-title .chip::before {
   content: ''; position: absolute; inset: 1.5px; z-index: -1;
   background: color-mix(in srgb, var(--chip, var(--axis)) 10%, var(--surface));
   clip-path: polygon(22% 0, 100% 0, 78% 100%, 0 100%);
 }
-.tower-row .chip.used, .podium .chip.used, .banner .chip.used, .legend-note .chip.used { background: var(--chip, var(--ink)); }
-.tower-row .chip.used::before, .podium .chip.used::before, .banner .chip.used::before, .legend-note .chip.used::before { display: none; }
+.tower-row .chip.used, .podium .chip.used, .banner .chip.used, .legend-note .chip.used, .chip-group-title .chip.used { background: var(--chip, var(--ink)); }
+.tower-row .chip.used::before, .podium .chip.used::before, .banner .chip.used::before, .legend-note .chip.used::before, .chip-group-title .chip.used::before { display: none; }
 .tower-row .chips, .podium .chips { gap: 0; }
 .tower-row .chip + .chip, .podium .chip + .chip { margin-left: -5px; } /* tuck into the slant, leaving a ~3px visual gap */
 .legend-note .chip { display: inline-block; width: auto; height: auto; padding: 3px 8px; margin: 0 2px; font-size: 11px; font-weight: 700; clip-path: none; border-radius: 0; }
@@ -450,6 +450,9 @@ h3.spaced { margin-top: 24px; }
 .race-table td:first-child { text-align: center; color: var(--muted); }
 .race-table thead th:nth-child(1) { text-align: center; }
 .race-table thead th:nth-child(2) { text-align: left; }
+.records thead th, .records thead th:first-child { background: #15151e; color: #fff; border-bottom: 0; font-family: var(--font-head); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; padding: 9px 10px; }
+.records tbody th { border-left: 4px solid var(--c, var(--ink)); }
+.records tbody tr:hover td, .records tbody tr:hover th { background: color-mix(in srgb, var(--ink) 4%, var(--surface)); }
 .records td .muted-text { font-size: 12px; margin-left: 4px; }
 
 /* ---------- form guide heat table ---------- */
@@ -502,17 +505,17 @@ h3.spaced { margin-top: 24px; }
 }
 
 /* ---------- stats ---------- */
-.facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 0; border-top: 1px solid var(--hair); }
-.fact { padding: 16px 16px 16px 0; border-bottom: 1px solid var(--grid); display: grid; gap: 2px; align-content: start; }
+.facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 6px; }
+.fact { padding: 12px 14px; background: var(--wash); border-left: 4px solid var(--accent); display: grid; gap: 2px; align-content: start; }
 .fact dt { font-size: 13px; color: var(--ink-2); }
 .fact-value { font-family: var(--font-head); font-size: 26px; font-weight: 750; letter-spacing: -0.02em; line-height: 1.15; font-variant-numeric: tabular-nums; }
 .fact-detail { font-size: 13px; color: var(--ink-2); }
 .two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px; }
 .bars { display: grid; gap: 6px; }
 .bars li { display: grid; grid-template-columns: 52px 1fr 78px; gap: 10px; align-items: center; font-size: 13px; }
-.bar-label { font-weight: 650; }
-.bar-track { height: 14px; display: block; }
-.bar-fill { display: block; height: 100%; background: var(--s1); border-radius: 0 4px 4px 0; min-width: 2px; }
+.bar-label { font-family: var(--font-head); font-weight: 750; font-size: 15px; letter-spacing: 0.04em; }
+.bar-track { height: 16px; display: block; }
+.bar-fill { display: block; height: 100%; background: var(--s1); min-width: 8px; clip-path: polygon(0 0, 100% 0, calc(100% - 6px) 100%, 0 100%); }
 .bar-value { font-variant-numeric: tabular-nums; }
 
 .foot { margin-top: 16px; color: var(--ink-2); font-size: 13px; }
@@ -631,6 +634,7 @@ h3.spaced { margin-top: 24px; }
 .chip-group { margin-top: 18px; }
 .chip-group-title { display: flex; align-items: center; gap: 10px; font-family: var(--font-head); font-size: 16px; font-weight: 750; margin: 0 0 4px; }
 .chip-group .facts { border-top: 0; }
+.chip-group .fact { border-left-color: var(--chip, var(--accent)); }
 /* chip colour mixed toward the text colour so it stays readable in light and dark */
 .chip-value { color: color-mix(in srgb, var(--chip, var(--ink)) 78%, var(--ink)); }
 .budget-inf { font-size: 1.25em; line-height: 1; font-weight: 700; vertical-align: -0.08em; }

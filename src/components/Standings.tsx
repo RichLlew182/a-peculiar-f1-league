@@ -1,11 +1,11 @@
 import { useEffect, useRef, type CSSProperties } from 'react'
-import { hotStreaks } from '../lib/stats'
+import { hotStreaks, unlimitedPlayers } from '../lib/stats'
 import { Flame, Trophy } from './icons'
 import { RecapBanner } from './RecapBanner'
 import { useCountUp } from '../lib/useCountUp'
 import { playerColour } from '../lib/playerColour'
 import { useSeason } from '../lib/SeasonContext'
-import { fmt, ordinal, signedFmt, textOn } from '../lib/format'
+import { fmt, money, ordinal, signedFmt, textOn } from '../lib/format'
 import { CHIPS, type Colours, type LeagueData, type Player, type Race } from '../lib/types'
 
 /** Clicking anywhere on a row or card opens the player's page (the name stays the real, keyboard-friendly link). */
@@ -191,6 +191,7 @@ export function Standings({ data }: { data: LeagueData }) {
   const rest = data.players.slice(3)
   const finished = data.completed.length > 0 && data.completed.length === data.races.length
   const hot = hotStreaks(data)
+  const unlimited = unlimitedPlayers(data) // a Limitless chip lifts the budget limit
   const topGain = latest ? Math.max(...Object.values(latest.gains)) : undefined
 
   return (
@@ -225,6 +226,9 @@ export function Standings({ data }: { data: LeagueData }) {
             </span>
             <span role="columnheader" className="num" title="Points behind the player above / behind the leader">
               Gap to next / leader
+            </span>
+            <span role="columnheader" className="num" title="Budget for the next race">
+              Budget
             </span>
             <span role="columnheader">Chips</span>
           </div>
@@ -282,6 +286,15 @@ export function Standings({ data }: { data: LeagueData }) {
                   >
                     {p.rank === 1 ? <span className="muted-text">–</span> : fmt(Math.abs(p.leaderGap))}
                   </span>
+                </span>
+                <span className="budget-cell num" role="cell">
+                  {unlimited.has(p.name) ? (
+                    <span className="budget-inf" title="Limitless chip this weekend, so no budget limit">
+                      ∞<span className="sr-only"> unlimited (Limitless chip this weekend)</span>
+                    </span>
+                  ) : (
+                    money(p.budget)
+                  )}
                 </span>
                 <span className="chips-cell" role="cell">
                   <Chips player={p} colours={data.colours} />

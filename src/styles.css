@@ -270,8 +270,8 @@ h3.spaced { margin-top: 24px; }
 .tower { border-top: 0; }
 .tower-head, .tower-row {
   display: grid;
-  grid-template-columns: 72px 62px minmax(200px, 1fr) 130px 190px 196px;
-  align-items: center; column-gap: 14px; padding: 0 16px 0 0;
+  grid-template-columns: 72px 62px minmax(200px, 1fr) 130px 190px 90px 196px;
+  align-items: center; column-gap: 22px; padding: 0 16px 0 0;
 }
 .tower-head {
   font-family: var(--font-head); font-size: 14px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
@@ -296,6 +296,7 @@ h3.spaced { margin-top: 24px; }
 .gap-cell { display: grid; gap: 2px; font-family: var(--font-head); font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .gap-cell .g-next { color: var(--gap-ink); font-weight: 800; font-size: 22px; line-height: 1; }
 .gap-cell .g-lead { color: var(--ink-2); font-size: 15px; }
+.budget-cell { font-family: var(--font-head); font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; color: var(--ink-2); }
 .movecell { display: flex; justify-content: center; }
 .badge {
   display: inline-flex; align-items: center; justify-content: center; gap: 4px; min-width: 46px;
@@ -333,11 +334,11 @@ h3.spaced { margin-top: 24px; }
 @media (max-width: 1020px) {
   .tower-head { display: none; }
   .tower-row {
-    grid-template-columns: 62px 1fr auto;
+    grid-template-columns: 62px minmax(0, 1fr) auto;
     grid-template-areas:
       'pos who points'
       'pos move gap'
-      'pos chips chips';
+      'pos chips budget';
     row-gap: 6px; column-gap: 12px; padding: 0 12px 0 0;
   }
   .pos { grid-area: pos; font-size: 30px; }
@@ -350,6 +351,16 @@ h3.spaced { margin-top: 24px; }
   .gap-cell .g-next { font-size: 17px; }
   .gap-cell.num { text-align: right; }
   .chips-cell { grid-area: chips; padding-bottom: 12px; }
+  .budget-cell { grid-area: budget; padding-bottom: 12px; font-size: 15px; white-space: nowrap; }
+  .chips-cell .chips { gap: 4px; }
+}
+
+@media (max-width: 420px) {
+  .tower-row .chip { width: 24px; height: 24px; font-size: 10px; }
+}
+@media (max-width: 370px) {
+  .tower-row .chip { width: 21px; height: 21px; font-size: 9px; }
+  .tower-row .chips-cell .chips { gap: 3px; }
 }
 
 /* ---------- progress chart ---------- */
@@ -685,6 +696,7 @@ h3,
 .who strong,
 .points,
 .gap-cell,
+.budget-cell,
 .fact-value,
 .podium-points,
 .podium-step,

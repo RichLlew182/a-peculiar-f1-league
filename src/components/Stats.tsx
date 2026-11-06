@@ -1,6 +1,5 @@
 import type { CSSProperties } from 'react'
 import { fmt, money, textOn } from '../lib/format'
-import { playerColour } from '../lib/playerColour'
 import { chipHighlights, highlights, ownership, playerStats } from '../lib/stats'
 import { CHIPS, type LeagueData } from '../lib/types'
 
@@ -121,7 +120,7 @@ export function Stats({ data }: { data: LeagueData }) {
             </thead>
             <tbody>
               {ps.map((s) => (
-                <tr key={s.name} style={{ '--c': playerColour(data.playerNames, s.name) } as CSSProperties}>
+                <tr key={s.name}>
                   <th scope="row">{s.name}</th>
                   <td className="num">{s.raceWins}</td>
                   <td className="num">{s.racesLed}</td>

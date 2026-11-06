@@ -451,7 +451,6 @@ h3.spaced { margin-top: 24px; }
 .race-table thead th:nth-child(1) { text-align: center; }
 .race-table thead th:nth-child(2) { text-align: left; }
 .records thead th, .records thead th:first-child { background: #15151e; color: #fff; border-bottom: 0; font-family: var(--font-head); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; padding: 9px 10px; }
-.records tbody th { border-left: 4px solid var(--c, var(--ink)); }
 .records tbody tr:hover td, .records tbody tr:hover th { background: color-mix(in srgb, var(--ink) 4%, var(--surface)); }
 .records td .muted-text { font-size: 12px; margin-left: 4px; }
 
@@ -505,7 +504,7 @@ h3.spaced { margin-top: 24px; }
 }
 
 /* ---------- stats ---------- */
-.facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 6px; }
+.facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 12px; }
 .fact { padding: 12px 14px; background: var(--wash); border-left: 4px solid var(--accent); display: grid; gap: 2px; align-content: start; }
 .fact dt { font-size: 13px; color: var(--ink-2); }
 .fact-value { font-family: var(--font-head); font-size: 26px; font-weight: 750; letter-spacing: -0.02em; line-height: 1.15; font-variant-numeric: tabular-nums; }
@@ -632,7 +631,7 @@ h3.spaced { margin-top: 24px; }
 
 /* ---------- chip stats grouped by chip ---------- */
 .chip-group { margin-top: 18px; }
-.chip-group-title { display: flex; align-items: center; gap: 10px; font-family: var(--font-head); font-size: 16px; font-weight: 750; margin: 0 0 4px; }
+.chip-group-title { display: flex; align-items: center; gap: 10px; font-family: var(--font-head); font-size: 16px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 8px; }
 .chip-group .facts { border-top: 0; }
 .chip-group .fact { border-left-color: var(--chip, var(--accent)); }
 /* chip colour mixed toward the text colour so it stays readable in light and dark */

@@ -341,8 +341,10 @@ h3.spaced { margin-top: 24px; }
 .tower-row .chip.used::before, .podium .chip.used::before, .banner .chip.used::before, .legend-note .chip.used::before { display: none; }
 .tower-row .chips, .podium .chips { gap: 0; }
 .tower-row .chip + .chip, .podium .chip + .chip { margin-left: -5px; } /* tuck into the slant, leaving a ~3px visual gap */
-.legend-note .chip:not(.used) { --chip: var(--ink-2); }
-.legend-note .chip { display: inline-block; width: auto; height: auto; padding: 3px 16px; margin: 0 2px; font-size: 11px; font-weight: 700; }
+.legend-note .chip { display: inline-block; width: auto; height: auto; padding: 3px 8px; margin: 0 2px; font-size: 11px; font-weight: 700; clip-path: none; border-radius: 0; }
+.legend-note .chip::before { display: none; }
+.legend-note .chip.used { background: var(--ink); color: var(--surface); }
+.legend-note .chip:not(.used) { background: transparent; border: 1px solid var(--axis); color: var(--ink-2); }
 
 .team { display: grid; gap: 6px; }
 .picks { display: flex; flex-wrap: wrap; gap: 4px 6px; }

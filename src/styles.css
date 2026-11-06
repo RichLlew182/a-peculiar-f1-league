@@ -284,7 +284,7 @@ h3.spaced { margin-top: 24px; }
   color: var(--ink-2); padding-top: 4px; padding-bottom: 8px;
 }
 .tower-head .num { text-align: right; white-space: nowrap; }
-.tower-row { background: var(--wash); min-height: 68px; margin-bottom: 6px; position: relative; }
+.tower-row { background: var(--wash); min-height: 68px; margin-bottom: 10px; position: relative; }
 .pos {
   align-self: stretch; display: grid; place-items: center; padding-right: 10px;
   background: var(--c, var(--ink)); color: #fff;
@@ -327,18 +327,18 @@ h3.spaced { margin-top: 24px; }
 }
 .chip.used { background: var(--chip, var(--ink)); border-color: var(--chip, var(--ink)); color: var(--chip-ink, var(--surface)); }
 /* Slanted (parallelogram) chips in the standings; outlined ones draw their edge with an inset fill. */
-.tower-row .chip, .podium .chip, .banner .chip, .legend-note .chip, .chip-group-title .chip {
+.tower-row .chip, .podium .chip, .banner .chip, .legend-note .chip, .chip-group-title .chip, .recap-chip-row .chip {
   position: relative; isolation: isolate; border: 0; border-radius: 0; width: 36px; height: 26px; font-size: 11px;
   background: color-mix(in srgb, var(--chip, var(--axis)) 40%, var(--surface));
   clip-path: polygon(22% 0, 100% 0, 78% 100%, 0 100%);
 }
-.tower-row .chip::before, .podium .chip::before, .banner .chip::before, .legend-note .chip::before, .chip-group-title .chip::before {
+.tower-row .chip::before, .podium .chip::before, .banner .chip::before, .legend-note .chip::before, .chip-group-title .chip::before, .recap-chip-row .chip::before {
   content: ''; position: absolute; inset: 1.5px; z-index: -1;
   background: color-mix(in srgb, var(--chip, var(--axis)) 10%, var(--surface));
   clip-path: polygon(22% 0, 100% 0, 78% 100%, 0 100%);
 }
-.tower-row .chip.used, .podium .chip.used, .banner .chip.used, .legend-note .chip.used, .chip-group-title .chip.used { background: var(--chip, var(--ink)); }
-.tower-row .chip.used::before, .podium .chip.used::before, .banner .chip.used::before, .legend-note .chip.used::before, .chip-group-title .chip.used::before { display: none; }
+.tower-row .chip.used, .podium .chip.used, .banner .chip.used, .legend-note .chip.used, .chip-group-title .chip.used, .recap-chip-row .chip.used { background: var(--chip, var(--ink)); }
+.tower-row .chip.used::before, .podium .chip.used::before, .banner .chip.used::before, .legend-note .chip.used::before, .chip-group-title .chip.used::before, .recap-chip-row .chip.used::before { display: none; }
 .tower-row .chips, .podium .chips { gap: 0; }
 .tower-row .chip + .chip, .podium .chip + .chip { margin-left: -5px; } /* tuck into the slant, leaving a ~3px visual gap */
 .legend-note .chip { display: inline-block; width: auto; height: auto; padding: 3px 8px; margin: 0 2px; font-size: 11px; font-weight: 700; clip-path: none; border-radius: 0; }
@@ -450,18 +450,18 @@ h3.spaced { margin-top: 24px; }
 .race-table td:first-child { text-align: center; color: var(--muted); }
 .race-table thead th:nth-child(1) { text-align: center; }
 .race-table thead th:nth-child(2) { text-align: left; }
-.records thead th, .records thead th:first-child { background: #15151e; color: #fff; border-bottom: 0; font-family: var(--font-head); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; padding: 9px 10px; }
+.records thead th, .records thead th:first-child, .race-table thead th, .race-table thead th:first-child { background: #15151e; color: #fff; border-bottom: 0; font-family: var(--font-head); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; padding: 9px 10px; }
 .records tbody tr:hover td, .records tbody tr:hover th { background: color-mix(in srgb, var(--ink) 4%, var(--surface)); }
 .records td .muted-text { font-size: 12px; margin-left: 4px; }
 
 /* ---------- form guide heat table ---------- */
 .heat { border-collapse: separate; border-spacing: 2px; font-size: 12px; font-variant-numeric: tabular-nums; width: 100%; min-width: 760px; }
-.heat th { font-weight: 600; color: var(--ink-2); padding: 4px 2px; text-align: center; font-size: 11px; vertical-align: bottom; }
+.heat th { font-family: var(--font-head); font-weight: 700; letter-spacing: 0.06em; color: var(--ink-2); padding: 4px 2px; text-align: center; font-size: 13px; vertical-align: bottom; }
 .heat th .sp { display: block; font-size: 9px; color: var(--muted); font-weight: 500; }
-.heat td { text-align: center; padding: 7px 2px; border-radius: 4px; min-width: 34px; color: var(--ink-2); }
+.heat td { text-align: center; padding: 7px 2px; border-radius: 0; min-width: 34px; color: var(--ink-2); }
 .heat .sticky-col { position: sticky; left: 0; background: var(--surface); text-align: left; padding-right: 10px; white-space: nowrap; z-index: 1; font-size: 13px; color: var(--ink); }
-.heat tbody th.sticky-col { font-weight: 600; }
-.heat .total-col { font-weight: 700; color: var(--ink); background: none; padding-left: 8px; text-align: right; }
+.heat tbody th.sticky-col { font-family: var(--font-head); font-weight: 750; font-size: 16px; letter-spacing: 0.03em; text-transform: uppercase; }
+.heat .total-col { font-family: var(--font-head); font-size: 15px; font-weight: 800; color: var(--ink); background: none; padding-left: 8px; text-align: right; }
 .heat td.h0, .heat td.h1, .heat td.h2, .heat td.h3, .heat td.h4, .heat td.h5, .heat td.h6 { font-weight: 600; }
 .h0 { background: var(--h0); color: var(--h0t) !important; }
 .h1 { background: var(--h1); color: var(--h1t) !important; }
@@ -473,7 +473,7 @@ h3.spaced { margin-top: 24px; }
 .heat-legend { display: flex; align-items: center; gap: 3px; font-size: 12px; color: var(--ink-2); margin-bottom: 10px; }
 .heat-legend span:first-child { margin-right: 6px; }
 .heat-legend span:last-child { margin-left: 6px; }
-.heat-legend i { width: 22px; height: 12px; border-radius: 3px; display: inline-block; }
+.heat-legend i { width: 22px; height: 12px; border-radius: 0; display: inline-block; }
 /* Backup cue for red/green colour blindness: a corner mark on the best and worst shades. */
 .heat td { position: relative; }
 .heat td.h6::after, .heat-legend i.h6::after { content: '\25B2'; }
@@ -485,21 +485,21 @@ h3.spaced { margin-top: 24px; }
 
 
 /* ---------- race list ---------- */
-.race-list { border-top: 1px solid var(--hair); }
-.race { border-bottom: 1px solid var(--grid); }
-.race summary { display: grid; grid-template-columns: 40px minmax(130px, 1fr) minmax(160px, 1fr) minmax(130px, 1fr); gap: 12px; align-items: center; padding: 12px 4px; list-style: none; }
+.race-list { border-top: 0; }
+.race { background: var(--wash); margin-bottom: 10px; }
+.race summary { display: grid; grid-template-columns: 56px minmax(130px, 1fr) minmax(160px, 1fr) minmax(130px, 1fr); gap: 12px; align-items: center; padding: 12px 14px 12px 0; list-style: none; }
 .race summary::-webkit-details-marker { display: none; }
-.race summary:hover { background: var(--wash); }
-.race-round { color: var(--muted); font-weight: 650; font-variant-numeric: tabular-nums; }
-.race-name { font-weight: 650; display: flex; align-items: center; gap: 8px; }
+.race summary:hover { background: color-mix(in srgb, var(--ink) 3.5%, var(--wash)); }
+.race-round { justify-self: start; align-self: stretch; margin-block: -12px; display: flex; align-items: center; background: var(--ink); color: var(--surface); font-family: var(--font-head); font-weight: 800; font-size: 15px; letter-spacing: 0.04em; font-variant-numeric: tabular-nums; padding: 0 16px 0 10px; clip-path: polygon(0 0, 100% 0, calc(100% - 9px) 100%, 0 100%); }
+.race-name { font-family: var(--font-head); font-size: 21px; font-weight: 750; letter-spacing: 0.02em; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
 .race-top, .race-lead { font-size: 13px; color: var(--ink-2); }
 .race-top b, .race-lead b { color: var(--ink); font-weight: 650; }
 .race-top .tag { margin-left: 8px; }
-.tag { font-size: 11px; font-weight: 600; border: 1px solid var(--axis); border-radius: 4px; padding: 1px 5px; color: var(--ink-2); }
-.race[open] > summary { background: var(--wash); }
-.race .table-scroll { padding: 8px 4px 16px; }
+.tag { font-size: 11px; font-weight: 600; border: 1px solid color-mix(in srgb, var(--ink) 28%, transparent); border-radius: 0; padding: 1px 6px; color: var(--ink-2); font-family: var(--font); letter-spacing: 0; text-transform: none; }
+.race[open] > summary { background: color-mix(in srgb, var(--ink) 3.5%, var(--wash)); }
+.race .table-scroll { padding: 10px 14px 16px; background: var(--surface); border: 1px solid var(--hair); border-top: 0; }
 @media (max-width: 720px) {
-  .race summary { grid-template-columns: 34px 1fr; }
+  .race summary { grid-template-columns: 56px 1fr; }
   .race-top, .race-lead { grid-column: 2; }
 }
 
@@ -589,12 +589,12 @@ h3.spaced { margin-top: 24px; }
 /* ---------- weekend recap ---------- */
 .recap { margin-bottom: 36px; }
 .recap-pick { position: relative; display: inline-flex; align-items: center; gap: 8px; font-size: 13px; }
-.recap-pick select { appearance: none; -webkit-appearance: none; font: inherit; font-size: 14px; color: var(--ink); background: var(--surface); border: 1px solid var(--axis); border-radius: 8px; padding: 6px 34px 6px 12px; cursor: pointer; }
+.recap-pick select { appearance: none; -webkit-appearance: none; font: inherit; font-size: 14px; color: var(--ink); background: var(--surface); border: 1px solid var(--axis); border-radius: 0; padding: 6px 34px 6px 12px; cursor: pointer; }
 .recap-pick::after { content: ''; position: absolute; right: 14px; top: 50%; width: 6px; height: 6px; border-right: 2px solid var(--ink-2); border-bottom: 2px solid var(--ink-2); transform: translateY(-75%) rotate(45deg); pointer-events: none; }
 .recap-headline { font-size: 16px; line-height: 1.55; max-width: 70ch; margin-bottom: 18px; }
 .recap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; margin-bottom: 14px; }
-.recap-block { border: 1px solid var(--hair); border-radius: 10px; padding: 14px 16px; background: var(--surface); }
-.recap-block h3 { font-family: var(--font-head); font-size: 14px; font-weight: 750; margin: 0 0 10px; }
+.recap-block { border: 0; border-left: 4px solid var(--accent); border-radius: 0; padding: 14px 16px; background: var(--wash); }
+.recap-block h3 { font-family: var(--font-head); font-size: 16px; font-weight: 750; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 10px; }
 .recap-rows { display: grid; gap: 8px; list-style: none; padding: 0; margin: 0; }
 .recap-rows li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
 .recap-name { font-weight: 600; }

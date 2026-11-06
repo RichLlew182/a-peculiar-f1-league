@@ -77,7 +77,7 @@ export default function App() {
 
 /** The picker in the masthead: a plain year until there is more than one season. */
 function SeasonPicker({ current, onPick }: { current: string; onPick: (id: string) => void }) {
-  if (SEASONS.length < 2) return <>{current}</>
+  if (SEASONS.length < 2) return <span className="year">{current}</span>
   return (
     <span className="season-pick">
       <select value={current} onChange={(e) => onPick(e.target.value)} aria-label="Season">
@@ -179,14 +179,6 @@ function SeasonView({
             </div>
           </div>
         </div>
-      </header>
-      <div className="page">
-        {state.justUpdated && (
-          <p className="toast" role="status">
-            New scores found. The tables and charts have updated.
-          </p>
-        )}
-
         <nav className="tabs" aria-label="Sections">
           {TABS.map((t) => (
             <button
@@ -196,10 +188,17 @@ function SeasonView({
               aria-current={tab === t.id ? 'page' : undefined}
               onClick={() => go(t.id)}
             >
-              {t.label}
+              <span>{t.label}</span>
             </button>
           ))}
         </nav>
+      </header>
+      <div className="page">
+        {state.justUpdated && (
+          <p className="toast" role="status">
+            New scores found. The tables and charts have updated.
+          </p>
+        )}
 
         <main className="sheet">
           {route.player ? (

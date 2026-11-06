@@ -258,7 +258,7 @@ button { font: inherit; color: inherit; }
 /* ---------- sheet ---------- */
 .sheet {
   background: var(--surface); border: 1px solid var(--hair);
-  border-radius: 12px; padding: 24px 20px 32px; display: grid; gap: 40px;
+  border-radius: 0; padding: 24px 20px 32px; display: grid; gap: 40px;
   grid-template-columns: minmax(0, 1fr);
   min-height: 320px;
 }
@@ -327,18 +327,18 @@ h3.spaced { margin-top: 24px; }
 }
 .chip.used { background: var(--chip, var(--ink)); border-color: var(--chip, var(--ink)); color: var(--chip-ink, var(--surface)); }
 /* Slanted (parallelogram) chips in the standings; outlined ones draw their edge with an inset fill. */
-.tower-row .chip, .podium .chip {
+.tower-row .chip, .podium .chip, .banner .chip {
   position: relative; isolation: isolate; border: 0; border-radius: 0; width: 36px; height: 26px; font-size: 11px;
   background: color-mix(in srgb, var(--chip, var(--axis)) 40%, var(--surface));
   clip-path: polygon(22% 0, 100% 0, 78% 100%, 0 100%);
 }
-.tower-row .chip::before, .podium .chip::before {
+.tower-row .chip::before, .podium .chip::before, .banner .chip::before {
   content: ''; position: absolute; inset: 1.5px; z-index: -1;
   background: color-mix(in srgb, var(--chip, var(--axis)) 10%, var(--surface));
   clip-path: polygon(22% 0, 100% 0, 78% 100%, 0 100%);
 }
-.tower-row .chip.used, .podium .chip.used { background: var(--chip, var(--ink)); }
-.tower-row .chip.used::before, .podium .chip.used::before { display: none; }
+.tower-row .chip.used, .podium .chip.used, .banner .chip.used { background: var(--chip, var(--ink)); }
+.tower-row .chip.used::before, .podium .chip.used::before, .banner .chip.used::before { display: none; }
 .tower-row .chips, .podium .chips { gap: 0; }
 .tower-row .chip + .chip, .podium .chip + .chip { margin-left: -5px; } /* tuck into the slant, leaving a ~3px visual gap */
 .legend-note .chip { display: inline-block; width: auto; height: auto; padding: 3px 6px; margin: 0 2px; border-radius: 5px; }
@@ -604,13 +604,16 @@ h3.spaced { margin-top: 24px; }
 .recap-uses { display: flex; flex-wrap: wrap; gap: 2px 18px; }
 
 /* ---------- latest-race banner ---------- */
-.banner { position: relative; display: grid; gap: 8px; margin: 0 0 22px; padding: 14px 44px 14px 16px; border: 1px solid var(--hair); border-radius: 10px; background: var(--wash); }
-.banner-title { font-family: var(--font-head); font-size: 18px; font-weight: 800; letter-spacing: 0.06em; margin: 0; }
+.banner { position: relative; display: grid; gap: 8px; margin: 0 0 22px; padding: 14px 44px 14px 16px; border: 1px solid var(--hair); border-left: 4px solid var(--accent); border-radius: 0; background: var(--wash); }
+.banner-title {
+  font-family: var(--font-head); font-size: 15px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; margin: 0; justify-self: start;
+  background: var(--ink); color: var(--surface); padding: 4px 22px 4px 12px; clip-path: polygon(0 0, 100% 0, calc(100% - 9px) 100%, 0 100%);
+}
 .banner-text { font-size: 15px; line-height: 1.5; max-width: 75ch; }
 .banner-chips { display: flex; flex-wrap: wrap; gap: 6px 18px; list-style: none; padding: 0; margin: 0; font-size: 13px; color: var(--ink-2); }
 .banner-chips li { display: inline-flex; align-items: center; gap: 8px; }
 .banner-link { font-size: 13px; font-weight: 600; justify-self: start; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
-.banner-close { position: absolute; top: 6px; right: 6px; width: 32px; height: 32px; border: 0; border-radius: 8px; background: none; color: var(--ink-2); font-size: 22px; line-height: 1; cursor: pointer; }
+.banner-close { position: absolute; top: 6px; right: 6px; width: 32px; height: 32px; border: 0; border-radius: 0; background: none; color: var(--ink-2); font-size: 22px; line-height: 1; cursor: pointer; }
 .banner-close:hover { background: var(--grid); color: var(--ink); }
 .banner-big { font-family: var(--font-head); font-size: 20px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.3; margin: 0; }
 .banner-news { display: grid; gap: 6px; list-style: none; padding: 0; margin: 0; }

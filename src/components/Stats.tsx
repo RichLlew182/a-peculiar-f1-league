@@ -33,7 +33,7 @@ export function Stats({ data }: { data: LeagueData }) {
   const byValue = [...data.players].sort((a, b) => b.value - a.value)
 
   return (
-    <div className="stats-page">
+    <>
       <section aria-labelledby="hl-h">
         <div className="section-head">
           <h2 id="hl-h">Season highlights</h2>
@@ -164,6 +164,6 @@ export function Stats({ data }: { data: LeagueData }) {
           </div>
         </div>
       </section>
-    </div>
+    </>
   )
 }

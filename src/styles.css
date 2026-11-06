@@ -264,7 +264,7 @@ button { font: inherit; color: inherit; }
 }
 .sheet > * { min-width: 0; }
 .section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px 24px; flex-wrap: wrap; margin-bottom: 14px; }
-h2 { font-size: 20px; line-height: 1.25; font-weight: 700; letter-spacing: -0.01em; }
+h2 { font-size: 26px; line-height: 1.25; font-weight: 700; letter-spacing: -0.01em; }
 h3 { font-size: 14px; font-weight: 650; margin-bottom: 8px; }
 h3.spaced { margin-top: 24px; }
 .legend-note { color: var(--ink-2); font-size: 13px; }
@@ -631,8 +631,6 @@ h3.spaced { margin-top: 24px; }
 
 /* ---------- chip stats grouped by chip ---------- */
 .chip-group { margin-top: 18px; }
-.stats-page { display: contents; }
-.stats-page .section-head h2 { font-size: 26px; }
 .chip-group-title { display: flex; align-items: center; gap: 12px; font-family: var(--font-head); font-size: 21px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 8px; }
 .chip-group .facts { border-top: 0; }
 .chip-group .fact { border-left-color: var(--chip, var(--accent)); }
@@ -671,7 +669,7 @@ h3.spaced { margin-top: 24px; }
 .avg-line { fill: none; stroke: var(--ink-2); stroke-width: 1.5; stroke-dasharray: 5 4; }
 .chip-dot { stroke: var(--surface); stroke-width: 2; }
 .chart-note { font-size: 12px; color: var(--muted); margin-top: 6px; }
-@media (max-width: 800px) { .player-head h2 { font-size: 28px; } }
+@media (max-width: 800px) { .player-head h2 { font-size: 28px; } h2 { font-size: 22px; } }
 .num .move { margin-left: 4px; }
 .plain-table th[scope='row'] .tag { margin-left: 6px; }
 .team-sub { font-size: 13px; font-weight: 650; color: var(--ink-2); margin: 14px 0 8px; }

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { playerColour } from '../lib/playerColour'
 import { useSeason } from '../lib/SeasonContext'
 import { scopedKey } from '../lib/route'
 import { fmt, ordinal, raceCode, signedFmt } from '../lib/format'
@@ -11,8 +12,6 @@ type Metric = 'rank' | 'behind'
 /** Highlighting more than a handful of lines stops being readable. */
 const MAX_SEL = 4
 const STORE = 'f1-fantasy:progress:v1'
-/** Size of the colour palette. With more than 8 players some hues repeat. */
-const HUES = 8
 
 interface Stored {
   metric: Metric
@@ -82,11 +81,8 @@ export function ProgressChart({ data }: { data: LeagueData }) {
   const isSel = (name: string) => selected.includes(name)
   useEffect(() => saveStored(season, { metric, selected }), [season, metric, selected])
 
-  // Every player keeps one hue for good. Alphabetical order keeps it from shifting as rankings change.
-  const hueOf = useMemo(() => {
-    const sorted = [...names].sort((a, b) => a.localeCompare(b))
-    return (name: string) => `var(--s${(sorted.indexOf(name) % HUES) + 1})`
-  }, [names])
+  // Every player keeps one colour for good, the same one as their position block in the standings.
+  const hueOf = useMemo(() => (name: string) => playerColour(names, name), [names])
 
   // On narrow screens the chart scrolls sideways; start at the latest race.
   const scrolled = useRef(false)

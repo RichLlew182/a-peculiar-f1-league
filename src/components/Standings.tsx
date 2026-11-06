@@ -180,7 +180,10 @@ function Podium({
               <Chips player={p} colours={colours} />
             </div>
             <div className="podium-step" aria-hidden="true">
-              {p.rank}
+              <span className="podium-rank">
+                {p.rank}
+                <span className="podium-suffix">{ordinal(p.rank).slice(String(p.rank).length)}</span>
+              </span>
             </div>
           </li>
         )

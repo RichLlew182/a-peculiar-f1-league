@@ -329,7 +329,7 @@ h3.spaced { margin-top: 24px; }
 /* Slanted (parallelogram) chips in the standings; outlined ones draw their edge with an inset fill. */
 .tower-row .chip, .podium .chip {
   position: relative; isolation: isolate; border: 0; border-radius: 0; width: 36px; height: 26px; font-size: 11px;
-  background: color-mix(in srgb, var(--chip, var(--axis)) 80%, var(--ink));
+  background: color-mix(in srgb, var(--chip, var(--axis)) 40%, var(--surface));
   clip-path: polygon(22% 0, 100% 0, 78% 100%, 0 100%);
 }
 .tower-row .chip::before, .podium .chip::before {
@@ -667,8 +667,9 @@ h3.spaced { margin-top: 24px; }
 
 /* whole row / card opens the player page */
 .clickable { cursor: pointer; transition: background-color 0.12s, box-shadow 0.12s; }
-.tower-row.clickable:hover, .tower-row.clickable:focus-within { background: color-mix(in srgb, var(--ink) 8%, var(--wash)); }
-.podium-card.clickable:hover, .podium-card.clickable:focus-within { box-shadow: 0 0 0 2px color-mix(in srgb, var(--medal) 70%, transparent); }
+.tower-row.clickable:hover, .tower-row.clickable:focus-within { background: color-mix(in srgb, var(--ink) 3.5%, var(--wash)); }
+.podium-card.clickable { transition: background 0.15s; }
+.podium-card.clickable:hover, .podium-card.clickable:focus-within { background: color-mix(in srgb, var(--medal) 17%, var(--surface)); }
 .player-link:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
 
 /* ---- fun touches ---- */

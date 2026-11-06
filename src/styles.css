@@ -25,6 +25,20 @@
   --s6: #008300;
   --s7: #6250d6;
   --s8: #e34948;
+  --p1: #ee406f;
+  --p2: #8d0996;
+  --p3: #0a9068;
+  --p4: #8b3f03;
+  --p5: #d94ab3;
+  --p6: #048ff4;
+  --p7: #824585;
+  --p8: #9d8d26;
+  --p9: #545be9;
+  --p10: #a65c20;
+  --p11: #8c7ed0;
+  --p12: #662bbd;
+  --p13: #ad1b49;
+  --p14: #8b4ec4;
   --gray-line: #b6b5ad;
 
   /* sequential blue: 7 bins, low to high, with the text colour each needs */
@@ -65,6 +79,20 @@
   --s6: #008300;
   --s7: #9085e9;
   --s8: #e66767;
+  --p1: #a45dd2;
+  --p2: #d02010;
+  --p3: #90589d;
+  --p4: #3aa273;
+  --p5: #a438bb;
+  --p6: #617209;
+  --p7: #6f7df7;
+  --p8: #ac5346;
+  --p9: #3363ea;
+  --p10: #ad771b;
+  --p11: #c61d78;
+  --p12: #987aca;
+  --p13: #187c49;
+  --p14: #d456a5;
     --gray-line: #5b5b56;
     --h0: #c24848; --h0t: #ffffff;
     --h1: #8e3a3a; --h1t: #ffffff;
@@ -100,6 +128,20 @@
   --s6: #008300;
   --s7: #9085e9;
   --s8: #e66767;
+  --p1: #a45dd2;
+  --p2: #d02010;
+  --p3: #90589d;
+  --p4: #3aa273;
+  --p5: #a438bb;
+  --p6: #617209;
+  --p7: #6f7df7;
+  --p8: #ac5346;
+  --p9: #3363ea;
+  --p10: #ad771b;
+  --p11: #c61d78;
+  --p12: #987aca;
+  --p13: #187c49;
+  --p14: #d456a5;
   --gray-line: #5b5b56;
   --h0: #c24848; --h0t: #ffffff;
   --h1: #8e3a3a; --h1t: #ffffff;
@@ -131,8 +173,6 @@ body {
 h1, h2, h3, p, ul, ol, dl, dd { margin: 0; padding: 0; }
 h1, h2, h3 { font-family: var(--font-head); }
 h1, h2 { text-transform: uppercase; letter-spacing: 0.03em; }
-/* crisp light-on-dark and condensed type: no transforms on text, unblurred glyph placement */
-h1, h2, h3, .tab, .year, .subtitle, .podium-points { text-rendering: geometricPrecision; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 ul, ol { list-style: none; }
 button { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 3px; }
@@ -241,7 +281,7 @@ h3.spaced { margin-top: 24px; }
 .tower-row { background: var(--wash); min-height: 68px; margin-bottom: 6px; position: relative; }
 .pos {
   align-self: stretch; display: grid; place-items: center; padding-right: 10px;
-  background: var(--c, var(--ink)); color: var(--cink, var(--surface));
+  background: var(--c, var(--ink)); color: #fff;
   clip-path: polygon(0 0, 100% 0, 84% 100%, 0 100%);
   font-family: var(--font-head); font-weight: 800; font-size: 34px; font-variant-numeric: tabular-nums;
 }
@@ -633,3 +673,25 @@ h3.spaced { margin-top: 24px; }
   .tab { padding: 9px 16px; font-size: 16px; letter-spacing: 0.05em; }
   .year, .season-pick { margin-left: 0; }
 }
+
+/* crisp type for everything set in the heading font */
+h1,
+h2,
+h3,
+.masthead .subtitle,
+.tab,
+.tower-head,
+.pos,
+.who strong,
+.points,
+.gap-cell,
+.fact-value,
+.podium-points,
+.podium-step,
+.recap-block h3,
+.banner-title,
+.banner-big,
+.banner-news li,
+.chip-group-title,
+.player-head h2,
+.player-block h3 { text-rendering: geometricPrecision; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }

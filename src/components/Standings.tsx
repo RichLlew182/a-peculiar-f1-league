@@ -3,6 +3,7 @@ import { hotStreaks } from '../lib/stats'
 import { Flame, Trophy } from './icons'
 import { RecapBanner } from './RecapBanner'
 import { useCountUp } from '../lib/useCountUp'
+import { playerColour } from '../lib/playerColour'
 import { useSeason } from '../lib/SeasonContext'
 import { fmt, ordinal, signedFmt, textOn } from '../lib/format'
 import { CHIPS, type Colours, type LeagueData, type Player, type Race } from '../lib/types'
@@ -38,12 +39,6 @@ function Chips({ player, colours }: { player: Player; colours: Colours }) {
       })}
     </ul>
   )
-}
-
-/** The position block takes the colour of the player's first constructor. */
-const posStyle = (p: Player, colours: Colours): CSSProperties => {
-  const hex = colours.teams[p.constructors[0]?.code ?? '']
-  return hex ? ({ '--c': hex, '--cink': textOn(hex) } as CSSProperties) : {}
 }
 
 /** Shown for players who have beaten the league average at several races in a row. */
@@ -244,7 +239,7 @@ export function Standings({ data }: { data: LeagueData }) {
                 role="row"
                 onClick={openPlayer(playerHref(p.name))}
               >
-                <span className="pos" role="cell" style={posStyle(p, data.colours)}>
+                <span className="pos" role="cell" style={{ '--c': playerColour(data.playerNames, p.name) } as CSSProperties}>
                   {p.rank}
                 </span>
                 <span className="movecell" role="cell">

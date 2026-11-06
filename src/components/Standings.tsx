@@ -92,6 +92,7 @@ function Move({ move }: { move: number }) {
 function Podium({
   players,
   names,
+  unlimited,
   colours,
   latest,
   finished,
@@ -99,6 +100,7 @@ function Podium({
 }: {
   players: Player[]
   names: string[]
+  unlimited: Set<string>
   colours: Colours
   latest?: Race
   finished: boolean
@@ -177,6 +179,20 @@ function Podium({
                   </span>
                 </p>
               )}
+              <p className="podium-gaps podium-budget">
+                <span>
+                  Budget{' '}
+                  <b>
+                    {unlimited.has(p.name) ? (
+                      <span title="Limitless chip this weekend, so no budget limit">
+                        ∞<span className="sr-only"> unlimited (Limitless chip this weekend)</span>
+                      </span>
+                    ) : (
+                      money(p.budget)
+                    )}
+                  </b>
+                </span>
+              </p>
               <Chips player={p} colours={colours} />
             </div>
             <div className="podium-step" aria-hidden="true">
@@ -217,6 +233,7 @@ export function Standings({ data }: { data: LeagueData }) {
       <Podium
         players={data.players.slice(0, 3)}
         names={data.playerNames}
+        unlimited={unlimited}
         colours={data.colours}
         latest={latest}
         finished={finished}

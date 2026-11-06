@@ -188,7 +188,7 @@ function SeasonView({
               aria-current={tab === t.id ? 'page' : undefined}
               onClick={() => go(t.id)}
             >
-              <span>{t.label}</span>
+              {t.label}
             </button>
           ))}
         </nav>

@@ -1,10 +1,10 @@
 import { useEffect, useRef, type CSSProperties } from 'react'
-import { hotStreaks, unlimitedPlayers } from '../lib/stats'
+import { hotStreaks } from '../lib/stats'
 import { Flame, Trophy } from './icons'
 import { RecapBanner } from './RecapBanner'
 import { useCountUp } from '../lib/useCountUp'
 import { useSeason } from '../lib/SeasonContext'
-import { fmt, money, ordinal, signedFmt, textOn } from '../lib/format'
+import { fmt, ordinal, signedFmt, textOn } from '../lib/format'
 import { CHIPS, type Colours, type LeagueData, type Player, type Race } from '../lib/types'
 
 /** Clicking anywhere on a row or card opens the player's page (the name stays the real, keyboard-friendly link). */
@@ -13,8 +13,6 @@ const openPlayer = (href: string) => (e: React.MouseEvent) => {
   if (window.getSelection()?.toString()) return // the user is selecting text
   window.location.hash = href.slice(1)
 }
-
-const swatch = (hex?: string) => (hex ? ({ '--c': hex } as CSSProperties) : undefined)
 
 function Chips({ player, colours }: { player: Player; colours: Colours }) {
   const used = CHIPS.filter((c) => player.chips[c.key]).length
@@ -42,37 +40,10 @@ function Chips({ player, colours }: { player: Player; colours: Colours }) {
   )
 }
 
-function Team({ player, colours, unlimited }: { player: Player; colours: Colours; unlimited?: boolean }) {
-  return (
-    <div className="team">
-      <ul className="picks" aria-label="Constructors">
-        {player.constructors.map((c) => (
-          <li key={c.code} className="pick constructor" style={swatch(colours.teams[c.code])}>
-            <b>{c.code}</b>
-          </li>
-        ))}
-      </ul>
-      <ul className="picks" aria-label="Drivers">
-        {player.drivers.map((d) => (
-          <li key={d.code} className={d.boosted ? 'pick boosted' : 'pick'} style={swatch(colours.drivers[d.code])}>
-            <b>{d.code}</b>
-            {d.boosted && <em title="Double points driver">2×</em>}
-          </li>
-        ))}
-      </ul>
-      <p className="team-meta">
-        Value {money(player.value)} · Cap {money(player.cap)} · Budget{' '}
-        {unlimited ? (
-          <span className="budget-inf" title="Limitless chip this weekend, so no budget limit">
-            <span aria-hidden="true">∞</span>
-            <span className="sr-only">unlimited (Limitless chip this weekend)</span>
-          </span>
-        ) : (
-          money(player.budget)
-        )}
-      </p>
-    </div>
-  )
+/** The position block takes the colour of the player's first constructor. */
+const posStyle = (p: Player, colours: Colours): CSSProperties => {
+  const hex = colours.teams[p.constructors[0]?.code ?? '']
+  return hex ? ({ '--c': hex, '--cink': textOn(hex) } as CSSProperties) : {}
 }
 
 /** Shown for players who have beaten the league average at several races in a row. */
@@ -128,14 +99,12 @@ function Podium({
   colours,
   latest,
   finished,
-  unlimited,
   hot,
 }: {
   players: Player[]
   colours: Colours
   latest?: Race
   finished: boolean
-  unlimited: Set<string>
   hot: Map<string, number>
 }) {
   const { href } = useSeason()
@@ -207,7 +176,6 @@ function Podium({
                   </span>
                 </p>
               )}
-              <Team player={p} colours={colours} unlimited={unlimited.has(p.name)} />
               <Chips player={p} colours={colours} />
             </div>
             <div className="podium-step" aria-hidden="true">
@@ -227,8 +195,6 @@ export function Standings({ data }: { data: LeagueData }) {
   const raceLabel = latest ? latest.name : 'last race'
   const rest = data.players.slice(3)
   const finished = data.completed.length > 0 && data.completed.length === data.races.length
-  // A Limitless chip lifts the budget limit, so the budget is meaningless while it is in play.
-  const unlimited = unlimitedPlayers(data)
   const hot = hotStreaks(data)
   const topGain = latest ? Math.max(...Object.values(latest.gains)) : undefined
 
@@ -248,7 +214,6 @@ export function Standings({ data }: { data: LeagueData }) {
         colours={data.colours}
         latest={latest}
         finished={finished}
-        unlimited={unlimited}
         hot={hot}
       />
 
@@ -266,9 +231,6 @@ export function Standings({ data }: { data: LeagueData }) {
             <span role="columnheader" className="num" title="Points behind the player above / behind the leader">
               Gap to next / leader
             </span>
-            <span role="columnheader" className="team-head">
-              Team
-            </span>
             <span role="columnheader">Chips</span>
           </div>
 
@@ -282,7 +244,7 @@ export function Standings({ data }: { data: LeagueData }) {
                 role="row"
                 onClick={openPlayer(playerHref(p.name))}
               >
-                <span className="pos" role="cell">
+                <span className="pos" role="cell" style={posStyle(p, data.colours)}>
                   {p.rank}
                 </span>
                 <span className="movecell" role="cell">
@@ -325,9 +287,6 @@ export function Standings({ data }: { data: LeagueData }) {
                   >
                     {p.rank === 1 ? <span className="muted-text">–</span> : fmt(Math.abs(p.leaderGap))}
                   </span>
-                </span>
-                <span className="team-cell" role="cell">
-                  <Team player={p} colours={data.colours} unlimited={unlimited.has(p.name)} />
                 </span>
                 <span className="chips-cell" role="cell">
                   <Chips player={p} colours={data.colours} />

@@ -327,21 +327,22 @@ h3.spaced { margin-top: 24px; }
 }
 .chip.used { background: var(--chip, var(--ink)); border-color: var(--chip, var(--ink)); color: var(--chip-ink, var(--surface)); }
 /* Slanted (parallelogram) chips in the standings; outlined ones draw their edge with an inset fill. */
-.tower-row .chip, .podium .chip, .banner .chip {
+.tower-row .chip, .podium .chip, .banner .chip, .legend-note .chip {
   position: relative; isolation: isolate; border: 0; border-radius: 0; width: 36px; height: 26px; font-size: 11px;
   background: color-mix(in srgb, var(--chip, var(--axis)) 40%, var(--surface));
   clip-path: polygon(22% 0, 100% 0, 78% 100%, 0 100%);
 }
-.tower-row .chip::before, .podium .chip::before, .banner .chip::before {
+.tower-row .chip::before, .podium .chip::before, .banner .chip::before, .legend-note .chip::before {
   content: ''; position: absolute; inset: 1.5px; z-index: -1;
   background: color-mix(in srgb, var(--chip, var(--axis)) 10%, var(--surface));
   clip-path: polygon(22% 0, 100% 0, 78% 100%, 0 100%);
 }
-.tower-row .chip.used, .podium .chip.used, .banner .chip.used { background: var(--chip, var(--ink)); }
-.tower-row .chip.used::before, .podium .chip.used::before, .banner .chip.used::before { display: none; }
+.tower-row .chip.used, .podium .chip.used, .banner .chip.used, .legend-note .chip.used { background: var(--chip, var(--ink)); }
+.tower-row .chip.used::before, .podium .chip.used::before, .banner .chip.used::before, .legend-note .chip.used::before { display: none; }
 .tower-row .chips, .podium .chips { gap: 0; }
 .tower-row .chip + .chip, .podium .chip + .chip { margin-left: -5px; } /* tuck into the slant, leaving a ~3px visual gap */
-.legend-note .chip { display: inline-block; width: auto; height: auto; padding: 3px 6px; margin: 0 2px; border-radius: 5px; }
+.legend-note .chip:not(.used) { --chip: var(--ink-2); }
+.legend-note .chip { display: inline-block; width: auto; height: auto; padding: 3px 16px; margin: 0 2px; font-size: 11px; font-weight: 700; }
 
 .team { display: grid; gap: 6px; }
 .picks { display: flex; flex-wrap: wrap; gap: 4px 6px; }

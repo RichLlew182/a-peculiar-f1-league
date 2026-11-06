@@ -539,13 +539,17 @@ h3.spaced { margin-top: 24px; }
 .podium-slot.place-3 { order: 3; --medal: #c48a5a; --medal-ink: #2d1907; }
 .podium-card {
   display: grid; gap: 8px; align-content: start; padding: 16px;
-  border: 1px solid var(--hair); border-top: 4px solid var(--medal); border-bottom: 0; border-radius: 12px 12px 0 0;
+  border: 1px solid var(--hair); border-top: 4px solid var(--medal); border-bottom: 0; border-radius: 0;
   background: color-mix(in srgb, var(--medal) 9%, var(--surface));
 }
 .podium-slot.place-1 .podium-card { padding-top: 20px; padding-bottom: 20px; }
 .podium-top { display: flex; align-items: center; gap: 10px; min-height: 30px; }
 .podium-top .badge { margin-left: auto; }
-.podium-place { display: none; font-weight: 800; font-size: 13px; background: var(--medal); color: var(--medal-ink); border-radius: 999px; padding: 3px 10px; }
+.podium-place {
+  display: inline-block; font-family: var(--font-head); font-weight: 800; font-size: 15px; letter-spacing: 0.06em; text-transform: uppercase;
+  background: var(--c, var(--medal)); color: #fff; padding: 3px 18px 3px 10px;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+}
 .podium-gained { font-size: 12px; color: var(--ink-2); }
 .podium-name { margin: 0; font-size: 30px; line-height: 1.05; letter-spacing: 0.01em; text-transform: uppercase; font-weight: 800; }
 .podium-slot.place-1 .podium-name { font-size: 38px; }
@@ -558,7 +562,7 @@ h3.spaced { margin-top: 24px; }
 .podium-step {
   display: flex; align-items: center; justify-content: center; line-height: 1;
   font-family: var(--font-head); font-weight: 800; font-size: 40px;
-  background: var(--medal); color: var(--medal-ink); border-radius: 0 0 10px 10px;
+  background: var(--medal); color: var(--medal-ink); border-radius: 0;
 }
 .place-1 .podium-step { height: 84px; font-size: 52px; }
 .place-2 .podium-step { height: 60px; }
@@ -568,8 +572,7 @@ h3.spaced { margin-top: 24px; }
   .podium { grid-template-columns: minmax(0, 1fr); gap: 12px; }
   .podium-slot.place-1, .podium-slot.place-2, .podium-slot.place-3 { order: 0; }
   .podium-step { display: none; }
-  .podium-card, .podium-slot.place-1 .podium-card { border-bottom: 1px solid var(--hair); border-radius: 12px; padding: 16px; }
-  .podium-place { display: inline-block; }
+  .podium-card, .podium-slot.place-1 .podium-card { border-bottom: 1px solid var(--hair); border-radius: 0; padding: 16px; }
   .podium-slot.place-1 .podium-name { font-size: 32px; }
   .podium-slot.place-1 .podium-points { font-size: 42px; }
 }
@@ -613,7 +616,7 @@ h3.spaced { margin-top: 24px; }
 .news-in .news-icon { color: var(--good); }
 .news-out .news-icon { color: var(--bad); }
 .news-lead .news-icon { color: var(--ink); font-size: 14px; }
-.podium-champ { font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; background: var(--medal); color: var(--medal-ink); border-radius: 999px; padding: 3px 9px; }
+.podium-champ { font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; background: var(--medal); color: var(--medal-ink); border-radius: 0; padding: 3px 9px; clip-path: polygon(0 0, 100% 0, calc(100% - 6px) 100%, 0 100%); padding-right: 14px; }
 
 /* ---------- chip stats grouped by chip ---------- */
 .chip-group { margin-top: 18px; }

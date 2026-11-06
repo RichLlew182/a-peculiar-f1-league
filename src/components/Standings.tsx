@@ -91,12 +91,14 @@ function Move({ move }: { move: number }) {
 /** The top three laid out like a podium: 2nd on the left, 1st in the middle, 3rd on the right. */
 function Podium({
   players,
+  names,
   colours,
   latest,
   finished,
   hot,
 }: {
   players: Player[]
+  names: string[]
   colours: Colours
   latest?: Race
   finished: boolean
@@ -117,7 +119,11 @@ function Podium({
         const lead = p.rank === 1
         const chaser = lead ? players.find((q) => q.points < p.points) : undefined
         return (
-          <li key={p.name} className={`podium-slot place-${i + 1}`}>
+          <li
+            key={p.name}
+            className={`podium-slot place-${i + 1}`}
+            style={{ '--c': playerColour(names, p.name) } as CSSProperties}
+          >
             <div className="podium-card clickable" onClick={openPlayer(playerHref(p.name))}>
               <div className="podium-top">
                 <span className="podium-place" aria-hidden="true">
@@ -207,6 +213,7 @@ export function Standings({ data }: { data: LeagueData }) {
 
       <Podium
         players={data.players.slice(0, 3)}
+        names={data.playerNames}
         colours={data.colours}
         latest={latest}
         finished={finished}

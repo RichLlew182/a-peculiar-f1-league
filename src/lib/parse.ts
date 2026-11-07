@@ -1,6 +1,9 @@
 import { isBlankRow, parseCsv, parseMoney, parseNum } from './csv'
 import { CHIPS, type ChipKey, type ChipUse, type Colours, type LeagueData, type Pick, type Player, type Race } from './types'
 
+/** Budget (in £m) every player starts a season with. */
+const START_BUDGET = 100
+
 function colIndex(header: string[], label: string): number {
   return header.findIndex((h) => h.trim().toLowerCase() === label.toLowerCase())
 }
@@ -137,7 +140,8 @@ export function parseHistory(csv: string, leaderboardNames: string[]): Race[] {
       const g = parseNum(row[c.gain])
       if (!Number.isNaN(g)) gains[player] = g
     }
-    const complete = Object.keys(totals).length > 0
+    // A race counts once someone has points (a sheet that pre-fills zeros is still "not raced yet")
+    const complete = Object.values(totals).some((t) => t > 0)
     races.push({
       name,
       sprint,
@@ -249,5 +253,8 @@ export function parseLeague(leaderboardCsv: string, historyCsv: string, coloursC
   } catch {
     /* the chip tab is optional */
   }
-  return { players, colours, races, completed: races.filter((r) => r.complete), playerNames, chipUses }
+  const completed = races.filter((r) => r.complete)
+  // Before the first race the sheet may have no budget yet: everyone starts on £100m
+  if (completed.length === 0) for (const p of players) if (!(p.budget > 0)) p.budget = START_BUDGET
+  return { players, colours, races, completed, playerNames, chipUses }
 }

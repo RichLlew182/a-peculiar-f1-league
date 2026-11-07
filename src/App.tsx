@@ -249,11 +249,15 @@ function SeasonView({
           )}
           {tab === 'progress' && <ProgressChart data={data} />}
           {tab === 'races' && (
-            <>
-              <Recap data={data} />
-              <FormGuide data={data} />
-              <RaceList data={data} />
-            </>
+            data.completed.length === 0 ? (
+              <p className="empty">No races have been scored yet. Results appear here after the first race.</p>
+            ) : (
+              <>
+                <Recap data={data} />
+                <FormGuide data={data} />
+                <RaceList data={data} />
+              </>
+            )
           )}
           {tab === 'stats' && <Stats data={data} />}
         </main>

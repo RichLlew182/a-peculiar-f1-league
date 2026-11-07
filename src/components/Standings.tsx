@@ -213,7 +213,10 @@ export function Standings({ data }: { data: LeagueData }) {
   const playerHref = (name: string) => href(`player/${encodeURIComponent(name)}`)
   const latest = data.completed[data.completed.length - 1]
   const raceLabel = latest ? latest.name : 'last race'
-  const rest = data.players.slice(3)
+  // Before the first race everyone is level: no podium, players in name order, no ranks or gaps to show
+  const started = data.completed.length > 0
+  const players = started ? data.players : [...data.players].sort((a, b) => a.name.localeCompare(b.name))
+  const rest = started ? players.slice(3) : players
   const finished = data.completed.length > 0 && data.completed.length === data.races.length
   const hot = hotStreaks(data)
   const unlimited = unlimitedPlayers(data) // a Limitless chip lifts the budget limit
@@ -228,17 +231,19 @@ export function Standings({ data }: { data: LeagueData }) {
         </p>
       </div>
 
-      <RecapBanner data={data} />
+      {started && <RecapBanner data={data} />}
 
-      <Podium
-        players={data.players.slice(0, 3)}
-        names={data.playerNames}
-        unlimited={unlimited}
-        colours={data.colours}
-        latest={latest}
-        finished={finished}
-        hot={hot}
-      />
+      {started && (
+        <Podium
+          players={data.players.slice(0, 3)}
+          names={data.playerNames}
+          unlimited={unlimited}
+          colours={data.colours}
+          latest={latest}
+          finished={finished}
+          hot={hot}
+        />
+      )}
 
       {rest.length > 0 && (
         <div className="tower" role="table" aria-label="Rest of the league standings">
@@ -266,15 +271,17 @@ export function Standings({ data }: { data: LeagueData }) {
             return (
               <div
                 key={p.name}
-                className={p.rank === 1 ? 'tower-row clickable leader' : 'tower-row clickable'}
+                className={started && p.rank === 1 ? 'tower-row clickable leader' : 'tower-row clickable'}
                 role="row"
                 onClick={openPlayer(playerHref(p.name))}
               >
                 <span className="pos" role="cell" style={{ '--c': playerColour(data.playerNames, p.name) } as CSSProperties}>
-                  {p.rank}
-                  <span className="pos-suffix" aria-hidden="true">
-                    {ordinal(p.rank).slice(String(p.rank).length)}
-                  </span>
+                  {started ? p.rank : '–'}
+                  {started && (
+                    <span className="pos-suffix" aria-hidden="true">
+                      {ordinal(p.rank).slice(String(p.rank).length)}
+                    </span>
+                  )}
                 </span>
                 <span className="movecell" role="cell">
                   <Move move={move} />
@@ -307,14 +314,14 @@ export function Standings({ data }: { data: LeagueData }) {
                     data-label="Next"
                     title={`${fmt(Math.abs(p.gap))} points behind ${data.players[data.players.indexOf(p) - 1]?.name ?? 'the player above'}`}
                   >
-                    {p.rank === 1 ? <span className="muted-text">Leader</span> : fmt(Math.abs(p.gap))}
+                    {!started ? <span className="muted-text">–</span> : p.rank === 1 ? <span className="muted-text">Leader</span> : fmt(Math.abs(p.gap))}
                   </span>
                   <span
                     className="gap g-lead"
                     data-label="Leader"
                     title={`${fmt(Math.abs(p.leaderGap))} points behind ${data.players[0]?.name ?? 'the leader'}`}
                   >
-                    {p.rank === 1 ? <span className="muted-text">–</span> : fmt(Math.abs(p.leaderGap))}
+                    {!started || p.rank === 1 ? <span className="muted-text">–</span> : fmt(Math.abs(p.leaderGap))}
                   </span>
                 </span>
                 <span className="budget-cell num" role="cell">

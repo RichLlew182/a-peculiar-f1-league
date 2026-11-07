@@ -3,6 +3,7 @@ import { useSeason } from '../lib/SeasonContext'
 import { fmt, money, ordinal, raceCode, signedFmt, textOn } from '../lib/format'
 import { driverName, TEAM_NAMES } from '../lib/names'
 import { chipUseFor, playerProfile, type RaceLine } from '../lib/playerProfile'
+import { playerColour } from '../lib/playerColour'
 import { unlimitedPlayers } from '../lib/stats'
 import { useWidth } from '../lib/useWidth'
 import { CHIPS, type Colours, type LeagueData } from '../lib/types'
@@ -71,7 +72,7 @@ function PointsChart({ lines, colours, width }: { lines: RaceLine[]; colours: Co
         const hex = chip ? colours.chips[chip.chip] : undefined
         return (
           <g key={l.race}>
-            <rect x={cx - bw / 2} y={y(l.points)} width={bw} height={y(0) - y(l.points)} rx={3} className="points-bar">
+            <rect x={cx - bw / 2} y={y(l.points)} width={bw} height={y(0) - y(l.points)} rx={0} className="points-bar">
               <title>{`${l.race}: ${fmt(l.points)} pts (league average ${fmt(l.leagueAvg)})${
                 l.chips.length ? `, ${l.chips.map((c) => c.chip).join(' + ')} played` : ''
               }`}</title>
@@ -238,7 +239,7 @@ export function PlayerPage({ data, name }: { data: LeagueData; name: string }) {
       <a className="back-link" href={href('standings')}>
         ← Back to standings
       </a>
-      <header className="player-head">
+      <header className="player-head" style={{ '--c': playerColour(data.playerNames, p.name) } as CSSProperties}>
         <h2 id="player-h" ref={heading} tabIndex={-1}>
           {p.name}
         </h2>
@@ -313,7 +314,7 @@ export function PlayerPage({ data, name }: { data: LeagueData; name: string }) {
       <div className="player-block">
         <h3>Race by race</h3>
         <div className="table-scroll">
-          <table className="plain-table">
+          <table className="plain-table player-table">
             <caption className="sr-only">{p.name}’s results at each race</caption>
             <thead>
               <tr>

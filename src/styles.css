@@ -208,7 +208,7 @@ button { font: inherit; color: inherit; }
 .masthead .title { font-size: clamp(34px, 7vw, 60px); font-weight: 800; line-height: 0.95; letter-spacing: 0.01em; }
 .masthead .subtitle { font-family: var(--font-head); font-size: 16px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; margin-top: 10px; }
 .year {
-  display: inline-block; margin-left: 8px; padding: 0 16px; background: #fff; color: var(--accent);
+  display: inline-block; margin-left: 8px; padding: 0.063em 16px 0.017em; background: #fff; color: var(--accent);
   clip-path: polygon(9px 0, 100% 0, calc(100% - 9px) 100%, 0 100%);
 }
 .masthead .title { color: #fff; }
@@ -713,7 +713,7 @@ h3.spaced { margin-top: 24px; }
 .season-pick { margin-left: 8px; clip-path: polygon(9px 0, 100% 0, calc(100% - 9px) 100%, 0 100%); }
 .season-pick select {
   background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1.5 1.5 7 7l5.5-5.5' fill='none' stroke='%23e10600' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 10px center;
-  color: var(--accent); border: 0; border-radius: 0; padding: 0 34px 0 16px; font-weight: 800;
+  color: var(--accent); border: 0; border-radius: 0; padding: 0.063em 34px 0.017em 16px; font-weight: 800;
 }
 .season-pick select:hover { background-color: #f1f1f4; }
 

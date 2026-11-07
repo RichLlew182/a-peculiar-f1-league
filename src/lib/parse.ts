@@ -137,7 +137,8 @@ export function parseHistory(csv: string, leaderboardNames: string[]): Race[] {
       const g = parseNum(row[c.gain])
       if (!Number.isNaN(g)) gains[player] = g
     }
-    const complete = Object.keys(totals).length > 0
+    // A race counts once someone has points (a sheet that pre-fills zeros is still "not raced yet")
+    const complete = Object.values(totals).some((t) => t > 0)
     races.push({
       name,
       sprint,

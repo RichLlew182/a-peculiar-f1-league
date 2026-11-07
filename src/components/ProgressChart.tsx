@@ -82,6 +82,11 @@ export function ProgressChart({ data }: { data: LeagueData }) {
   useEffect(() => saveStored(season, { metric, selected }), [season, metric, selected])
 
   // Every player keeps one colour for good, the same one as their position block in the standings.
+  // Table columns run in first-race finishing order (1st to last); anyone without a first-race rank goes at the end.
+  const tableNames = useMemo(() => {
+    const first = data.completed[0]?.ranks ?? {}
+    return [...names].sort((a, b) => (first[a] ?? Infinity) - (first[b] ?? Infinity) || a.localeCompare(b))
+  }, [names, data.completed])
   const hueOf = useMemo(() => (name: string) => playerColour(names, name), [names])
 
   // On narrow screens the chart scrolls sideways; start at the latest race.
@@ -440,10 +445,10 @@ export function ProgressChart({ data }: { data: LeagueData }) {
               : 'Gap to the leader after each race (0 means leading)'
           }
           corner="Race"
-          columns={names}
+          columns={tableNames}
           rows={done.map((r) => ({
             label: r.name + (r.sprint ? ' (sprint)' : ''),
-            cells: names.map((nm) =>
+            cells: tableNames.map((nm) =>
               r.ranks[nm] === undefined ? '–' : metric === 'rank' ? r.ranks[nm] : signedFmt(-behindOf(r.round - 1, nm)),
             ),
           }))}

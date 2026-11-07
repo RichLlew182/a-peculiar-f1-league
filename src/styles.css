@@ -208,7 +208,7 @@ button { font: inherit; color: inherit; }
 .masthead .title { font-size: clamp(34px, 7vw, 60px); font-weight: 800; line-height: 0.95; letter-spacing: 0.01em; }
 .masthead .subtitle { font-family: var(--font-head); font-size: 16px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; margin-top: 10px; }
 .year {
-  display: inline-block; margin-left: 8px; padding: 0 16px; background: #fff; color: var(--accent);
+  display: inline-block; margin-left: 8px; padding: 0 16px 0.09em; background: #fff; color: var(--accent);
   clip-path: polygon(9px 0, 100% 0, calc(100% - 9px) 100%, 0 100%);
 }
 .masthead .title { color: #fff; }
@@ -389,42 +389,52 @@ h3.spaced { margin-top: 24px; }
 }
 
 /* ---------- progress chart ---------- */
-.seg { display: inline-flex; border: 1px solid var(--axis); border-radius: 8px; overflow: hidden; }
-.seg button { background: none; border: 0; padding: 6px 12px; cursor: pointer; font-size: 13px; color: var(--ink-2); font-weight: 600; }
-.seg button + button { border-left: 1px solid var(--axis); }
+.seg { display: inline-flex; }
+.seg button {
+  background: color-mix(in srgb, var(--ink) 8%, transparent); border: 0; padding: 8px 22px; cursor: pointer; color: var(--ink-2);
+  font-family: var(--font-head); font-size: 15px; font-weight: 750; letter-spacing: 0.06em; text-transform: uppercase;
+  clip-path: polygon(9px 0, 100% 0, calc(100% - 9px) 100%, 0 100%);
+}
+.seg button + button { margin-left: -5px; }
+.seg button:hover { background: color-mix(in srgb, var(--ink) 14%, transparent); }
 .seg button[aria-pressed='true'] { background: var(--ink); color: var(--surface); }
+.seg button:focus-visible { text-decoration: underline; text-underline-offset: 4px; }
 
 .picker { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; margin-bottom: 14px; }
 .picker-help { font-size: 13px; color: var(--ink-2); flex-basis: 100%; }
-.picker-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.picker-list { display: flex; flex-wrap: wrap; gap: 6px 0; }
+.picker-list li + li { margin-left: -5px; }
 .pick-btn {
-  display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid var(--axis);
-  border-radius: 999px; padding: 4px 11px 4px 8px; font-size: 13px; cursor: pointer; color: var(--ink-2);
+  display: inline-flex; align-items: center; gap: 6px; background: color-mix(in srgb, var(--ink) 6%, transparent); border: 0;
+  border-radius: 0; padding: 5px 18px 5px 14px; cursor: pointer; color: var(--ink-2);
+  font-family: var(--font-head); font-size: 15px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+  clip-path: polygon(7px 0, 100% 0, calc(100% - 7px) 100%, 0 100%);
 }
-.pick-btn:hover { border-color: var(--ink-2); color: var(--ink); }
-.pick-btn.on { color: var(--ink); font-weight: 650; border-color: var(--ink-2); background: var(--wash); }
+.pick-btn:hover { background: color-mix(in srgb, var(--ink) 12%, transparent); color: var(--ink); }
+.pick-btn.on { color: var(--ink); font-weight: 800; background: color-mix(in srgb, var(--ink) 16%, transparent); }
+.pick-btn:focus-visible { text-decoration: underline; text-underline-offset: 4px; }
 .pick-btn[aria-disabled='true'] { opacity: 0.45; cursor: not-allowed; }
 
 .chart-wrap { overflow-x: auto; padding-bottom: 4px; }
 .chart-inner { position: relative; }
 .chart-inner svg { display: block; overflow: visible; touch-action: pan-x pan-y pinch-zoom; }
 .chart-inner svg:focus-visible { outline-offset: 4px; }
-.tick { font-size: 11px; fill: var(--muted); font-variant-numeric: tabular-nums; font-family: var(--font); }
-.tick.xt { font-size: 10px; }
-.tick.sprint-mark { font-size: 9px; }
+.tick { font-size: 12px; fill: var(--muted); font-variant-numeric: tabular-nums; font-family: var(--font-head); font-weight: 600; letter-spacing: 0.03em; }
+.tick.xt { font-size: 11px; }
+.tick.sprint-mark { font-size: 10px; }
 .label {
-  font-size: 12px; fill: var(--ink-2); font-family: var(--font); cursor: pointer;
+  font-size: 14px; fill: var(--ink-2); font-family: var(--font-head); font-weight: 600; letter-spacing: 0.02em; cursor: pointer;
   /* surface-coloured halo keeps names legible where they cross gridlines */
   paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round;
 }
-.label.sel { fill: var(--ink); font-weight: 700; }
+.label.sel { fill: var(--ink); font-weight: 800; }
 
 .tip {
   position: absolute; z-index: 5; pointer-events: none; background: var(--surface); color: var(--ink);
-  border: 1px solid var(--hair); border-radius: 8px; box-shadow: var(--shadow); padding: 8px 10px; font-size: 12px;
+  border: 1px solid var(--hair); border-left: 4px solid var(--accent); border-radius: 0; box-shadow: var(--shadow); padding: 8px 10px; font-size: 12px;
 }
 .tip.fixed { position: fixed; z-index: 20; width: 190px; }
-.tip-title { font-weight: 700; margin-bottom: 4px; }
+.tip-title { font-family: var(--font-head); font-size: 15px; font-weight: 750; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; }
 .tip ul { display: grid; gap: 1px; }
 .tip li { display: grid; grid-template-columns: 14px 32px minmax(60px, 1fr) 44px 48px; gap: 6px; align-items: center; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .tip li.on { color: var(--ink); }
@@ -552,7 +562,7 @@ h3.spaced { margin-top: 24px; }
 .podium-top .badge { margin-left: auto; }
 .podium-place {
   display: none; font-family: var(--font-head); font-weight: 800; font-size: 15px; letter-spacing: 0.06em; text-transform: uppercase;
-  background: var(--c, var(--medal)); color: #fff; padding: 3px 18px 3px 10px;
+  background: var(--medal); color: var(--medal-ink); padding: 3px 18px 3px 10px;
   clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
 }
 .podium-gained { font-size: 12px; color: var(--ink-2); }
@@ -713,14 +723,16 @@ h3.spaced { margin-top: 24px; }
 .season-pick { margin-left: 8px; clip-path: polygon(9px 0, 100% 0, calc(100% - 9px) 100%, 0 100%); }
 .season-pick select {
   background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1.5 1.5 7 7l5.5-5.5' fill='none' stroke='%23e10600' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 10px center;
-  color: var(--accent); border: 0; border-radius: 0; padding: 0 34px 0 16px; font-weight: 800;
+  color: var(--accent); border: 0; border-radius: 0; padding: 0 34px 0.09em 16px; font-weight: 800;
 }
 .season-pick select:hover { background-color: #f1f1f4; }
 
 @media (max-width: 560px) {
   .tabs { gap: 2px; padding: 0 8px; }
   .tab { padding: 9px 16px; font-size: 16px; letter-spacing: 0.05em; }
-  .year, .season-pick { margin-left: 0; }
+  .year, .season-pick { margin-left: 0; margin-top: 6px; }
+  .year { padding-bottom: 0.11em; }
+  .season-pick select { padding-bottom: 0.11em; }
 }
 
 /* crisp type for everything set in the heading font */

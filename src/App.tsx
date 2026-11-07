@@ -217,13 +217,11 @@ function SeasonView({
           {tab === 'stats' && <Stats data={data} />}
         </main>
 
-        <footer className="foot">
-          <p>
-            {season.archived
-              ? 'This season is archived, so these scores no longer change.'
-              : 'Scores come from the league spreadsheet and refresh every few minutes while this page is open.'}
-          </p>
-        </footer>
+        {season.archived && (
+          <footer className="foot">
+            <p>This season is archived, so these scores no longer change.</p>
+          </footer>
+        )}
       </div>
     </>
   )

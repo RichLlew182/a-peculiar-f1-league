@@ -272,6 +272,9 @@ export function Standings({ data }: { data: LeagueData }) {
               >
                 <span className="pos" role="cell" style={{ '--c': playerColour(data.playerNames, p.name) } as CSSProperties}>
                   {p.rank}
+                  <span className="pos-suffix" aria-hidden="true">
+                    {ordinal(p.rank).slice(String(p.rank).length)}
+                  </span>
                 </span>
                 <span className="movecell" role="cell">
                   <Move move={move} />

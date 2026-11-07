@@ -285,6 +285,7 @@ h3.spaced { margin-top: 24px; }
 }
 .tower-head .num { text-align: right; white-space: nowrap; }
 .tower-row { background: var(--wash); min-height: 68px; margin-bottom: 10px; position: relative; }
+.pos-suffix { display: none; }
 .pos {
   align-self: stretch; display: grid; place-items: center; padding-right: 10px;
   background: var(--c, var(--ink)); color: #fff;
@@ -358,18 +359,25 @@ h3.spaced { margin-top: 24px; }
 @media (max-width: 1160px) {
   .tower-head { display: none; }
   .tower-row {
-    grid-template-columns: 62px minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas:
-      'pos who points'
-      'pos move gap'
-      'pos chips budget';
-    row-gap: 6px; column-gap: 12px; padding: 0 12px 0 0;
+      'pos pos'
+      'who points'
+      'move gap'
+      'chips budget';
+    row-gap: 6px; column-gap: 12px; padding: 0 12px;
   }
-  .pos { grid-area: pos; font-size: 30px; }
-  .who { grid-area: who; padding-top: 12px; }
+  /* the place sits on a small slanted tab, as on the podium */
+  .pos {
+    grid-area: pos; justify-self: start; align-self: start; display: block; margin-left: -12px;
+    padding: 3px 18px 3px 12px; font-size: 15px; letter-spacing: 0.06em; text-transform: uppercase;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+  }
+  .pos-suffix { display: inline; }
+  .who { grid-area: who; padding-top: 6px; }
   .who strong { font-size: 28px; }
   .movecell { grid-area: move; justify-content: flex-start; padding-left: 2px; }
-  .points { grid-area: points; padding-top: 12px; text-align: right; }
+  .points { grid-area: points; padding-top: 6px; text-align: right; }
   .gap-cell { grid-area: gap; display: grid; grid-template-columns: auto auto; gap: 2px 8px; justify-content: end; align-items: baseline; }
   .gap-cell .gap { display: contents; }
   .gap-cell .gap::before { content: attr(data-label); justify-self: end; color: var(--muted); font-size: 12px; font-weight: 600; }

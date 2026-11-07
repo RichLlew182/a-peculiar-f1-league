@@ -597,8 +597,11 @@ h3.spaced { margin-top: 24px; }
   .podium { grid-template-columns: minmax(0, 1fr); gap: 12px; }
   .podium-slot.place-1, .podium-slot.place-2, .podium-slot.place-3 { order: 0; }
   .podium-step { display: none; }
-  .podium-card, .podium-slot.place-1 .podium-card { border-bottom: 1px solid var(--hair); border-radius: 0; padding: 16px; }
+  .podium-card, .podium-slot.place-1 .podium-card { border-bottom: 1px solid var(--hair); border-radius: 0; padding: 0 16px 16px; }
   .podium-place { display: inline-block; } /* the steps are hidden here, so the tab carries the place */
+  .podium-top { margin-left: -16px; margin-bottom: 4px; min-height: 0; }
+  .podium-place { padding: 4px 18px 4px 12px; }
+  .podium-top .badge { margin-right: 16px; }
   .podium-slot.place-1 .podium-name { font-size: 32px; }
   .podium-slot.place-1 .podium-points { font-size: 42px; }
 }

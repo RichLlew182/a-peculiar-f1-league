@@ -359,33 +359,35 @@ h3.spaced { margin-top: 24px; }
 @media (max-width: 1160px) {
   .tower-head { display: none; }
   .tower-row {
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas:
-      'pos pos'
-      'who points'
-      'move gap'
-      'chips budget';
-    row-gap: 6px; column-gap: 12px; padding: 0 12px;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'pos' 'who' 'points' 'gap' 'budget' 'chips';
+    row-gap: 8px; column-gap: 0; padding: 0 16px 16px;
   }
-  /* the place sits on a small slanted tab, as on the podium */
+  /* laid out like a podium card: place tab, name, team, points, gaps, budget, chips */
   .pos {
-    grid-area: pos; justify-self: start; align-self: start; display: block; margin-left: -12px;
-    padding: 3px 18px 3px 12px; font-size: 15px; letter-spacing: 0.06em; text-transform: uppercase;
+    grid-area: pos; justify-self: start; align-self: start; display: block; margin-left: -16px;
+    padding: 4px 18px 4px 12px; font-size: 15px; letter-spacing: 0.06em; text-transform: uppercase;
     clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
   }
   .pos-suffix { display: inline; }
-  .who { grid-area: who; padding-top: 6px; }
-  .who strong { font-size: 28px; }
-  .movecell { grid-area: move; justify-content: flex-start; padding-left: 2px; }
-  .points { grid-area: points; padding-top: 6px; text-align: right; }
-  .gap-cell { grid-area: gap; display: grid; grid-template-columns: auto auto; gap: 2px 8px; justify-content: end; align-items: baseline; }
-  .gap-cell .gap { display: contents; }
-  .gap-cell .gap::before { content: attr(data-label); justify-self: end; color: var(--muted); font-size: 12px; font-weight: 600; }
-  .gap-cell .g-next { font-size: 17px; }
-  .gap-cell.num { text-align: right; }
-  .chips-cell { grid-area: chips; padding-bottom: 12px; }
-  .budget-cell { grid-area: budget; padding-bottom: 12px; font-size: 15px; white-space: nowrap; line-height: 1.05; }
-  .budget-cell::before { content: 'Budget'; display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1px; }
+  .who { grid-area: who; padding: 0; gap: 4px; }
+  .who strong { font-size: 30px; }
+  .team-name { font-style: normal; }
+  .movecell { position: absolute; top: 14px; right: 12px; }
+  .points { grid-area: points; padding: 0; text-align: left; font-size: 38px; letter-spacing: -0.02em; }
+  .points::after { content: ' pts'; font-size: 14px; font-weight: 600; color: var(--ink-2); letter-spacing: 0; }
+  .gap-cell { grid-area: gap; display: flex; flex-wrap: wrap; gap: 4px 16px; font-family: var(--font); font-size: 13px; font-weight: 400; color: var(--ink-2); }
+  .gap-cell .gap, .gap-cell .g-next, .gap-cell .g-lead { display: inline; font-family: var(--font); font-size: 13px; font-weight: 650; line-height: inherit; color: var(--ink); }
+  .gap-cell .gap::before { font-weight: 400; color: var(--ink-2); font-size: 13px; margin-right: 4px; }
+  .gap-cell .g-next::before { content: 'Gap to next'; }
+  .gap-cell .g-lead::before { content: 'Gap to leader'; }
+  .gap-cell.num { text-align: left; }
+  .chips-cell { grid-area: chips; padding: 0; }
+  .budget-cell {
+    grid-area: budget; padding: 0; margin-top: -4px; text-align: left; white-space: nowrap;
+    font-family: var(--font); font-size: 13px; font-weight: 650; line-height: inherit; color: var(--ink);
+  }
+  .budget-cell::before { content: 'Budget'; display: inline; font-size: 13px; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--ink-2); margin: 0 4px 0 0; }
 }
 
 @media (max-width: 420px) {
@@ -582,6 +584,7 @@ h3.spaced { margin-top: 24px; }
 .podium-points span { font-size: 14px; font-weight: 600; color: var(--ink-2); letter-spacing: 0; }
 .podium-gaps { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .podium-gaps b { color: var(--ink); font-weight: 650; margin-left: 4px; }
+.podium-gaps + .podium-gaps { margin-top: -4px; }
 .podium-step {
   display: flex; align-items: center; justify-content: center; line-height: 1;
   font-family: var(--font-head); font-weight: 800; font-size: 40px;

@@ -359,8 +359,8 @@ h3.spaced { margin-top: 24px; }
 @media (max-width: 1160px) {
   .tower-head { display: none; }
   .tower-row {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: 'pos' 'who' 'points' 'gap' 'budget' 'chips';
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: 'pos sub' 'name name' 'team team' 'points points' 'gap gap' 'budget budget' 'chips chips';
     row-gap: 8px; column-gap: 0; padding: 0 16px 16px;
   }
   /* laid out like a podium card: place tab, name, team, points, gaps, budget, chips */
@@ -370,9 +370,10 @@ h3.spaced { margin-top: 24px; }
     clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
   }
   .pos-suffix { display: inline; }
-  .who { grid-area: who; padding: 0; gap: 4px; }
-  .who strong { font-size: 30px; }
-  .team-name { font-style: normal; }
+  .who { display: contents; }
+  .who strong { grid-area: name; font-size: 30px; }
+  .team-name { grid-area: team; font-style: normal; margin-top: -4px; }
+  .who-sub { grid-area: sub; align-self: center; margin-left: 10px; font-size: 13px; }
   .movecell { position: absolute; top: 14px; right: 12px; }
   .points { grid-area: points; padding: 0; text-align: left; font-size: 38px; letter-spacing: -0.02em; }
   .points::after { content: ' pts'; font-size: 14px; font-weight: 600; color: var(--ink-2); letter-spacing: 0; }

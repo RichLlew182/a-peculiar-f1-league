@@ -711,29 +711,38 @@ h3.spaced { margin-top: 24px; }
 .podium-name .hot { margin-left: 8px; vertical-align: middle; font-weight: 700; }
 
 /* ---- season picker in the masthead ---- */
-.season-pick { position: relative; display: inline-block; }
-.season-pick select {
-  appearance: none; -webkit-appearance: none; font: inherit; letter-spacing: inherit; color: #fff; cursor: pointer;
-  background: rgba(255, 255, 255, 0.12) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1.5 1.5 7 7l5.5-5.5' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center;
-  border: 1px solid rgba(255, 255, 255, 0.28); border-radius: 12px; padding: 0 36px 0 14px; margin: 0;
+.season-pick { position: relative; display: inline-block; margin-left: 8px; }
+.season-btn {
+  appearance: none; -webkit-appearance: none; font: inherit; letter-spacing: inherit; cursor: pointer; margin: 0;
+  background: #fff; color: var(--accent); border: 0; border-radius: 0; font-weight: 800;
+  padding: 0 34px 0.09em 16px; display: block;
+  clip-path: polygon(9px 0, 100% 0, calc(100% - 9px) 100%, 0 100%);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1.5 1.5 7 7l5.5-5.5' fill='none' stroke='%23e10600' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center;
 }
-.season-pick select:hover { background-color: rgba(255, 255, 255, 0.2); }
-.season-pick select option { color: #15151e; background: #fff; font-size: 16px; }
-
-/* year picker, matching the year block */
-.season-pick { margin-left: 8px; clip-path: polygon(9px 0, 100% 0, calc(100% - 9px) 100%, 0 100%); }
-.season-pick select {
-  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1.5 1.5 7 7l5.5-5.5' fill='none' stroke='%23e10600' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 10px center;
-  color: var(--accent); border: 0; border-radius: 0; padding: 0 34px 0.09em 16px; font-weight: 800;
+.season-btn:hover { background-color: #f1f1f4; }
+.season-btn[aria-expanded='true'] { background-color: #f1f1f4; }
+.season-menu {
+  position: absolute; z-index: 20; top: calc(100% + 6px); left: 0; min-width: 100%; margin: 0; padding: 0; list-style: none;
+  background: #15151e; border: 1px solid rgba(255, 255, 255, 0.22); border-left: 4px solid var(--accent);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
 }
-.season-pick select:hover { background-color: #f1f1f4; }
+.season-opt {
+  appearance: none; display: flex; align-items: baseline; justify-content: space-between; gap: 14px; width: 100%;
+  font: inherit; font-size: 24px; line-height: 1.2; letter-spacing: 0.04em; text-align: left; cursor: pointer;
+  background: transparent; color: #fff; border: 0; border-radius: 0; padding: 7px 16px; white-space: nowrap;
+}
+.season-opt small { font-family: var(--font); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255, 255, 255, 0.6); }
+.season-opt:hover, .season-opt:focus-visible { background: rgba(255, 255, 255, 0.14); outline: none; }
+.season-menu [aria-selected='true'] .season-opt { color: #fff; background: var(--accent); }
+.season-menu [aria-selected='true'] .season-opt small { color: rgba(255, 255, 255, 0.85); }
 
 @media (max-width: 560px) {
   .tabs { gap: 2px; padding: 0 8px; }
   .tab { padding: 9px 16px; font-size: 16px; letter-spacing: 0.05em; }
   .year, .season-pick { margin-left: 0; margin-top: 6px; }
   .year { padding-bottom: 0.11em; }
-  .season-pick select { padding-bottom: 0.11em; }
+  .season-btn { padding-bottom: 0.11em; }
 }
 
 /* crisp type for everything set in the heading font */

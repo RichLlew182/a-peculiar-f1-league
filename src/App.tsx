@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Recap } from './components/Recap'
 import { PlayerPage } from './components/PlayerPage'
 import { FormGuide } from './components/FormGuide'
@@ -77,16 +77,57 @@ export default function App() {
 
 /** The picker in the masthead: a plain year until there is more than one season. */
 function SeasonPicker({ current, onPick }: { current: string; onPick: (id: string) => void }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLSpanElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    const onDown = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('mousedown', onDown)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onDown)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [open])
+
   if (SEASONS.length < 2) return <span className="year">{current}</span>
   return (
-    <span className="season-pick">
-      <select value={current} onChange={(e) => onPick(e.target.value)} aria-label="Season">
-        {SEASONS.map((s) => (
-          <option key={s.id} value={s.id}>
-            {s.id}
-          </option>
-        ))}
-      </select>
+    <span className="season-pick" ref={ref}>
+      <button
+        type="button"
+        className="season-btn"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-label={`Season: ${current}. Change season`}
+        onClick={() => setOpen((o) => !o)}
+      >
+        {current}
+      </button>
+      {open && (
+        <ul className="season-menu" role="listbox" aria-label="Season">
+          {SEASONS.map((s) => (
+            <li key={s.id} role="option" aria-selected={s.id === current}>
+              <button
+                type="button"
+                className="season-opt"
+                onClick={() => {
+                  setOpen(false)
+                  if (s.id !== current) onPick(s.id)
+                }}
+              >
+                {s.id}
+                {s.archived && <small>Archived</small>}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
     </span>
   )
 }

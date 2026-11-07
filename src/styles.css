@@ -327,18 +327,18 @@ h3.spaced { margin-top: 24px; }
 }
 .chip.used { background: var(--chip, var(--ink)); border-color: var(--chip, var(--ink)); color: var(--chip-ink, var(--surface)); }
 /* Slanted (parallelogram) chips in the standings; outlined ones draw their edge with an inset fill. */
-.tower-row .chip, .podium .chip, .banner .chip, .legend-note .chip, .chip-group-title .chip, .recap-chip-row .chip {
+.tower-row .chip, .podium .chip, .banner .chip, .legend-note .chip, .chip-group-title .chip, .recap-chip-row .chip, .chip-card .chip {
   position: relative; isolation: isolate; border: 0; border-radius: 0; width: 36px; height: 26px; font-size: 11px;
   background: color-mix(in srgb, var(--chip, var(--axis)) 40%, var(--surface));
   clip-path: polygon(22% 0, 100% 0, 78% 100%, 0 100%);
 }
-.tower-row .chip::before, .podium .chip::before, .banner .chip::before, .legend-note .chip::before, .chip-group-title .chip::before, .recap-chip-row .chip::before {
+.tower-row .chip::before, .podium .chip::before, .banner .chip::before, .legend-note .chip::before, .chip-group-title .chip::before, .recap-chip-row .chip::before, .chip-card .chip::before {
   content: ''; position: absolute; inset: 1.5px; z-index: -1;
   background: color-mix(in srgb, var(--chip, var(--axis)) 10%, var(--surface));
   clip-path: polygon(22% 0, 100% 0, 78% 100%, 0 100%);
 }
-.tower-row .chip.used, .podium .chip.used, .banner .chip.used, .legend-note .chip.used, .chip-group-title .chip.used, .recap-chip-row .chip.used { background: var(--chip, var(--ink)); }
-.tower-row .chip.used::before, .podium .chip.used::before, .banner .chip.used::before, .legend-note .chip.used::before, .chip-group-title .chip.used::before, .recap-chip-row .chip.used::before { display: none; }
+.tower-row .chip.used, .podium .chip.used, .banner .chip.used, .legend-note .chip.used, .chip-group-title .chip.used, .recap-chip-row .chip.used, .chip-card .chip.used { background: var(--chip, var(--ink)); }
+.tower-row .chip.used::before, .podium .chip.used::before, .banner .chip.used::before, .legend-note .chip.used::before, .chip-group-title .chip.used::before, .recap-chip-row .chip.used::before, .chip-card .chip.used::before { display: none; }
 .tower-row .chips, .podium .chips { gap: 0; }
 .tower-row .chip + .chip, .podium .chip + .chip { margin-left: -5px; } /* tuck into the slant, leaving a ~3px visual gap */
 .legend-note .chip { display: inline-block; width: auto; height: auto; padding: 3px 8px; margin: 0 2px; font-size: 11px; font-weight: 700; clip-path: none; border-radius: 0; }
@@ -352,7 +352,7 @@ h3.spaced { margin-top: 24px; }
 .pick b { font-weight: 700; letter-spacing: 0.01em; }
 .pick span { color: var(--ink-2); font-size: 12px; font-variant-numeric: tabular-nums; }
 .pick.constructor { box-shadow: inset 0 0 0 1px var(--axis); background: none; }
-.pick em { font-style: normal; font-weight: 700; font-size: 11px; color: var(--surface); background: var(--accent); border-radius: 3px; padding: 0 4px; }
+.pick em { font-style: normal; font-weight: 700; font-size: 11px; color: var(--surface); background: var(--accent); border-radius: 0; padding: 0 4px; }
 .team-meta { font-size: 12px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 
 @media (max-width: 1160px) {
@@ -460,7 +460,7 @@ h3.spaced { margin-top: 24px; }
 .race-table td:first-child { text-align: center; color: var(--muted); }
 .race-table thead th:nth-child(1) { text-align: center; }
 .race-table thead th:nth-child(2) { text-align: left; }
-.records thead th, .records thead th:first-child, .race-table thead th, .race-table thead th:first-child { background: #15151e; color: #fff; border-bottom: 0; font-family: var(--font-head); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; padding: 9px 10px; }
+.records thead th, .records thead th:first-child, .race-table thead th, .race-table thead th:first-child, .player-table thead th, .player-table thead th:first-child { background: #15151e; color: #fff; border-bottom: 0; font-family: var(--font-head); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; padding: 9px 10px; }
 .records tbody tr:hover td, .records tbody tr:hover th { background: color-mix(in srgb, var(--ink) 4%, var(--surface)); }
 .records td .muted-text { font-size: 12px; margin-left: 4px; }
 
@@ -651,20 +651,21 @@ h3.spaced { margin-top: 24px; }
 /* ---------- player page ---------- */
 .player-link { color: inherit; text-decoration: none; }
 .player-link:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
-.back-link { display: inline-block; font-size: 14px; font-weight: 600; color: var(--ink-2); text-decoration: none; margin-bottom: 14px; }
+.back-link { display: inline-block; font-family: var(--font-head); font-size: 15px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); text-decoration: none; margin-bottom: 14px; }
 .back-link:hover { color: var(--ink); text-decoration: underline; }
-.player-head { margin-bottom: 18px; }
-.player-head h2 { font-family: var(--font-head); font-size: 34px; letter-spacing: -0.02em; margin: 0; outline: none; }
+.player-head { margin-bottom: 18px; border-left: 6px solid var(--c, var(--accent)); padding-left: 14px; }
+.player-head h2 { font-family: var(--font-head); font-size: 44px; line-height: 1.05; letter-spacing: 0.01em; margin: 0; outline: none; }
 .player-team { font-size: 16px; color: var(--ink-2); }
 .player-block { margin-top: 30px; }
-.player-block h3 { font-family: var(--font-head); font-size: 18px; margin: 0 0 12px; }
+.player-block h3 { font-family: var(--font-head); font-size: 22px; font-weight: 750; letter-spacing: 0.06em; text-transform: uppercase; margin: 0 0 12px; }
 .team-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px 16px; list-style: none; padding: 0; margin: 0 0 10px; }
-.team-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 12px; border-left: 4px solid var(--c, var(--axis)); border-radius: 3px 6px 6px 3px; background: var(--wash); }
+.team-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 12px; border-left: 4px solid var(--c, var(--axis)); border-radius: 0; background: var(--wash); }
 .team-row-name { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 14px; }
 .team-row-name em { font-style: normal; font-weight: 700; font-size: 11px; color: var(--surface); background: var(--accent); border-radius: 3px; padding: 0 4px; }
 .team-row-price { font-variant-numeric: tabular-nums; font-size: 14px; color: var(--ink-2); }
 .chip-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; list-style: none; padding: 0; margin: 0; }
-.chip-card { display: flex; gap: 12px; align-items: flex-start; border: 1px solid var(--hair); border-radius: 10px; padding: 12px 14px; background: var(--surface); }
+.chip-card { display: flex; gap: 12px; align-items: flex-start; border: 0; border-left: 4px solid var(--accent); border-radius: 0; padding: 12px 14px; background: var(--wash); }
+.chip-card-text b { font-family: var(--font-head); font-size: 17px; font-weight: 750; letter-spacing: 0.06em; text-transform: uppercase; }
 .chip-card .chip { flex: none; margin-top: 2px; }
 .chip-card-text { display: grid; gap: 2px; font-size: 14px; }
 .chip-card-text .muted-text { font-size: 13px; }
@@ -682,7 +683,7 @@ h3.spaced { margin-top: 24px; }
 @media (max-width: 800px) { .player-head h2 { font-size: 28px; } h2 { font-size: 22px; } }
 .num .move { margin-left: 4px; }
 .plain-table th[scope='row'] .tag { margin-left: 6px; }
-.team-sub { font-size: 13px; font-weight: 650; color: var(--ink-2); margin: 14px 0 8px; }
+.team-sub { font-family: var(--font-head); font-size: 15px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); margin: 14px 0 8px; }
 
 /* whole row / card opens the player page */
 .clickable { cursor: pointer; transition: background-color 0.12s, box-shadow 0.12s; }

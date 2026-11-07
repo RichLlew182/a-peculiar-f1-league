@@ -586,6 +586,7 @@ h3.spaced { margin-top: 24px; }
 .podium-gaps { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .podium-gaps b { color: var(--ink); font-weight: 650; margin-left: 4px; }
 .podium-gaps + .podium-gaps { margin-top: -4px; }
+.podium-card .chips { margin-top: 6px; }
 .podium-step {
   display: flex; align-items: center; justify-content: center; line-height: 1;
   font-family: var(--font-head); font-weight: 800; font-size: 40px;
@@ -607,7 +608,6 @@ h3.spaced { margin-top: 24px; }
   .podium-place { padding: 4px 18px 4px 12px; }
   .podium-card { position: relative; }
   .podium-top .badge { position: absolute; top: 14px; right: 12px; margin: 0; }
-  .podium-card .chips { margin-top: 6px; }
   .podium-slot.place-1 .podium-name { font-size: 32px; }
   .podium-slot.place-1 .podium-points { font-size: 42px; }
 }

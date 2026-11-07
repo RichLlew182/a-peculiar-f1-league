@@ -601,7 +601,8 @@ h3.spaced { margin-top: 24px; }
   .podium-place { display: inline-block; } /* the steps are hidden here, so the tab carries the place */
   .podium-top { margin-left: -16px; margin-bottom: 4px; min-height: 0; }
   .podium-place { padding: 4px 18px 4px 12px; }
-  .podium-top .badge { margin-right: 16px; }
+  .podium-card { position: relative; }
+  .podium-top .badge { position: absolute; top: 14px; right: 12px; margin: 0; }
   .podium-slot.place-1 .podium-name { font-size: 32px; }
   .podium-slot.place-1 .podium-points { font-size: 42px; }
 }

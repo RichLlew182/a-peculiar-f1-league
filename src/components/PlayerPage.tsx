@@ -109,6 +109,8 @@ interface TeamRow {
   name: string
   price: number
   hex?: string
+  /** the team the driver races for, or "Constructor" */
+  sub: string
   /** points multiplier shown next to the driver (2 or 3), if any */
   boost?: 2 | 3
 }
@@ -120,12 +122,18 @@ function TeamList({ label, rows }: { label: string; rows: TeamRow[] }) {
       <h4 className="team-sub">{label}</h4>
       <ul className="team-list" aria-label={label}>
         {rows.map((r) => (
-          <li key={r.key} style={swatch(r.hex)} className="team-row">
-            <span className="team-row-name">
-              <b>{r.name}</b> <span className="muted-text">{r.code}</span>
-              {r.boost && <em title={r.boost === 3 ? 'Triple points driver (Extra DRS)' : 'Double points driver'}>{r.boost}×</em>}
+          <li key={r.key} style={swatch(r.hex)} className="team-card">
+            <span className="team-code">{r.code}</span>
+            {r.boost && (
+              <em className="team-boost" title={r.boost === 3 ? 'Triple points driver (Extra DRS)' : 'Double points driver'}>
+                {r.boost}×
+              </em>
+            )}
+            <b className="team-card-name">{r.name}</b>
+            <span className="team-card-foot">
+              <small>{r.sub}</small>
+              <span className="team-card-price">{money(r.price)}</span>
             </span>
-            <span className="team-row-price">{money(r.price)}</span>
           </li>
         ))}
       </ul>
@@ -222,12 +230,18 @@ export function PlayerPage({ data, name }: { data: LeagueData; name: string }) {
     detail: `${CHIPS.length - usedCount} still to play`,
   })
 
+  // a driver's team colour is their constructor's colour, so the colour tells us the team
+  const teamOf = (hex?: string) => {
+    const code = hex ? Object.keys(data.colours.teams).find((k) => data.colours.teams[k] === hex) : undefined
+    return code ? (TEAM_NAMES[code] ?? code) : ''
+  }
   const constructorRows = p.constructors.map((c) => ({
     key: `c-${c.code}`,
     code: c.code,
     name: TEAM_NAMES[c.code] ?? c.code,
     price: c.price,
     hex: data.colours.teams[c.code],
+    sub: 'Constructor',
   }))
   // Extra DRS (3X) is on for the race it was played at: Driver 1 scores 3x and Driver 2 takes the 2x
   const nextRace = data.races.find((r) => !r.complete)?.name
@@ -241,6 +255,7 @@ export function PlayerPage({ data, name }: { data: LeagueData; name: string }) {
     name: driverName(d.code),
     price: d.price,
     hex: data.colours.drivers[d.code],
+    sub: teamOf(data.colours.drivers[d.code]),
     boost: drsOn ? (i === 0 ? 3 : i === 1 ? 2 : undefined) : d.boosted ? 2 : undefined,
   }))
 

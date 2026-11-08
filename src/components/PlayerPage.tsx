@@ -109,7 +109,8 @@ interface TeamRow {
   name: string
   price: number
   hex?: string
-  boosted: boolean
+  /** points multiplier shown next to the driver (2 or 3), if any */
+  boost?: 2 | 3
 }
 
 function TeamList({ label, rows }: { label: string; rows: TeamRow[] }) {
@@ -122,7 +123,7 @@ function TeamList({ label, rows }: { label: string; rows: TeamRow[] }) {
           <li key={r.key} style={swatch(r.hex)} className="team-row">
             <span className="team-row-name">
               <b>{r.name}</b> <span className="muted-text">{r.code}</span>
-              {r.boosted && <em title="Double points driver">2×</em>}
+              {r.boost && <em title={r.boost === 3 ? 'Triple points driver (Extra DRS)' : 'Double points driver'}>{r.boost}×</em>}
             </span>
             <span className="team-row-price">{money(r.price)}</span>
           </li>
@@ -227,15 +228,20 @@ export function PlayerPage({ data, name }: { data: LeagueData; name: string }) {
     name: TEAM_NAMES[c.code] ?? c.code,
     price: c.price,
     hex: data.colours.teams[c.code],
-    boosted: false,
   }))
-  const driverRows = p.drivers.map((d) => ({
+  // Extra DRS (3X) is on for the race it was played at: Driver 1 scores 3x and Driver 2 takes the 2x
+  const nextRace = data.races.find((r) => !r.complete)?.name
+  const drs = data.chipUses.find((u) => u.player === p.name && u.chip === '3X')
+  const sameRace = (a?: string, b?: string) =>
+    !!a && !!b && a.replace(/\s*\(sp\)\s*$/i, '').toLowerCase() === b.replace(/\s*\(sp\)\s*$/i, '').toLowerCase()
+  const drsOn = sameRace(drs?.race, nextRace)
+  const driverRows: TeamRow[] = p.drivers.map((d, i) => ({
     key: `d-${d.code}`,
     code: d.code,
     name: driverName(d.code),
     price: d.price,
     hex: data.colours.drivers[d.code],
-    boosted: !!d.boosted,
+    boost: drsOn ? (i === 0 ? 3 : i === 1 ? 2 : undefined) : d.boosted ? 2 : undefined,
   }))
 
   return (

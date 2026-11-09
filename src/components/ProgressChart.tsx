@@ -202,7 +202,9 @@ export function ProgressChart({ data }: { data: LeagueData }) {
   const ranked = Object.entries(lastRace.totals).sort((a, b) => b[1] - a[1])
   const summary =
     ranked.length > 1
-      ? `After ${lastRace.name}, ${ranked[0][0]} leads ${ranked[1][0]} by ${fmt(ranked[0][1] - ranked[1][1])} points.`
+      ? data.completed.length === data.races.length && ranked[0][1] > ranked[1][1]
+        ? `${ranked[0][0]} won the season by ${fmt(ranked[0][1] - ranked[1][1])} points over ${ranked[1][0]}.`
+        : `After ${lastRace.name}, ${ranked[0][0]} leads ${ranked[1][0]} by ${fmt(ranked[0][1] - ranked[1][1])} points.`
       : `After ${lastRace.name}.`
 
   return (

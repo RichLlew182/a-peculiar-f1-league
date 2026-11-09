@@ -131,9 +131,17 @@ function Podium({
           >
             <div className="podium-card clickable" onClick={openPlayer(playerHref(p.name))}>
               <div className="podium-top">
-                <span className="podium-place" aria-hidden="true">
-                  {tied.has(p.rank) ? 'Joint ' : ''}
-                  {ordinal(p.rank)}
+                <span className={finished && p.rank === 1 ? 'podium-place is-champ' : 'podium-place'} aria-hidden="true">
+                  <span className="pp-ord">
+                    {tied.has(p.rank) ? 'Joint ' : ''}
+                    {ordinal(p.rank)}
+                  </span>
+                  {finished && p.rank === 1 && (
+                    <span className="pp-champ">
+                      <Trophy />
+                      Champion
+                    </span>
+                  )}
                 </span>
                 {finished && p.rank === 1 && (
                   <span className="podium-champ">

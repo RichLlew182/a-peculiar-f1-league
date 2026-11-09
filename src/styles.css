@@ -580,6 +580,8 @@ h3.spaced { margin-top: 24px; }
   background: var(--medal); color: var(--medal-ink); padding: 3px 18px 3px 10px;
   clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
 }
+.pp-champ { display: none; }
+.pp-champ svg { width: 14px; height: 14px; vertical-align: -2px; margin-right: 4px; }
 .podium-gained { font-size: 12px; color: var(--ink-2); }
 .podium-name { margin: 0; font-size: 30px; line-height: 1.05; letter-spacing: 0.01em; text-transform: uppercase; font-weight: 800; }
 .podium-slot.place-1 .podium-name { font-size: 38px; }
@@ -610,6 +612,10 @@ h3.spaced { margin-top: 24px; }
   .podium-place { display: inline-block; } /* the steps are hidden here, so the tab carries the place */
   .podium-top { margin-left: -16px; margin-bottom: 4px; min-height: 0; }
   .podium-place { padding: 4px 18px 4px 12px; }
+  /* on mobile the champion tab says Champion instead of 1st */
+  .podium-place.is-champ .pp-ord { display: none; }
+  .podium-place.is-champ .pp-champ { display: inline; }
+  .podium-top .podium-champ { display: none; }
   .podium-card { position: relative; }
   .podium-top .badge { position: absolute; top: 14px; right: 12px; margin: 0; }
   .podium-slot.place-1 .podium-name { font-size: 32px; }

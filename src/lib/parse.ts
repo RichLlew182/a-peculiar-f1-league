@@ -200,6 +200,8 @@ export function parseColours(csv: string): Colours {
       if (code && HEX.test(hex)) set(code, hex)
     }
   }
+  // Racing Bulls is VCARB on some colour sheets and VRB on the leaderboard
+  if (out.teams.VCARB && !out.teams.VRB) out.teams.VRB = out.teams.VCARB
   return out
 }
 

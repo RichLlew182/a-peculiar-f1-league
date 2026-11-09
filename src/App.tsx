@@ -258,7 +258,7 @@ function SeasonView({
               </>
             )
           )}
-          {tab === 'stats' && <Stats data={data} />}
+          {tab === 'stats' && <Stats data={data} conceal={!season.archived} />}
         </main>
 
         {season.archived && (

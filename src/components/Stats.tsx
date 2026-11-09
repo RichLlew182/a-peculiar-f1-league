@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { fmt, money, textOn } from '../lib/format'
 import { chipHighlights, highlights, ownership, playerStats } from '../lib/stats'
 import { CHIPS, type LeagueData } from '../lib/types'
@@ -21,7 +21,54 @@ function Bars({ items, max, unit }: { items: { code: string; owners: number }[];
   )
 }
 
-export function Stats({ data }: { data: LeagueData }) {
+/** Player-related stats can be held back for a big reveal. Flip to false to show everything straight away. */
+const CONCEAL_PLAYER_STATS = true
+
+/** What has been revealed this visit (kept across tab switches, reset on reload). */
+const revealed = new Set<string>()
+
+function Fact({
+  id,
+  label,
+  value,
+  detail,
+  hidden,
+  onReveal,
+  chip,
+}: {
+  id: string
+  label: string
+  value: string
+  detail: string
+  hidden: boolean
+  onReveal: (id: string) => void
+  chip?: boolean
+}) {
+  return (
+    <div className={hidden ? 'fact concealed' : 'fact'}>
+      <dt>{label}</dt>
+      {/* while hidden the real answer is never rendered, only a stand-in that gets blurred */}
+      <dd className={chip ? 'fact-value chip-value' : 'fact-value'}>{hidden ? '000 pts' : value}</dd>
+      <dd className="fact-detail">{hidden ? 'Someone at somewhere' : detail}</dd>
+      {hidden && (
+        <dd className="reveal-wrap">
+          <button type="button" className="reveal-btn" onClick={() => onReveal(id)} aria-label={`Reveal: ${label}`}>
+            <span>Tap to reveal</span>
+          </button>
+        </dd>
+      )}
+    </div>
+  )
+}
+
+export function Stats({ data, conceal = false }: { data: LeagueData; conceal?: boolean }) {
+  const [, setTick] = useState(0)
+  const active = conceal && CONCEAL_PLAYER_STATS
+  const isHidden = (id: string) => active && !revealed.has(id)
+  const reveal = (id: string) => {
+    revealed.add(id)
+    setTick((t) => t + 1)
+  }
   if (data.completed.length === 0) return <p className="empty">Stats appear after the first race is scored.</p>
   const hl = highlights(data)
   const chipFacts = chipHighlights(data)
@@ -32,8 +79,29 @@ export function Stats({ data }: { data: LeagueData }) {
   // Cheapest/priciest squads give a feel for how people are spending.
   const byValue = [...data.players].sort((a, b) => b.value - a.value)
 
+  // everything that can be hidden, so "Reveal all" knows what is left
+  const hideable = [
+    ...hl.filter((h) => h.players.length > 0).map((h) => h.id),
+    ...chipFacts.filter((f) => f.id !== 'ff-in' && f.players.length > 0).map((f) => f.id),
+    'records',
+    'squads',
+  ]
+  const hiddenLeft = active ? hideable.filter((id) => !revealed.has(id)) : []
+  const revealAll = () => {
+    hideable.forEach((id) => revealed.add(id))
+    setTick((t) => t + 1)
+  }
+
   return (
     <>
+      {active && hiddenLeft.length > 0 && (
+        <div className="reveal-bar">
+          <p>The player stats are under wraps. Tap a card to reveal it, or show them all.</p>
+          <button type="button" className="reveal-all" onClick={revealAll}>
+            Reveal all
+          </button>
+        </div>
+      )}
       <section aria-labelledby="hl-h">
         <div className="section-head">
           <h2 id="hl-h">Season highlights</h2>
@@ -43,11 +111,15 @@ export function Stats({ data }: { data: LeagueData }) {
         </div>
         <dl className="facts">
           {hl.map((h) => (
-            <div key={h.id} className="fact">
-              <dt>{h.label}</dt>
-              <dd className="fact-value">{h.value}</dd>
-              <dd className="fact-detail">{h.detail}</dd>
-            </div>
+            <Fact
+              key={h.id}
+              id={h.id}
+              label={h.label}
+              value={h.value}
+              detail={h.detail}
+              hidden={h.players.length > 0 && isHidden(h.id)}
+              onReveal={reveal}
+            />
           ))}
         </dl>
       </section>
@@ -75,11 +147,16 @@ export function Stats({ data }: { data: LeagueData }) {
                 </h3>
                 <dl className="facts">
                   {facts.map((h) => (
-                    <div key={h.id} className="fact">
-                      <dt>{h.label}</dt>
-                      <dd className="fact-value chip-value">{h.value}</dd>
-                      <dd className="fact-detail">{h.detail}</dd>
-                    </div>
+                    <Fact
+                      key={h.id}
+                      id={h.id}
+                      label={h.label}
+                      value={h.value}
+                      detail={h.detail}
+                      chip
+                      hidden={h.id !== 'ff-in' && h.players.length > 0 && isHidden(h.id)}
+                      onReveal={reveal}
+                    />
                   ))}
                 </dl>
               </div>
@@ -92,8 +169,13 @@ export function Stats({ data }: { data: LeagueData }) {
         <div className="section-head">
           <h2 id="pl-h">Player records</h2>
         </div>
-        <div className="table-scroll">
-          <table className="plain-table records">
+        <div className={isHidden('records') ? 'table-scroll concealed-table' : 'table-scroll'}>
+          {isHidden('records') && (
+            <button type="button" className="reveal-btn" onClick={() => reveal('records')} aria-label="Reveal the player records">
+              <span>Tap to reveal</span>
+            </button>
+          )}
+          <table className="plain-table records" aria-hidden={isHidden('records') || undefined}>
             <caption className="sr-only">Season records for each player</caption>
             <thead>
               <tr>
@@ -122,17 +204,35 @@ export function Stats({ data }: { data: LeagueData }) {
               {ps.map((s) => (
                 <tr key={s.name}>
                   <th scope="row">{s.name}</th>
-                  <td className="num">{s.raceWins}</td>
-                  <td className="num">{s.racesLed}</td>
-                  <td className="num">{Math.round(s.avgPerRace)}</td>
-                  <td className="num">
-                    {s.bestRace ? fmt(s.bestRace.points) : '–'} <span className="muted-text">{s.bestRace?.race}</span>
-                  </td>
-                  <td className="num">
-                    {s.worstRace ? fmt(s.worstRace.points) : '–'}{' '}
-                    <span className="muted-text">{s.worstRace?.race}</span>
-                  </td>
-                  <td className="num">{s.chipsUsed} of 6</td>
+                  {isHidden('records') ? (
+                    <>
+                      <td className="num">0</td>
+                      <td className="num">0</td>
+                      <td className="num">000</td>
+                      <td className="num">
+                        000 <span className="muted-text">Somewhere</span>
+                      </td>
+                      <td className="num">
+                        000 <span className="muted-text">Somewhere</span>
+                      </td>
+                      <td className="num">0 of 6</td>
+                    </>
+                  ) : (
+                    <>
+                      <td className="num">{s.raceWins}</td>
+                      <td className="num">{s.racesLed}</td>
+                      <td className="num">{Math.round(s.avgPerRace)}</td>
+                      <td className="num">
+                        {s.bestRace ? fmt(s.bestRace.points) : '–'}{' '}
+                        <span className="muted-text">{s.bestRace?.race}</span>
+                      </td>
+                      <td className="num">
+                        {s.worstRace ? fmt(s.worstRace.points) : '–'}{' '}
+                        <span className="muted-text">{s.worstRace?.race}</span>
+                      </td>
+                      <td className="num">{s.chipsUsed} of 6</td>
+                    </>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -157,10 +257,21 @@ export function Stats({ data }: { data: LeagueData }) {
             <h3>Constructors</h3>
             <Bars items={own.constructors} max={n} unit="teams" />
             <h3 className="spaced">Team value</h3>
-            <p className="note-line">
-              Most valuable squad: <b>{byValue[0].name}</b> {money(byValue[0].value)}. Smallest:{' '}
-              <b>{byValue[byValue.length - 1].name}</b> {money(byValue[byValue.length - 1].value)}.
-            </p>
+            {isHidden('squads') ? (
+              <p className="note-line concealed-line">
+                <button type="button" className="reveal-btn" onClick={() => reveal('squads')} aria-label="Reveal the squad values">
+                  <span>Tap to reveal</span>
+                </button>
+                <span className="blurred" aria-hidden="true">
+                  Most valuable squad: <b>Someone</b> £000.0m. Smallest: <b>Someone</b> £000.0m.
+                </span>
+              </p>
+            ) : (
+              <p className="note-line">
+                Most valuable squad: <b>{byValue[0].name}</b> {money(byValue[0].value)}. Smallest:{' '}
+                <b>{byValue[byValue.length - 1].name}</b> {money(byValue[byValue.length - 1].value)}.
+              </p>
+            )}
           </div>
         </div>
       </section>

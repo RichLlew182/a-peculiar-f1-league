@@ -237,7 +237,7 @@ export function Standings({ data }: { data: LeagueData }) {
       <div className="section-head">
         <h2 id="standings-h">{finished ? 'Final standings' : `Standings${latest ? ` after ${latest.name}` : ''}`}</h2>
         <p className="legend-note">
-          Chips: <span className="chip used">filled</span> used, <span className="chip">outlined</span> still available
+          Chips: <span className="chip used">filled</span> used, <span className="chip">outlined</span> {finished ? 'not played' : 'still available'}
         </p>
       </div>
 

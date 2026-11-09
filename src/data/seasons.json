@@ -15,7 +15,7 @@
       "sources": {
         "leaderboard": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQp4Zahasfyzzar6ouv7sBRzsepvy2brpPG3H007QZ3m355octtnXZyUomsPWNAecA5cj-NUUYWD8V8/pub?gid=0&single=true&output=csv",
         "history": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQp4Zahasfyzzar6ouv7sBRzsepvy2brpPG3H007QZ3m355octtnXZyUomsPWNAecA5cj-NUUYWD8V8/pub?gid=2112818767&single=true&output=csv",
-        "colours": "",
+        "colours": "https://docs.google.com/spreadsheets/d/e/2PACX-1vQp4Zahasfyzzar6ouv7sBRzsepvy2brpPG3H007QZ3m355octtnXZyUomsPWNAecA5cj-NUUYWD8V8/pub?gid=1964049602&single=true&output=csv",
         "chips": ""
       }
     }

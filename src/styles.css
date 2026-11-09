@@ -807,3 +807,12 @@ h3,
 .chip-group-title,
 .player-head h2,
 .player-block h3 { text-rendering: geometricPrecision; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+/* ---- player stats held back until the big reveal ---- */
+.fact { position: relative; }
+.fact.concealed { overflow: hidden; }
+.fact.concealed .fact-value, .fact.concealed .fact-detail { filter: blur(9px); user-select: none; pointer-events: none; }
+.concealed-table { position: relative; }
+.concealed-table table { filter: blur(8px); user-select: none; pointer-events: none; }
+/* same look as the "new scores found" notice */
+.reveal-bar { background: var(--ink); color: var(--surface); padding: 10px 14px; border-radius: 0; border-left: 4px solid var(--accent); margin: 0 0 18px; font-size: 14px; }

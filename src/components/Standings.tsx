@@ -97,8 +97,11 @@ function Podium({
   latest,
   finished,
   hot,
+  tied,
 }: {
   players: Player[]
+  /** ranks more than one player holds (joint places) */
+  tied: ReadonlySet<number>
   names: string[]
   unlimited: Set<string>
   colours: Colours
@@ -129,6 +132,7 @@ function Podium({
             <div className="podium-card clickable" onClick={openPlayer(playerHref(p.name))}>
               <div className="podium-top">
                 <span className="podium-place" aria-hidden="true">
+                  {tied.has(p.rank) ? 'Joint ' : ''}
                   {ordinal(p.rank)}
                 </span>
                 {finished && p.rank === 1 && (
@@ -148,7 +152,10 @@ function Podium({
                 <Move move={move} />
               </div>
               <h3 className="podium-name">
-                <span className="sr-only">{ordinal(p.rank)}: </span>
+                <span className="sr-only">
+                  {tied.has(p.rank) ? 'Joint ' : ''}
+                  {ordinal(p.rank)}:{' '}
+                </span>
                 <a className="player-link" href={playerHref(p.name)}>
                   {p.name}
                 </a>
@@ -197,6 +204,7 @@ function Podium({
             </div>
             <div className="podium-step" aria-hidden="true">
               <span className="podium-rank">
+                {tied.has(p.rank) ? '=' : ''}
                 {p.rank}
                 <span className="podium-suffix">{ordinal(p.rank).slice(String(p.rank).length)}</span>
               </span>
@@ -215,6 +223,8 @@ export function Standings({ data }: { data: LeagueData }) {
   const raceLabel = latest ? latest.name : 'last race'
   // Before the first race everyone is level: no podium, players in name order, no ranks or gaps to show
   const started = data.completed.length > 0
+  // players level on points share a rank: mark those as joint places
+  const tied = new Set(data.players.filter((p) => data.players.some((o) => o !== p && o.rank === p.rank)).map((p) => p.rank))
   const players = started ? data.players : [...data.players].sort((a, b) => a.name.localeCompare(b.name))
   const rest = started ? players.slice(3) : players
   const finished = data.completed.length > 0 && data.completed.length === data.races.length
@@ -236,6 +246,7 @@ export function Standings({ data }: { data: LeagueData }) {
       {started && (
         <Podium
           players={data.players.slice(0, 3)}
+          tied={tied}
           names={data.playerNames}
           unlimited={unlimited}
           colours={data.colours}
@@ -275,7 +286,22 @@ export function Standings({ data }: { data: LeagueData }) {
                 role="row"
                 onClick={openPlayer(playerHref(p.name))}
               >
-                <span className="pos" role="cell" style={{ '--c': playerColour(data.playerNames, p.name) } as CSSProperties}>
+                <span
+                  className="pos"
+                  role="cell"
+                  title={started && tied.has(p.rank) ? `Joint ${ordinal(p.rank)}` : undefined}
+                  style={{ '--c': playerColour(data.playerNames, p.name) } as CSSProperties}
+                >
+                  {started && tied.has(p.rank) && (
+                    <>
+                      <span className="pos-eq" aria-hidden="true">
+                        =
+                      </span>
+                      <span className="pos-joint" aria-hidden="true">
+                        Joint{' '}
+                      </span>
+                    </>
+                  )}
                   {started ? p.rank : '–'}
                   {started && (
                     <span className="pos-suffix" aria-hidden="true">

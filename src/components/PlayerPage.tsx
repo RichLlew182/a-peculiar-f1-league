@@ -173,7 +173,7 @@ export function PlayerPage({ data, name }: { data: LeagueData; name: string }) {
   const facts: { label: string; value: string; detail: string }[] = [
     {
       label: 'Position',
-      value: started ? ordinal(p.rank) : '–',
+      value: started ? `${data.players.some((o) => o !== p && o.rank === p.rank) ? 'Joint ' : ''}${ordinal(p.rank)}` : '–',
       detail: !started
         ? 'No races scored yet'
         : p.rank === 1

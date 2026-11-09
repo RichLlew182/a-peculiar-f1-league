@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from 'react'
+import type { CSSProperties } from 'react'
 import { fmt, money, textOn } from '../lib/format'
 import { chipHighlights, highlights, ownership, playerStats } from '../lib/stats'
 import { CHIPS, type LeagueData } from '../lib/types'
@@ -21,30 +21,23 @@ function Bars({ items, max, unit }: { items: { code: string; owners: number }[];
   )
 }
 
-/** Player-related stats can be held back for a big reveal. Flip to false to show everything straight away. */
+/** Player-related stats are held back until the big reveal. Set to false to show everything. */
 const CONCEAL_PLAYER_STATS = true
-
-/** What has been revealed this visit (kept across tab switches, reset on reload). */
-const revealed = new Set<string>()
 
 /** Facts about races and drivers rather than people: never hidden. */
 const isOpenFact = (id: string) => id === 'ff-in' || id.startsWith('popular-')
 
 function Fact({
-  id,
   label,
   value,
   detail,
   hidden,
-  onReveal,
   chip,
 }: {
-  id: string
   label: string
   value: string
   detail: string
   hidden: boolean
-  onReveal: (id: string) => void
   chip?: boolean
 }) {
   return (
@@ -55,9 +48,7 @@ function Fact({
       <dd className="fact-detail">{hidden ? 'Someone at somewhere' : detail}</dd>
       {hidden && (
         <dd className="reveal-wrap">
-          <button type="button" className="reveal-btn" onClick={() => onReveal(id)} aria-label={`Reveal: ${label}`}>
-            <span>Tap to reveal</span>
-          </button>
+          <span className="under-wraps">Under wraps</span>
         </dd>
       )}
     </div>
@@ -65,13 +56,8 @@ function Fact({
 }
 
 export function Stats({ data, conceal = false }: { data: LeagueData; conceal?: boolean }) {
-  const [, setTick] = useState(0)
   const active = conceal && CONCEAL_PLAYER_STATS
-  const isHidden = (id: string) => active && !revealed.has(id)
-  const reveal = (id: string) => {
-    revealed.add(id)
-    setTick((t) => t + 1)
-  }
+  const isHidden = (_id: string) => active
   if (data.completed.length === 0) return <p className="empty">Stats appear after the first race is scored.</p>
   const hl = highlights(data)
   const chipFacts = chipHighlights(data)
@@ -82,29 +68,9 @@ export function Stats({ data, conceal = false }: { data: LeagueData; conceal?: b
   // Cheapest/priciest squads give a feel for how people are spending.
   const byValue = [...data.players].sort((a, b) => b.value - a.value)
 
-  // everything that can be hidden, so "Reveal all" knows what is left
-  const hideable = [
-    ...hl.filter((h) => h.players.length > 0).map((h) => h.id),
-    ...chipFacts.filter((f) => !isOpenFact(f.id) && f.players.length > 0).map((f) => f.id),
-    'records',
-    'squads',
-  ]
-  const hiddenLeft = active ? hideable.filter((id) => !revealed.has(id)) : []
-  const revealAll = () => {
-    hideable.forEach((id) => revealed.add(id))
-    setTick((t) => t + 1)
-  }
-
   return (
     <>
-      {active && hiddenLeft.length > 0 && (
-        <div className="reveal-bar">
-          <p>The player stats are under wraps. Tap a card to reveal it, or show them all.</p>
-          <button type="button" className="reveal-all" onClick={revealAll}>
-            Reveal all
-          </button>
-        </div>
-      )}
+      {active && <p className="reveal-bar">The player stats are under wraps until the big reveal.</p>}
       <section aria-labelledby="hl-h">
         <div className="section-head">
           <h2 id="hl-h">Season highlights</h2>
@@ -116,12 +82,10 @@ export function Stats({ data, conceal = false }: { data: LeagueData; conceal?: b
           {hl.map((h) => (
             <Fact
               key={h.id}
-              id={h.id}
               label={h.label}
               value={h.value}
               detail={h.detail}
               hidden={h.players.length > 0 && isHidden(h.id)}
-              onReveal={reveal}
             />
           ))}
         </dl>
@@ -152,14 +116,12 @@ export function Stats({ data, conceal = false }: { data: LeagueData; conceal?: b
                   {facts.map((h) => (
                     <Fact
                       key={h.id}
-                      id={h.id}
-                      label={h.label}
+                              label={h.label}
                       value={h.value}
                       detail={h.detail}
                       chip
                       hidden={!isOpenFact(h.id) && h.players.length > 0 && isHidden(h.id)}
-                      onReveal={reveal}
-                    />
+                            />
                   ))}
                 </dl>
               </div>
@@ -173,11 +135,7 @@ export function Stats({ data, conceal = false }: { data: LeagueData; conceal?: b
           <h2 id="pl-h">Player records</h2>
         </div>
         <div className={isHidden('records') ? 'table-scroll concealed-table' : 'table-scroll'}>
-          {isHidden('records') && (
-            <button type="button" className="reveal-btn" onClick={() => reveal('records')} aria-label="Reveal the player records">
-              <span>Tap to reveal</span>
-            </button>
-          )}
+          {isHidden('records') && <span className="under-wraps">Under wraps</span>}
           <table className="plain-table records" aria-hidden={isHidden('records') || undefined}>
             <caption className="sr-only">Season records for each player</caption>
             <thead>
@@ -262,9 +220,7 @@ export function Stats({ data, conceal = false }: { data: LeagueData; conceal?: b
             <h3 className="spaced">Team value</h3>
             {isHidden('squads') ? (
               <p className="note-line concealed-line">
-                <button type="button" className="reveal-btn" onClick={() => reveal('squads')} aria-label="Reveal the squad values">
-                  <span>Tap to reveal</span>
-                </button>
+                <span className="under-wraps">Under wraps</span>
                 <span className="blurred" aria-hidden="true">
                   Most valuable squad: <b>Someone</b> £000.0m. Smallest: <b>Someone</b> £000.0m.
                 </span>

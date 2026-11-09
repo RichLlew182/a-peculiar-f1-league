@@ -43,7 +43,7 @@ export function parseCsv(text: string): string[][] {
 /** "£28.8m" -> 28.8 ; blank/invalid -> NaN */
 export function parseMoney(s: string | undefined): number {
   if (!s) return NaN
-  const n = parseFloat(s.replace(/[£m,\s]/g, ''))
+  const n = parseFloat(s.replace(/[£$m,\s]/g, ''))
   return Number.isFinite(n) ? n : NaN
 }
 

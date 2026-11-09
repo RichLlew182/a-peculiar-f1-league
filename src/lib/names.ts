@@ -22,6 +22,7 @@ export const DRIVER_NAMES: Record<string, string> = {
   ALB: 'Alexander Albon',
   BOT: 'Valtteri Bottas',
   STR: 'Lance Stroll',
+  OCO: 'Esteban Ocon',
 }
 
 export const TEAM_NAMES: Record<string, string> = {
@@ -36,6 +37,8 @@ export const TEAM_NAMES: Record<string, string> = {
   WIL: 'Williams',
   CAD: 'Cadillac',
   AST: 'Aston Martin',
+  VRB: 'Racing Bulls',
+  KCK: 'Kick Sauber',
 }
 
 /** Full driver name, or the code itself if we don't know it. */

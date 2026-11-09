@@ -72,12 +72,12 @@ function PointsChart({ lines, colours, width }: { lines: RaceLine[]; colours: Co
         const hex = chip ? colours.chips[chip.chip] : undefined
         return (
           <g key={l.race}>
-            <rect x={cx - bw / 2} y={y(l.points)} width={bw} height={y(0) - y(l.points)} rx={0} className="points-bar">
+            <rect x={cx - bw / 2} y={y(Math.max(l.points, 0))} width={bw} height={y(0) - y(Math.max(l.points, 0))} rx={0} className="points-bar">
               <title>{`${l.race}: ${fmt(l.points)} pts (league average ${fmt(l.leagueAvg)})${
                 l.chips.length ? `, ${l.chips.map((c) => c.chip).join(' + ')} played` : ''
               }`}</title>
             </rect>
-            {chip && <circle cx={cx} cy={y(l.points) - 9} r={5} fill={hex ?? 'var(--ink)'} className="chip-dot" />}
+            {chip && <circle cx={cx} cy={y(Math.max(l.points, 0)) - 9} r={5} fill={hex ?? 'var(--ink)'} className="chip-dot" />}
             <text x={cx} y={H - 10} textAnchor="middle" className="chart-label small">
               {raceCode(l.race)}
             </text>

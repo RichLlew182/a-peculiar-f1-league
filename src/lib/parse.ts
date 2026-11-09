@@ -125,6 +125,8 @@ export function parseHistory(csv: string, leaderboardNames: string[]): Race[] {
 
   const races: Race[] = []
   for (const row of rows.slice(1)) {
+    // a blank row after the races ends the table (anything below, e.g. a "Formula" summary row, isn't a race)
+    if (isBlankRow(row) && races.length > 0) break
     if (isBlankRow(row)) continue
     const rawName = (row[iRaces] ?? '').trim()
     if (!rawName) continue
@@ -137,7 +139,9 @@ export function parseHistory(csv: string, leaderboardNames: string[]): Race[] {
       const player = nameMap.get(c.name) ?? c.name
       const t = parseNum(row[c.total])
       if (!Number.isNaN(t)) totals[player] = t
-      const g = parseNum(row[c.gain])
+      // a negative race score is written "--23" (the sheet's "+" format plus a minus)
+      const rawGain = (row[c.gain] ?? '').trim()
+      const g = rawGain.startsWith('--') ? -parseNum(rawGain) : parseNum(rawGain)
       if (!Number.isNaN(g)) gains[player] = g
     }
     // A race counts once someone has points (a sheet that pre-fills zeros is still "not raced yet")
@@ -196,6 +200,8 @@ export function parseColours(csv: string): Colours {
       if (code && HEX.test(hex)) set(code, hex)
     }
   }
+  // Racing Bulls is VCARB on some colour sheets and VRB on the leaderboard
+  if (out.teams.VCARB && !out.teams.VRB) out.teams.VRB = out.teams.VCARB
   return out
 }
 

@@ -165,6 +165,7 @@ export function PlayerPage({ data, name }: { data: LeagueData; name: string }) {
   const { player: p, lines } = prof
   const started = data.completed.length > 0
   const unlimited = unlimitedPlayers(data).has(p.name)
+  const finished = data.completed.length > 0 && data.completed.length === data.races.length
   const hotN = hotStreaks(data).get(p.name)
   const leader = data.players[0]
   const above = data.players[data.players.indexOf(p) - 1]
@@ -229,7 +230,7 @@ export function PlayerPage({ data, name }: { data: LeagueData; name: string }) {
   facts.push({
     label: 'Chips used',
     value: `${usedCount} of ${CHIPS.length}`,
-    detail: `${CHIPS.length - usedCount} still to play`,
+    detail: `${CHIPS.length - usedCount} ${finished ? 'not played' : 'still to play'}`,
   })
 
   // a driver's team colour is their constructor's colour, so the colour tells us the team
@@ -313,7 +314,7 @@ export function PlayerPage({ data, name }: { data: LeagueData; name: string }) {
                 <span className="chip-card-text">
                   <b>{c.name}</b>
                   <span className="muted-text">
-                    {use ? `Played at ${use.race}` : used ? 'Played' : 'Still available'}
+                    {use ? `Played at ${use.race}` : used ? 'Played' : finished ? 'Not played' : 'Still available'}
                   </span>
                   {use?.out && use.in && (
                     <span className="muted-text">

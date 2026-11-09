@@ -42,7 +42,7 @@ function Chips({ player, colours }: { player: Player; colours: Colours }) {
 }
 
 /** Shown for players who have beaten the league average at several races in a row. */
-function Hot({ n }: { n: number }) {
+export function Hot({ n }: { n: number }) {
   return (
     <span className="hot" title={`Above the league average for the last ${n} races`}>
       <Flame />

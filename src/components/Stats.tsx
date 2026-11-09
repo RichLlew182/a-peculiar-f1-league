@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react'
-import { fmt, money, textOn } from '../lib/format'
+import { fmt, textOn } from '../lib/format'
 import { chipHighlights, highlights, ownership, playerStats } from '../lib/stats'
 import { CHIPS, type LeagueData } from '../lib/types'
 
@@ -60,9 +60,6 @@ export function Stats({ data, conceal = false }: { data: LeagueData; conceal?: b
   const own = ownership(data)
   const n = data.players.length
 
-  // Cheapest/priciest squads give a feel for how people are spending.
-  const byValue = [...data.players].sort((a, b) => b.value - a.value)
-
   return (
     <>
       {active && <p className="reveal-bar" role="status">
@@ -92,10 +89,6 @@ export function Stats({ data, conceal = false }: { data: LeagueData; conceal?: b
         <section aria-labelledby="chip-h">
           <div className="section-head">
             <h2 id="chip-h">Chips</h2>
-            <p className="legend-note">
-              Limitless and Extra DRS compare the chip score with the best score that weekend by a player who didn’t play
-              that chip. Final Fix compares the driver brought in with the one swapped out
-            </p>
           </div>
           {(['LL', '3X', 'FF', 'NN'] as const).map((key) => {
             const facts = chipFacts.filter((f) => f.chip === key)
@@ -213,19 +206,6 @@ export function Stats({ data, conceal = false }: { data: LeagueData; conceal?: b
           <div>
             <h3>Constructors</h3>
             <Bars items={own.constructors} max={n} unit="teams" />
-            <h3 className="spaced">Team value</h3>
-            {isHidden('squads') ? (
-              <p className="note-line concealed-line">
-                <span className="blurred" aria-hidden="true">
-                  Most valuable squad: <b>Someone</b> £000.0m. Smallest: <b>Someone</b> £000.0m.
-                </span>
-              </p>
-            ) : (
-              <p className="note-line">
-                Most valuable squad: <b>{byValue[0].name}</b> {money(byValue[0].value)}. Smallest:{' '}
-                <b>{byValue[byValue.length - 1].name}</b> {money(byValue[byValue.length - 1].value)}.
-              </p>
-            )}
           </div>
         </div>
       </section>

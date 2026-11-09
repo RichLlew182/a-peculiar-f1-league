@@ -441,7 +441,7 @@ h3.spaced { margin-top: 24px; }
   /* surface-coloured halo keeps names legible where they cross gridlines */
   paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round;
 }
-.label.sel { fill: var(--ink); font-weight: 600; }
+.label.sel { fill: var(--ink); font-weight: 700; }
 
 .tip {
   position: absolute; z-index: 5; pointer-events: none; background: var(--surface); color: var(--ink);

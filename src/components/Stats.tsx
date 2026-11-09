@@ -27,6 +27,9 @@ const CONCEAL_PLAYER_STATS = true
 /** What has been revealed this visit (kept across tab switches, reset on reload). */
 const revealed = new Set<string>()
 
+/** Facts about races and drivers rather than people: never hidden. */
+const isOpenFact = (id: string) => id === 'ff-in' || id.startsWith('popular-')
+
 function Fact({
   id,
   label,
@@ -82,7 +85,7 @@ export function Stats({ data, conceal = false }: { data: LeagueData; conceal?: b
   // everything that can be hidden, so "Reveal all" knows what is left
   const hideable = [
     ...hl.filter((h) => h.players.length > 0).map((h) => h.id),
-    ...chipFacts.filter((f) => f.id !== 'ff-in' && f.players.length > 0).map((f) => f.id),
+    ...chipFacts.filter((f) => !isOpenFact(f.id) && f.players.length > 0).map((f) => f.id),
     'records',
     'squads',
   ]
@@ -154,7 +157,7 @@ export function Stats({ data, conceal = false }: { data: LeagueData; conceal?: b
                       value={h.value}
                       detail={h.detail}
                       chip
-                      hidden={h.id !== 'ff-in' && h.players.length > 0 && isHidden(h.id)}
+                      hidden={!isOpenFact(h.id) && h.players.length > 0 && isHidden(h.id)}
                       onReveal={reveal}
                     />
                   ))}

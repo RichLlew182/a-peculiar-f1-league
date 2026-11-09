@@ -437,11 +437,11 @@ h3.spaced { margin-top: 24px; }
 .tick.xt { font-size: 11px; }
 .tick.sprint-mark { font-size: 10px; }
 .label {
-  font-size: 14px; fill: var(--ink-2); font-family: var(--font-head); font-weight: 600; letter-spacing: 0.02em; cursor: pointer;
+  font-size: 12px; fill: var(--ink-2); font-family: var(--font); font-weight: 400; letter-spacing: 0; cursor: pointer;
   /* surface-coloured halo keeps names legible where they cross gridlines */
   paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round;
 }
-.label.sel { fill: var(--ink); font-weight: 800; }
+.label.sel { fill: var(--ink); font-weight: 600; }
 
 .tip {
   position: absolute; z-index: 5; pointer-events: none; background: var(--surface); color: var(--ink);

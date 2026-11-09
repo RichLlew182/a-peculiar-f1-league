@@ -4,7 +4,8 @@ import { fmt, money, ordinal, raceCode, signedFmt, textOn } from '../lib/format'
 import { driverName, TEAM_NAMES } from '../lib/names'
 import { chipUseFor, playerProfile, type RaceLine } from '../lib/playerProfile'
 import { playerColour } from '../lib/playerColour'
-import { unlimitedPlayers } from '../lib/stats'
+import { hotStreaks, unlimitedPlayers } from '../lib/stats'
+import { Hot } from './Standings'
 import { useWidth } from '../lib/useWidth'
 import { CHIPS, type Colours, type LeagueData } from '../lib/types'
 
@@ -164,6 +165,7 @@ export function PlayerPage({ data, name }: { data: LeagueData; name: string }) {
   const { player: p, lines } = prof
   const started = data.completed.length > 0
   const unlimited = unlimitedPlayers(data).has(p.name)
+  const hotN = hotStreaks(data).get(p.name)
   const leader = data.players[0]
   const above = data.players[data.players.indexOf(p) - 1]
   const usedCount = CHIPS.filter((c) => p.chips[c.key] || chipUseFor(prof, c.key)).length
@@ -269,6 +271,12 @@ export function PlayerPage({ data, name }: { data: LeagueData; name: string }) {
           {p.name}
         </h2>
         {p.teamName && <p className="player-team">{p.teamName}</p>}
+        {hotN && (
+          <p className="player-hot">
+            <Hot n={hotN} />
+            <span>Scored above the league average at each of the last {hotN} races</span>
+          </p>
+        )}
       </header>
 
       <dl className="facts">

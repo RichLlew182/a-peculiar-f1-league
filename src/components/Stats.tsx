@@ -63,7 +63,7 @@ export function Stats({ data, conceal = false }: { data: LeagueData; conceal?: b
   return (
     <>
       {active && <p className="reveal-bar" role="status">
-          The player stats are being kept under wraps until the Christmas party.
+          The player stats are being kept under wraps until the Christmas party!
         </p>}
       <section aria-labelledby="hl-h">
         <div className="section-head">

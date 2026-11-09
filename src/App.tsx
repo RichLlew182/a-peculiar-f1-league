@@ -122,7 +122,6 @@ function SeasonPicker({ current, onPick }: { current: string; onPick: (id: strin
                 }}
               >
                 {s.id}
-                {s.archived && <small>Archived</small>}
               </button>
             </li>
           ))}

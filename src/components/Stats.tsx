@@ -46,11 +46,6 @@ function Fact({
       {/* while hidden the real answer is never rendered, only a stand-in that gets blurred */}
       <dd className={chip ? 'fact-value chip-value' : 'fact-value'}>{hidden ? '000 pts' : value}</dd>
       <dd className="fact-detail">{hidden ? 'Someone at somewhere' : detail}</dd>
-      {hidden && (
-        <dd className="reveal-wrap">
-          <span className="under-wraps">Under wraps</span>
-        </dd>
-      )}
     </div>
   )
 }
@@ -70,7 +65,9 @@ export function Stats({ data, conceal = false }: { data: LeagueData; conceal?: b
 
   return (
     <>
-      {active && <p className="reveal-bar">The player stats are under wraps until the big reveal.</p>}
+      {active && <p className="reveal-bar" role="status">
+          The player stats are being kept under wraps until the Christmas party.
+        </p>}
       <section aria-labelledby="hl-h">
         <div className="section-head">
           <h2 id="hl-h">Season highlights</h2>
@@ -135,7 +132,6 @@ export function Stats({ data, conceal = false }: { data: LeagueData; conceal?: b
           <h2 id="pl-h">Player records</h2>
         </div>
         <div className={isHidden('records') ? 'table-scroll concealed-table' : 'table-scroll'}>
-          {isHidden('records') && <span className="under-wraps">Under wraps</span>}
           <table className="plain-table records" aria-hidden={isHidden('records') || undefined}>
             <caption className="sr-only">Season records for each player</caption>
             <thead>
@@ -220,7 +216,6 @@ export function Stats({ data, conceal = false }: { data: LeagueData; conceal?: b
             <h3 className="spaced">Team value</h3>
             {isHidden('squads') ? (
               <p className="note-line concealed-line">
-                <span className="under-wraps">Under wraps</span>
                 <span className="blurred" aria-hidden="true">
                   Most valuable squad: <b>Someone</b> £000.0m. Smallest: <b>Someone</b> £000.0m.
                 </span>

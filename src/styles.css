@@ -812,15 +812,9 @@ h3,
 .fact { position: relative; }
 .fact.concealed { overflow: hidden; }
 .fact.concealed .fact-value, .fact.concealed .fact-detail { filter: blur(9px); user-select: none; pointer-events: none; }
-.reveal-wrap { margin: 0; }
-.under-wraps {
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; white-space: nowrap;
-  font-family: var(--font-head); font-weight: 800; font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase;
-  background: var(--ink); color: var(--surface); padding: 6px 18px 6px 14px;
-  clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
-}
 .concealed-table { position: relative; }
 .concealed-table table { filter: blur(8px); user-select: none; pointer-events: none; }
 .concealed-line { position: relative; min-height: 44px; display: flex; align-items: center; }
 .concealed-line .blurred { filter: blur(7px); user-select: none; }
-.reveal-bar { background: var(--wash); border-left: 4px solid var(--accent); padding: 10px 14px; margin: 0 0 18px; font-size: 14px; color: var(--ink-2); }
+/* same look as the "new scores found" notice */
+.reveal-bar { background: var(--ink); color: var(--surface); padding: 10px 14px; border-radius: 0; border-left: 4px solid var(--accent); margin: 0 0 18px; font-size: 14px; }

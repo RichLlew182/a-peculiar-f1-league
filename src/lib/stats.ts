@@ -282,7 +282,9 @@ export function ord(n: number): string {
 
 export { signed, fmt }
 
-const sameRace = (a: string, b: string) => a.trim().toLowerCase() === b.trim().toLowerCase()
+/** Race names match ignoring case, spacing and a trailing "(Sp)" sprint tag. */
+const raceKey = (s: string) => s.replace(/\s*\(sp\)\s*$/i, '').replace(/\s+/g, ' ').trim().toLowerCase()
+const sameRace = (a: string, b: string) => raceKey(a) === raceKey(b)
 const sgn = (n: number) => (n > 0 ? `+${fmt(n)}` : n < 0 ? `−${fmt(Math.abs(n))}` : '0')
 const joinNames = (xs: string[]) =>
   xs.length <= 1 ? (xs[0] ?? '') : `${xs.slice(0, -1).join(', ')} and ${xs[xs.length - 1]}`

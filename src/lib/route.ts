@@ -1,9 +1,10 @@
 import { CURRENT_SEASON, SEASONS } from './seasons'
 
-export type Tab = 'standings' | 'progress' | 'races' | 'stats'
+export type Tab = 'standings' | 'progress' | 'replay' | 'races' | 'stats'
 export const TABS: { id: Tab; label: string }[] = [
   { id: 'standings', label: 'Standings' },
   { id: 'progress', label: 'Progress' },
+  { id: 'replay', label: 'Replay' },
   { id: 'races', label: 'Races' },
   { id: 'stats', label: 'Stats' },
 ]

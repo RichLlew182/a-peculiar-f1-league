@@ -72,6 +72,8 @@ export function Replay({ data }: { data: LeagueData }) {
   const gains = (p: string) => (race ? (race.gains[p] ?? 0) : 0)
   const shownOrder = phase === 'move' && i > 0 ? orders[i - 1] : orders[i]
   const done = i === n && n > 0
+  // no positions until the first race has been run: the starting grid is just alphabetical
+  const ranked = !!race && !(i === 1 && phase === 'move')
 
   // keep the replay valid if scores change underneath it
   useEffect(() => {
@@ -233,7 +235,7 @@ export function Replay({ data }: { data: LeagueData }) {
           const f = Math.min(1, Math.max(0, totals(p)) / domain)
           const d = phase === 'swap' ? moves[p] : 0
           const cls = ['rp-row']
-          if (pos === 0 && race) cls.push('lead')
+          if (pos === 0 && ranked) cls.push('lead')
           if (phase === 'move' && race) cls.push('moving')
           if (follow && follow !== p) cls.push('dim')
           const style = {
@@ -243,7 +245,7 @@ export function Replay({ data }: { data: LeagueData }) {
           } as CSSProperties
           return (
             <div key={p} role="listitem" className={cls.join(' ')} style={style} onClick={() => setFollow(follow === p ? null : p)}>
-              <span className="rp-pos">{race ? pos + 1 : '–'}</span>
+              <span className="rp-pos">{ranked ? pos + 1 : '–'}</span>
               {d ? <span className={d > 0 ? 'rp-badge up' : 'rp-badge down'}>{d > 0 ? '▲' : '▼'}{Math.abs(d)}</span> : null}
               <span className="rp-nm">
                 <i className="rp-dot" />

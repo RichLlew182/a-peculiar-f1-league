@@ -845,7 +845,9 @@ h3,
 }
 .rp-row.dim { opacity: 0.35; }
 .rp-pos { font-family: var(--font-head); font-weight: 800; font-size: 22px; text-align: center; line-height: 1; height: 30px; display: flex; align-items: center; justify-content: center; background: var(--wash); margin-right: 8px; clip-path: polygon(0 0, 100% 0, calc(100% - 7px) 100%, 0 100%); }
-.rp-row.lead .rp-pos { background: var(--accent); color: #fff; }
+.rp-row.medal-1 .rp-pos { background: #d9b44a; color: #33280a; }
+.rp-row.medal-2 .rp-pos { background: #bcc1c9; color: #1f2329; }
+.rp-row.medal-3 .rp-pos { background: #c48a5a; color: #2d1907; }
 .rp-badge { position: absolute; left: calc(var(--rp-pos) - 26px); top: 0; z-index: 3; font-family: var(--font-head); font-weight: 800; font-size: 12px; line-height: 1; padding: 2px 4px; color: #fff; }
 .rp-badge.up { background: var(--good); }
 .rp-badge.down { background: var(--bad); }

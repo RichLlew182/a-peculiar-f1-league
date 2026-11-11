@@ -235,7 +235,7 @@ export function Replay({ data }: { data: LeagueData }) {
           const f = Math.min(1, Math.max(0, totals(p)) / domain)
           const d = phase === 'swap' ? moves[p] : 0
           const cls = ['rp-row']
-          if (pos === 0 && ranked) cls.push('lead')
+          if (ranked && pos < 3) cls.push(`medal-${pos + 1}`)
           if (phase === 'move' && race) cls.push('moving')
           if (follow && follow !== p) cls.push('dim')
           const style = {

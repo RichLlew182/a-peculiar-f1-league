@@ -849,7 +849,7 @@ h3,
 .rp-badge { position: absolute; left: calc(var(--rp-pos) - 26px); top: 0; z-index: 3; font-family: var(--font-head); font-weight: 800; font-size: 12px; line-height: 1; padding: 2px 4px; color: #fff; }
 .rp-badge.up { background: var(--good); }
 .rp-badge.down { background: var(--bad); }
-.rp-nm { font-family: var(--font-head); font-weight: 700; font-size: 19px; letter-spacing: 0.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 8px; display: flex; align-items: center; gap: 6px; }
+.rp-nm { font-family: var(--font); font-weight: 600; font-size: 15px; letter-spacing: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 8px; display: flex; align-items: center; gap: 6px; }
 .rp-nm svg { width: 16px; height: 16px; flex: none; }
 .rp-dot { width: 10px; height: 10px; flex: none; background: var(--c); }
 .rp-lane { position: relative; height: var(--rp-rh); }
@@ -870,7 +870,7 @@ h3,
   .rp-name { font-size: 34px; }
   /* on a phone the round sits on its own line above, so the name below never moves */
   .rp-round { order: -1; flex-basis: 100%; margin-left: 0; }
-  .rp-nm { font-size: 15px; }
+  .rp-nm { font-size: 14px; }
   .rp-dot { width: 8px; height: 8px; }
   .rp-pos { font-size: 18px; height: 26px; }
   .rp-pts { font-size: 18px; }

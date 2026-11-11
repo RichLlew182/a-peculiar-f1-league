@@ -187,7 +187,9 @@ export function Replay({ data }: { data: LeagueData }) {
       </div>
 
       <div className="rp-race">
-        <span className="rp-name">{race ? race.name : 'Lights out'}</span>
+        <span key={i} className="rp-name">
+          {race ? race.name : 'Lights out'}
+        </span>
         {race?.sprint && <span className="rp-sprint">Sprint</span>}
         <span className="rp-round">{race ? `Round ${i} of ${data.races.length}` : 'Grid'}</span>
       </div>

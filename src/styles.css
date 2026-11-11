@@ -821,7 +821,8 @@ h3,
 .rp { --rp-rh: 44px; --rp-carw: 54px; --rp-pos: 44px; --rp-nm: 130px; --rp-pts: 130px; --rp-track: var(--grid); }
 .rp-race { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 14px; margin-top: 6px; }
 .rp-round { margin-left: auto; font-family: var(--font-head); font-weight: 700; font-size: 15px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
-.rp-name { font-family: var(--font-head); font-weight: 800; font-size: 44px; line-height: 1; text-transform: uppercase; }
+.rp-name { font-family: var(--font-head); font-weight: 800; font-size: 44px; line-height: 1; text-transform: uppercase; animation: rp-name-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1); }
+@keyframes rp-name-in { from { opacity: 0; transform: translateY(14px); clip-path: inset(0 100% 0 0); } to { opacity: 1; transform: none; clip-path: inset(0 0 0 0); } }
 .rp-sprint { font-family: var(--font-head); font-weight: 800; font-size: 13px; letter-spacing: 0.1em; background: var(--accent); color: #fff; padding: 2px 10px 2px 8px; text-transform: uppercase; clip-path: polygon(0 0, 100% 0, calc(100% - 5px) 100%, 0 100%); }
 .rp-feed { min-height: 44px; display: flex; flex-wrap: wrap; gap: 4px 18px; padding: 8px 0 12px; font-size: 15px; font-weight: 600; }
 .rp-note { opacity: 0; animation: rp-in 0.4s ease-out forwards; }
@@ -883,4 +884,5 @@ h3,
 @media (prefers-reduced-motion: reduce) {
   .rp-row, .rp-car, .rp-fill { transition-duration: 0.01s !important; }
   .rp-row.moving .rp-wheel { animation: none; }
+  .rp-name { animation: none; }
 }

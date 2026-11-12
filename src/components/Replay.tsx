@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { fmt, ordinal } from '../lib/format'
 import { playerColour } from '../lib/playerColour'
 import type { LeagueData } from '../lib/types'
+import { Fireworks } from './Fireworks'
 import { Trophy } from './icons'
 
 /** Cars charge forward for MOVE ms, then the rows swap for the overtakes, then the next race starts at STEP ms. */
@@ -47,6 +48,8 @@ export function Replay({ data }: { data: LeagueData }) {
   const [speed, setSpeed] = useState(1)
   const [instant, setInstant] = useState(true)
   const [follow, setFollow] = useState<string | null>(null)
+  // bumped when the replay reaches the end of a finished season, to set the fireworks off
+  const [celebrate, setCelebrate] = useState(0)
 
   // the running order after every race (ties keep the previous order)
   const orders = useMemo(() => {
@@ -102,6 +105,10 @@ export function Replay({ data }: { data: LeagueData }) {
     }
     return () => window.clearTimeout(t)
   }, [playing, phase, i, n, speed])
+
+  useEffect(() => {
+    if (playing && phase === 'swap' && done) setCelebrate((c) => c + 1)
+  }, [playing, phase, done])
 
   // after an instant jump, switch the animations back on
   useEffect(() => {
@@ -235,6 +242,7 @@ export function Replay({ data }: { data: LeagueData }) {
       <div className="rp-tower" style={{ height: `calc(${names.length} * var(--rp-rh))` }} role="list">
         {/* one continuous track behind the rows, so only the cars (not whole blocks) appear to change places */}
         <div className="rp-backing" aria-hidden="true" />
+        <Fireworks key={celebrate} on={celebrate > 0 && done} />
         {names.map((p) => {
           const pos = shownOrder.indexOf(p)
           const f = Math.min(1, Math.max(0, totals(p)) / domain)

@@ -888,3 +888,5 @@ h3,
   .rp-row.moving .rp-wheel { animation: none; }
   .rp-name { animation: none; }
 }
+
+.fireworks { position: absolute; inset: -30px 0 0; width: 100%; height: calc(100% + 30px); pointer-events: none; z-index: 5; }

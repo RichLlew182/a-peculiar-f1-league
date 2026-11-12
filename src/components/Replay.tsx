@@ -232,6 +232,8 @@ export function Replay({ data }: { data: LeagueData }) {
       </div>
 
       <div className="rp-tower" style={{ height: `calc(${names.length} * var(--rp-rh))` }} role="list">
+        {/* one continuous track behind the rows, so only the cars (not whole blocks) appear to change places */}
+        <div className="rp-backing" aria-hidden="true" />
         {names.map((p) => {
           const pos = shownOrder.indexOf(p)
           const f = Math.min(1, Math.max(0, totals(p)) / domain)

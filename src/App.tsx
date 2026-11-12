@@ -111,7 +111,7 @@ function SeasonPicker({ current, onPick }: { current: string; onPick: (id: strin
       </button>
       {open && (
         <ul className="season-menu" role="listbox" aria-label="Season">
-          {SEASONS.map((s) => (
+          {[...SEASONS].reverse().map((s) => (
             <li key={s.id} role="option" aria-selected={s.id === current}>
               <button
                 type="button"

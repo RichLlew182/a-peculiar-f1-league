@@ -117,13 +117,27 @@ export function Replay({ data }: { data: LeagueData }) {
     return () => window.clearTimeout(t)
   }, [instant, idx])
 
+  const stepTimer = useRef(0)
   const jump = (to: number) => {
+    window.clearTimeout(stepTimer.current)
     setPlaying(false)
+    if (Math.abs(to - i) === 1) {
+      // a single step (arrow keys) animates like a normal race; bigger jumps are instant
+      setInstant(false)
+      setIdx(to)
+      if (to > i) {
+        setPhase('move')
+        stepTimer.current = window.setTimeout(() => setPhase('swap'), MOVE / speed)
+      } else setPhase('swap')
+      return
+    }
     setInstant(true)
     setIdx(to)
     setPhase('swap')
   }
+  useEffect(() => () => window.clearTimeout(stepTimer.current), [])
   const play = () => {
+    window.clearTimeout(stepTimer.current)
     if (playing) return setPlaying(false)
     if (i >= n) {
       setInstant(true)

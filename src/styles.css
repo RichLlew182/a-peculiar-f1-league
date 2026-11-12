@@ -554,6 +554,7 @@ h3.spaced { margin-top: 24px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .rp-rail-fill, .rp-rail-thumb { transition: none; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 @media (forced-colors: active) {
@@ -838,7 +839,12 @@ h3,
 .rp-speed button { font-family: var(--font-head); font-weight: 800; font-size: 15px; background: transparent; color: var(--ink-2); border: 1px solid var(--axis); padding: 4px 11px; cursor: pointer; margin-left: -1px; }
 .rp-speed button[aria-pressed='true'] { background: var(--ink); color: var(--surface); border-color: var(--ink); }
 .rp-scrub { flex: 1; min-width: 200px; display: flex; align-items: center; gap: 10px; }
-.rp-scrub input { flex: 1; accent-color: var(--accent); }
+.rp-range { position: relative; flex: 1; height: 22px; display: block; }
+.rp-rail { position: absolute; left: 8px; right: 8px; top: 50%; height: 6px; transform: translateY(-50%); background: var(--axis); border-radius: 3px; }
+.rp-rail-fill { position: absolute; left: 0; top: 0; bottom: 0; width: calc(var(--p) * 100%); background: var(--accent); border-radius: 3px; transition: width var(--rp-glide, 0.5s) linear; }
+.rp-rail-thumb { position: absolute; top: 50%; left: calc(var(--p) * 100%); width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; background: var(--accent); border: 2px solid var(--surface); box-shadow: 0 0 0 1px var(--accent); transition: left var(--rp-glide, 0.5s) linear; }
+.rp-range input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.rp-range:focus-within .rp-rail-thumb { outline: 2px solid var(--ink); outline-offset: 2px; }
 .rp-scrub small { color: var(--ink-2); font-size: 12px; min-width: 70px; text-align: right; }
 .rp-tower { position: relative; margin-top: 14px; }
 .rp-row {

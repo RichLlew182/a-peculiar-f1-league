@@ -163,6 +163,7 @@ export function Replay({ data }: { data: LeagueData }) {
   const vars = {
     '--rp-move': instant ? '0s' : `${1.5 / speed}s`,
     '--rp-reorder': instant ? '0s' : `${0.9 / speed}s`,
+    '--rp-glide': instant ? '0s' : `${STEP / 1000 / speed}s`,
   } as CSSProperties
 
   return (
@@ -230,7 +231,13 @@ export function Replay({ data }: { data: LeagueData }) {
         </div>
         <label className="rp-scrub">
           <span className="sr-only">Race</span>
-          <input type="range" min={0} max={n} step={1} value={i} onChange={(e) => jump(+e.target.value)} />
+          <span className="rp-range" style={{ '--p': i / n } as CSSProperties}>
+            <span className="rp-rail" aria-hidden="true">
+              <span className="rp-rail-fill" />
+              <span className="rp-rail-thumb" />
+            </span>
+            <input type="range" min={0} max={n} step={1} value={i} onChange={(e) => jump(+e.target.value)} />
+          </span>
           <small>{race ? `${i} / ${data.races.length}` : 'Start'}</small>
         </label>
       </div>

@@ -200,7 +200,7 @@ export function Replay({ data }: { data: LeagueData }) {
       </div>
       <div className="rp-feed" aria-live="polite">
         {notes.map((x, k) => (
-          <span key={`${i}-${x.key}`} className={x.tone ? `rp-note ${x.tone}` : 'rp-note'} style={{ animationDelay: `${(k * 200) / speed}ms`, animationDuration: speed > 1 ? '0.2s' : undefined }}>
+          <span key={`${i}-${x.key}`} className={x.tone ? `rp-note ${x.tone}` : 'rp-note'} style={{ animationDelay: `${(k * 200) / speed}ms`, animationDuration: '0.2s' }}>
             {x.text}
           </span>
         ))}

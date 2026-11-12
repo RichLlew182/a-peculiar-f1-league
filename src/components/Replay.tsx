@@ -100,7 +100,7 @@ export function Replay({ data }: { data: LeagueData }) {
             setPhase('move')
           } else setPlaying(false)
         },
-        (i === 0 ? 500 : STEP - MOVE) / speed,
+        i === 0 ? 500 / speed : Math.max(1300, (STEP - MOVE) / speed),
       )
     }
     return () => window.clearTimeout(t)
@@ -200,7 +200,7 @@ export function Replay({ data }: { data: LeagueData }) {
       </div>
       <div className="rp-feed" aria-live="polite">
         {notes.map((x, k) => (
-          <span key={`${i}-${x.key}`} className={x.tone ? `rp-note ${x.tone}` : 'rp-note'} style={{ animationDelay: `${(k * 250) / speed}ms` }}>
+          <span key={`${i}-${x.key}`} className={x.tone ? `rp-note ${x.tone}` : 'rp-note'} style={{ animationDelay: `${(k * 200) / speed}ms`, animationDuration: speed > 1 ? '0.2s' : undefined }}>
             {x.text}
           </span>
         ))}

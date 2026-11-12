@@ -401,7 +401,7 @@ export function Replay({ data }: { data: LeagueData }) {
                 </span>
               </span>
               <span className="rp-pts">
-                {race && !sm && <span className={gains(p) < 0 ? 'rp-gain neg' : 'rp-gain'}>{gains(p) < 0 ? '−' : '+'}{fmt(Math.abs(gains(p)))}</span>}
+                {race && <span className={gains(p) < 0 ? 'rp-gain neg' : 'rp-gain'} style={sm ? { visibility: 'hidden' } : undefined}>{gains(p) < 0 ? '−' : '+'}{fmt(Math.abs(gains(p)))}</span>}
                 <Tick value={Math.round(totals(p))} ms={1500 / speed} instant={instant || sm} />
               </span>
             </div>

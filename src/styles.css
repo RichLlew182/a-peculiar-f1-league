@@ -819,7 +819,7 @@ h3,
 .reveal-bar { background: var(--ink); color: var(--surface); padding: 10px 14px; border-radius: 0; border-left: 4px solid var(--accent); margin: 0 0 18px; font-size: 14px; }
 
 /* ---------- season replay ---------- */
-.rp { --rp-pad: 14px; --rp-rh: 44px; --rp-carw: 60px; --rp-pos: 44px; --rp-nm: 130px; --rp-pts: 130px; --rp-track: var(--grid); }
+.rp { --rp-pad: 14px; --rp-rh: 44px; --rp-carw: 60px; --rp-pos: 44px; --rp-nm: 130px; --rp-pts: 104px; --rp-track: var(--grid); }
 .rp-race { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 14px; margin-top: 6px; }
 .rp-round { margin-left: auto; font-family: var(--font-head); font-weight: 700; font-size: 15px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
 .rp-name { font-family: var(--font-head); font-weight: 800; font-size: 44px; line-height: 1; text-transform: uppercase; animation: rp-name-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
@@ -875,7 +875,7 @@ h3,
 .rp-row.moving .rp-wheel { animation: rp-spin 0.28s linear infinite; }
 @keyframes rp-spin { to { transform: rotate(360deg); } }
 .rp-pts { font-family: var(--font-head); font-weight: 800; font-size: 22px; text-align: right; font-variant-numeric: tabular-nums; padding-left: 8px; display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
-.rp-gain { font-size: 13px; font-weight: 700; color: var(--ink-2); min-width: 44px; text-align: right; }
+.rp-gain { font-size: 13px; font-weight: 700; color: var(--ink-2); min-width: 34px; text-align: right; }
 .rp-gain.neg { color: var(--bad); }
 .rp-foot { margin-top: 10px; }
 @media (max-width: 700px) {

@@ -308,11 +308,14 @@ export function Replay({ data }: { data: LeagueData }) {
 
       <div className="rp-controls">
         <button type="button" className="rp-btn" onClick={play}>
-          {playing ? 'Pause' : atEnd ? 'Replay' : 'Play'}
+          {playing ? 'Pause' : 'Race by race'}
+        </button>
+        <button type="button" className="rp-btn season" aria-pressed={smoothPlaying} onClick={playSeason}>
+          {smoothPlaying ? 'Pause' : 'Whole season'}
         </button>
         <button
           type="button"
-          className="rp-btn ghost"
+          className="rp-btn plain"
           onClick={() => {
             setInstant(true)
             setIdx(0)
@@ -322,9 +325,6 @@ export function Replay({ data }: { data: LeagueData }) {
           }}
         >
           Restart
-        </button>
-        <button type="button" className="rp-btn ghost" aria-pressed={smoothPlaying} onClick={playSeason}>
-          {smoothPlaying ? 'Pause' : 'Whole season'}
         </button>
         <div className="rp-speed" role="group" aria-label="Speed">
           {SPEEDS.map((x) => (

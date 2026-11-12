@@ -168,25 +168,21 @@ export function Replay({ data }: { data: LeagueData }) {
   return (
     <section aria-labelledby="rp-h" className="rp" style={vars}>
       <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">
-        <symbol id="rp-car" viewBox="0 0 60 22">
-          <rect x="1" y="2" width="4" height="11" fill="currentColor" />
-          <rect x="0" y="1.5" width="7" height="2" fill="#111" />
-          <path d="M5 14 L17 10.5 L29 9.5 L40 8 L52 12 L59 14 L59 16 L5 16 Z" fill="currentColor" />
-          <path d="M17 10.5 L29 9.5 L40 8 L41 11 L16 13 Z" fill="#000" opacity=".18" />
-          <circle cx="31" cy="6.6" r="3" fill="#fff" />
-          <path d="M28.4 6.6h5.2" stroke="currentColor" strokeWidth="1.2" />
-          <path d="M27.5 5.2 Q31 1.8 35 5.2" fill="none" stroke="#111" strokeWidth="1.1" />
-          <rect x="52" y="16" width="8" height="2" fill="#111" />
-          <g className="rp-wheel">
-            <circle cx="14" cy="16.5" r="5" fill="#111" />
-            <circle cx="14" cy="16.5" r="2" fill="#bbb" />
-            <path d="M14 14.5v4M12 16.5h4" stroke="#555" strokeWidth=".8" />
-          </g>
-          <g className="rp-wheel">
-            <circle cx="46" cy="16.5" r="5" fill="#111" />
-            <circle cx="46" cy="16.5" r="2" fill="#bbb" />
-            <path d="M46 14.5v4M44 16.5h4" stroke="#555" strokeWidth=".8" />
-          </g>
+        <symbol id="rp-car" viewBox="0 0 60 16">
+          <path d="M0 2.6 H6.6 L7 9.2 H0.6 Z" fill="currentColor"/>
+          <path d="M0 2.6 H6.6 V3.7 H0.1 Z" fill="#000" opacity=".25"/>
+          <path d="M0.4 9.2 H7.4 V10.4 H0.7 Z" fill="#111"/>
+          <path d="M5.5 10.4 H8 L9 13.6 H6.4 Z" fill="#111"/>
+          <path d="M6.4 9 C9 7.4 13 6.6 18 6.1 L22.6 4.2 L27.4 4.3 L29.6 6.2 L37 6.7 C44 7.2 51 9.2 59.6 12.2 V13.3 L51 13.3 L48 14.4 H11 L6.4 13 Z" fill="currentColor"/>
+          <path d="M12 13 L50 12.6 L48.6 14.4 H11 Z" fill="#000" opacity=".28"/>
+          <path d="M30.5 9 H39 L40.6 10.8 H31.6 Z" fill="#000" opacity=".3"/>
+          <path d="M23 4.4 L27.2 4.5 L28.6 6 L21.4 5.8 Z" fill="#000" opacity=".35"/>
+          <circle cx="32.8" cy="4.9" r="1.6" fill="#f4f4f4"/>
+          <path d="M33.4 4.5 H34.8 V5.3 H33.4 Z" fill="#111"/>
+          <path d="M30.2 6.4 Q33 2.6 36.6 6.7" fill="none" stroke="#111" strokeWidth=".8" strokeLinecap="round"/>
+          <path d="M52 13.9 H59.8 V15 H51 Z" fill="#111"/>
+          <g className="rp-wheel"><circle cx="10" cy="11" r="4" fill="#111"/><circle cx="10" cy="11" r="2" fill="#aab"/><path d="M10 9.4v3.2M8.4 11h3.2" stroke="#555" strokeWidth=".7"/></g>
+          <g className="rp-wheel"><circle cx="46" cy="11" r="4" fill="#111"/><circle cx="46" cy="11" r="2" fill="#aab"/><path d="M46 9.4v3.2M44.4 11h3.2" stroke="#555" strokeWidth=".7"/></g>
         </symbol>
       </svg>
 

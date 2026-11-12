@@ -185,7 +185,6 @@ export function Replay({ data }: { data: LeagueData }) {
 
       <div className="section-head">
         <h2 id="rp-h">Season replay</h2>
-        <p className="legend-note">The track is the whole season: the finish line is where the leader is on course to end up</p>
       </div>
 
       <div className="rp-race">

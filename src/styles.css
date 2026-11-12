@@ -867,7 +867,7 @@ h3,
 .rp-dot { width: 10px; height: 10px; flex: none; background: var(--c); }
 .rp-lane { position: relative; height: var(--rp-rh); }
 .rp-backing { position: absolute; top: 4px; bottom: 4px; left: calc(var(--rp-pos) + var(--rp-nm)); right: var(--rp-pts); background: var(--rp-track); }
-.rp-backing::after { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 10px; background: repeating-conic-gradient(var(--ink) 0 25%, transparent 0 50%) 0 0 / 5px 5px; opacity: 0.55; }
+.rp-backing::after { content: ''; position: absolute; right: calc(var(--rp-carw) * 0.3); top: 0; bottom: 0; width: 10px; background: repeating-conic-gradient(var(--ink) 0 25%, transparent 0 50%) 0 0 / 5px 5px; opacity: 0.55; }
 .rp-fill { position: absolute; left: var(--rp-pad); top: 50%; height: 5px; transform: translateY(-50%); background: var(--c); opacity: 0.35; width: calc((100% - var(--rp-pad) - var(--rp-carw)) * var(--f) + var(--rp-carw) * 0.6); transition: width var(--rp-move, 1.5s) cubic-bezier(0.3, 0.1, 0.2, 1); }
 .rp-car { position: absolute; top: 50%; width: var(--rp-carw); height: calc(var(--rp-carw) * 0.267); transform: translateY(-50%); left: calc(var(--rp-pad) + (100% - var(--rp-pad) - var(--rp-carw)) * var(--f)); transition: left var(--rp-move, 1.5s) cubic-bezier(0.3, 0.1, 0.2, 1); color: var(--c); filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.25)); }
 .rp-car svg { width: 100%; height: 100%; overflow: visible; display: block; }

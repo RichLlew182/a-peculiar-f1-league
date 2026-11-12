@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Recap } from './components/Recap'
 import { PlayerPage } from './components/PlayerPage'
 import { FormGuide } from './components/FormGuide'
+import { Replay } from './components/Replay'
 import { ProgressChart } from './components/ProgressChart'
 import { RaceList } from './components/RaceList'
 import { Standings } from './components/Standings'
@@ -247,6 +248,7 @@ function SeasonView({
             tab === 'standings' && <Standings data={data} />
           )}
           {tab === 'progress' && <ProgressChart data={data} />}
+          {tab === 'replay' && <Replay data={data} />}
           {tab === 'races' && (
             data.completed.length === 0 ? (
               <p className="empty">No races have been scored yet. Results appear here after the first race.</p>

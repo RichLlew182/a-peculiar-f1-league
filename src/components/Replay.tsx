@@ -325,7 +325,9 @@ export function Replay({ data }: { data: LeagueData }) {
           className="rp-btn plain"
           onClick={() => {
             window.clearTimeout(stepTimer.current)
-            if (lastMode === 'season') {
+            // restarting mid-run keeps going; restarting from a pause just goes back to the grid and waits for Play
+            const go = playing || smoothPlaying || atEnd
+            if (lastMode === 'season' && go) {
               setPlaying(false)
               tRef.current = 0
               setT(0)
@@ -334,11 +336,12 @@ export function Replay({ data }: { data: LeagueData }) {
               setSmoothPlaying(true)
               return
             }
+            setSmoothPlaying(false)
+            setSmooth(false)
             setInstant(true)
             setIdx(0)
             setPhase('swap')
-            leaveSmooth()
-            setPlaying(true)
+            setPlaying(lastMode === 'race' && go)
           }}
         >
           Restart

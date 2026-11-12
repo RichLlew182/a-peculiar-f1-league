@@ -54,6 +54,8 @@ export function Replay({ data }: { data: LeagueData }) {
   const [celebrate, setCelebrate] = useState(0)
   // "whole season" mode: one continuous run where t is a fractional race number and the cars overtake as points cross
   const [smooth, setSmooth] = useState(false)
+  // which way the replay was last played, so Restart can do the same again
+  const [lastMode, setLastMode] = useState<'race' | 'season'>('race')
   const [smoothPlaying, setSmoothPlaying] = useState(false)
   const [t, setT] = useState(0)
   const tRef = useRef(0)
@@ -200,6 +202,7 @@ export function Replay({ data }: { data: LeagueData }) {
   const playSeason = () => {
     window.clearTimeout(stepTimer.current)
     if (smoothPlaying) return setSmoothPlaying(false)
+    setLastMode('season')
     setPlaying(false)
     let from = sm ? t : i
     if (from >= n) from = 0
@@ -212,6 +215,7 @@ export function Replay({ data }: { data: LeagueData }) {
   const play = () => {
     window.clearTimeout(stepTimer.current)
     if (playing) return setPlaying(false)
+    setLastMode('race')
     if (sm) {
       // carry on race by race from where the season run stopped
       const k = t >= n ? 0 : Math.floor(t)
@@ -318,6 +322,16 @@ export function Replay({ data }: { data: LeagueData }) {
           type="button"
           className="rp-btn plain"
           onClick={() => {
+            window.clearTimeout(stepTimer.current)
+            if (lastMode === 'season') {
+              setPlaying(false)
+              tRef.current = 0
+              setT(0)
+              setInstant(false)
+              setSmooth(true)
+              setSmoothPlaying(true)
+              return
+            }
             setInstant(true)
             setIdx(0)
             setPhase('swap')

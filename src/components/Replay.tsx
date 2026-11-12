@@ -80,8 +80,8 @@ export function Replay({ data }: { data: LeagueData }) {
   }, [races, n, names, data.races.length])
 
   const sm = smooth
-  const tf = Math.min(n, Math.floor(t))
-  const frac = Math.min(1, t - tf)
+  const tf = Math.max(0, Math.min(n, Math.floor(t)))
+  const frac = Math.max(0, Math.min(1, t - tf))
   const at = (p: string, k: number) => (k > 0 ? (races[k - 1].totals[p] ?? 0) : 0)
   const smVal = (p: string) => at(p, tf) + (at(p, Math.min(n, tf + 1)) - at(p, tf)) * frac
   const i = sm ? (t <= 0 ? 0 : Math.min(n, Math.ceil(t))) : Math.min(idx, n)
@@ -102,7 +102,8 @@ export function Replay({ data }: { data: LeagueData }) {
     let raf = 0
     let last = performance.now()
     const loop = (now: number) => {
-      const dt = Math.min(0.1, (now - last) / 1000)
+      // the first frame's timestamp can be slightly earlier than our start time, so never let dt go negative
+      const dt = Math.max(0, Math.min(0.1, (now - last) / 1000))
       last = now
       const nt = Math.min(n, tRef.current + (dt * n * speed) / SEASON_SECONDS)
       tRef.current = nt

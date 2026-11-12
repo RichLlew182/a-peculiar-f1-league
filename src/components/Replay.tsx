@@ -65,12 +65,14 @@ export function Replay({ data }: { data: LeagueData }) {
 
   // the running order after every race (ties keep the previous order)
   const orders = useMemo(() => {
-    // the grid starts alphabetical so it doesn't give away the final order
     const out: string[][] = [[...names].sort((a, b) => a.localeCompare(b))]
     races.forEach((r) => {
       const prev = out[out.length - 1]
       out.push([...names].sort((a, b) => (r.totals[b] ?? 0) - (r.totals[a] ?? 0) || prev.indexOf(a) - prev.indexOf(b)))
     })
+    // line the grid up in the order they'll be in after the first race, so nothing reshuffles when the cars set off
+    // (positions stay hidden until that race has run, so it doesn't give anything away)
+    if (out.length > 1) out[0] = out[1]
     return out
   }, [races, names])
 

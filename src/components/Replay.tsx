@@ -71,7 +71,9 @@ export function Replay({ data }: { data: LeagueData }) {
   const totals = (p: string) => (race ? (race.totals[p] ?? 0) : 0)
   const gains = (p: string) => (race ? (race.gains[p] ?? 0) : 0)
   const shownOrder = phase === 'move' && i > 0 ? orders[i - 1] : orders[i]
-  const done = i === n && n > 0
+  // the replay has reached the last scored race; it only crowns a champion once every race of the season is in
+  const atEnd = i === n && n > 0
+  const done = atEnd && n >= data.races.length
   // no positions until the first race has been run: the starting grid is just alphabetical
   const ranked = !!race && !(i === 1 && phase === 'move')
 
@@ -203,7 +205,7 @@ export function Replay({ data }: { data: LeagueData }) {
 
       <div className="rp-controls">
         <button type="button" className="rp-btn" onClick={play}>
-          {playing ? 'Pause' : done ? 'Replay' : 'Play'}
+          {playing ? 'Pause' : atEnd ? 'Replay' : 'Play'}
         </button>
         <button
           type="button"

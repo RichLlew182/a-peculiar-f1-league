@@ -781,8 +781,8 @@ h3.spaced { margin-top: 24px; }
 .season-menu [aria-selected='true'] .season-opt small { color: rgba(255, 255, 255, 0.85); }
 
 @media (max-width: 560px) {
-  .tabs { gap: 2px; padding: 0 8px; }
-  .tab { padding: 9px 16px; font-size: 16px; letter-spacing: 0.05em; }
+  .tab { padding: 9px 11px; font-size: 15px; letter-spacing: 0.04em; clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%); }
+  .tabs { gap: 0; padding: 0 4px; }
   .year, .season-pick { margin-left: 0; margin-top: 6px; }
   .year { padding-bottom: 0.11em; }
   .season-btn { padding-bottom: 0.11em; }
@@ -897,3 +897,7 @@ h3,
 }
 
 .fireworks { position: absolute; inset: -30px 0 0; width: 100%; height: calc(100% + 30px); pointer-events: none; z-index: 5; }
+
+@media (max-width: 380px) {
+  .tab { padding: 9px 7px; font-size: 14px; letter-spacing: 0.03em; }
+}

@@ -140,7 +140,7 @@ export function Replay({ data }: { data: LeagueData }) {
     return m
   }, [i, orders, names])
   const notes = useMemo(() => {
-    if (!race || phase !== 'swap') return []
+    if (!race) return []
     const out: { key: string; text: string; tone?: 'up' | 'down' }[] = []
     const best = Math.max(...names.map((p) => gains(p)))
     const winner = names.find((p) => gains(p) === best)
@@ -153,7 +153,7 @@ export function Replay({ data }: { data: LeagueData }) {
       if (moves[down] < -1) out.push({ key: 'd', tone: 'down', text: `▼ ${down} drops ${-moves[down]} to ${ordinal(orders[i].indexOf(down) + 1)}` })
       if (orders[i][0] !== orders[i - 1][0]) out.push({ key: 'l', text: `New leader: ${orders[i][0]}!` })
     }
-    if (done) out.push({ key: 'c', text: `🏁 ${orders[i][0]} is the champion` })
+    if (done && phase === 'swap') out.push({ key: 'c', text: `🏁 ${orders[i][0]} is the champion` })
     return out
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [race, phase, i, orders, moves, done])
@@ -200,7 +200,7 @@ export function Replay({ data }: { data: LeagueData }) {
       </div>
       <div className="rp-feed" aria-live="polite">
         {notes.map((x, k) => (
-          <span key={`${i}-${x.key}`} className={x.tone ? `rp-note ${x.tone}` : 'rp-note'} style={{ animationDelay: `${(k * 200) / speed}ms`, animationDuration: '0.2s' }}>
+          <span key={`${i}-${x.key}`} className={x.tone ? `rp-note ${x.tone}` : 'rp-note'} style={{ animationDelay: `${(300 + k * 250) / speed}ms`, animationDuration: '0.2s' }}>
             {x.text}
           </span>
         ))}

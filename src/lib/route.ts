@@ -4,9 +4,9 @@ export type Tab = 'standings' | 'progress' | 'replay' | 'races' | 'stats'
 export const TABS: { id: Tab; label: string }[] = [
   { id: 'standings', label: 'Standings' },
   { id: 'progress', label: 'Progress' },
-  { id: 'replay', label: 'Replay' },
   { id: 'races', label: 'Races' },
   { id: 'stats', label: 'Stats' },
+  { id: 'replay', label: 'Replay' },
 ]
 
 export type Route = { season: string; tab: Tab; player?: string }

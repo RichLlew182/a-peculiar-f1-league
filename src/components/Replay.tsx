@@ -9,6 +9,8 @@ import { Trophy } from './icons'
 const MOVE = 1300
 const STEP = 2900
 const SPEEDS = [1, 2, 4]
+/** The whole-season run takes this long at 1x. */
+const SEASON_SECONDS = 30
 
 /** A number that counts from its previous value to the new one. */
 function Tick({ value, ms, instant }: { value: number; ms: number; instant: boolean }) {
@@ -50,6 +52,14 @@ export function Replay({ data }: { data: LeagueData }) {
   const [follow, setFollow] = useState<string | null>(null)
   // bumped when the replay reaches the end of a finished season, to set the fireworks off
   const [celebrate, setCelebrate] = useState(0)
+  // "whole season" mode: one continuous run where t is a fractional race number and the cars overtake as points cross
+  const [smooth, setSmooth] = useState(false)
+  const [smoothPlaying, setSmoothPlaying] = useState(false)
+  const [t, setT] = useState(0)
+  const tRef = useRef(0)
+  const [smNotes, setSmNotes] = useState<{ key: number; text: string }[]>([])
+  const noteKey = useRef(0)
+  const prevLeader = useRef<string | null>(null)
 
   // the running order after every race (ties keep the previous order)
   const orders = useMemo(() => {
@@ -69,16 +79,61 @@ export function Replay({ data }: { data: LeagueData }) {
     return Math.max(1, (lead * Math.max(data.races.length, n)) / n)
   }, [races, n, names, data.races.length])
 
-  const i = Math.min(idx, n)
+  const sm = smooth
+  const tf = Math.min(n, Math.floor(t))
+  const frac = Math.min(1, t - tf)
+  const at = (p: string, k: number) => (k > 0 ? (races[k - 1].totals[p] ?? 0) : 0)
+  const smVal = (p: string) => at(p, tf) + (at(p, Math.min(n, tf + 1)) - at(p, tf)) * frac
+  const i = sm ? (t <= 0 ? 0 : Math.min(n, Math.ceil(t))) : Math.min(idx, n)
   const race = i > 0 ? races[i - 1] : null
-  const totals = (p: string) => (race ? (race.totals[p] ?? 0) : 0)
+  const totals = (p: string) => (sm ? smVal(p) : race ? (race.totals[p] ?? 0) : 0)
   const gains = (p: string) => (race ? (race.gains[p] ?? 0) : 0)
-  const shownOrder = phase === 'move' && i > 0 ? orders[i - 1] : orders[i]
+  const smOrder = sm ? [...names].sort((a, b) => smVal(b) - smVal(a) || orders[tf].indexOf(a) - orders[tf].indexOf(b)) : []
+  const shownOrder = sm ? smOrder : phase === 'move' && i > 0 ? orders[i - 1] : orders[i]
   // the replay has reached the last scored race; it only crowns a champion once every race of the season is in
-  const atEnd = i === n && n > 0
+  const atEnd = sm ? t >= n && n > 0 : i === n && n > 0
   const done = atEnd && n >= data.races.length
   // no positions until the first race has been run: the starting grid is just alphabetical
-  const ranked = !!race && !(i === 1 && phase === 'move')
+  const ranked = sm ? t >= 1 : !!race && !(i === 1 && phase === 'move')
+
+  // whole-season run: advance t every frame
+  useEffect(() => {
+    if (!smoothPlaying) return
+    let raf = 0
+    let last = performance.now()
+    const loop = (now: number) => {
+      const dt = Math.min(0.1, (now - last) / 1000)
+      last = now
+      const nt = Math.min(n, tRef.current + (dt * n * speed) / SEASON_SECONDS)
+      tRef.current = nt
+      setT(nt)
+      if (nt >= n) {
+        setSmoothPlaying(false)
+        if (n >= data.races.length) setCelebrate((c) => c + 1)
+        return
+      }
+      raf = requestAnimationFrame(loop)
+    }
+    raf = requestAnimationFrame(loop)
+    return () => cancelAnimationFrame(raf)
+  }, [smoothPlaying, speed, n, data.races.length])
+
+  // lead changes pop up during the whole-season run
+  const leader = sm && ranked ? shownOrder[0] : null
+  useEffect(() => {
+    if (!sm) {
+      prevLeader.current = null
+      setSmNotes([])
+      return
+    }
+    if (!leader) return
+    if (smoothPlaying && prevLeader.current && prevLeader.current !== leader) {
+      const key = ++noteKey.current
+      setSmNotes((s) => [...s.slice(-1), { key, text: `New leader: ${leader}!` }])
+      window.setTimeout(() => setSmNotes((s) => s.filter((x) => x.key !== key)), 2400 / speed)
+    }
+    prevLeader.current = leader
+  }, [sm, leader, smoothPlaying, speed])
 
   // keep the replay valid if scores change underneath it
   useEffect(() => {
@@ -118,10 +173,15 @@ export function Replay({ data }: { data: LeagueData }) {
   }, [instant, idx])
 
   const stepTimer = useRef(0)
+  const leaveSmooth = () => {
+    setSmoothPlaying(false)
+    setSmooth(false)
+  }
   const jump = (to: number) => {
     window.clearTimeout(stepTimer.current)
     setPlaying(false)
-    if (Math.abs(to - i) === 1) {
+    leaveSmooth()
+    if (!sm && Math.abs(to - i) === 1) {
       // a single step (arrow keys) animates like a normal race; bigger jumps are instant
       setInstant(false)
       setIdx(to)
@@ -136,9 +196,31 @@ export function Replay({ data }: { data: LeagueData }) {
     setPhase('swap')
   }
   useEffect(() => () => window.clearTimeout(stepTimer.current), [])
+  const playSeason = () => {
+    window.clearTimeout(stepTimer.current)
+    if (smoothPlaying) return setSmoothPlaying(false)
+    setPlaying(false)
+    let from = sm ? t : i
+    if (from >= n) from = 0
+    tRef.current = from
+    setT(from)
+    setInstant(false)
+    setSmooth(true)
+    setSmoothPlaying(true)
+  }
   const play = () => {
     window.clearTimeout(stepTimer.current)
     if (playing) return setPlaying(false)
+    if (sm) {
+      // carry on race by race from where the season run stopped
+      const k = t >= n ? 0 : Math.floor(t)
+      leaveSmooth()
+      setInstant(true)
+      setIdx(k)
+      setPhase('swap')
+      setPlaying(true)
+      return
+    }
     if (i >= n) {
       setInstant(true)
       setIdx(0)
@@ -172,12 +254,16 @@ export function Replay({ data }: { data: LeagueData }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [race, phase, i, orders, moves, done])
 
+  const feed: { key: string | number; text: string; tone?: 'up' | 'down' }[] = sm
+    ? [...smNotes, ...(done ? [{ key: 'c', text: `🏁 ${shownOrder[0]} is the champion` }] : [])]
+    : notes
+
   if (n === 0) return <p className="empty">The replay appears after the first race is scored.</p>
 
   const vars = {
-    '--rp-move': instant ? '0s' : `${1.5 / speed}s`,
-    '--rp-reorder': instant ? '0s' : `${0.9 / speed}s`,
-    '--rp-glide': instant ? '0s' : `${STEP / 1000 / speed}s`,
+    '--rp-move': instant || sm ? '0s' : `${1.5 / speed}s`,
+    '--rp-reorder': sm ? '0.35s' : instant ? '0s' : `${0.9 / speed}s`,
+    '--rp-glide': instant || sm ? '0s' : `${STEP / 1000 / speed}s`,
   } as CSSProperties
 
   return (
@@ -213,8 +299,8 @@ export function Replay({ data }: { data: LeagueData }) {
         <span className="rp-round">{race ? `Round ${i} of ${data.races.length}` : 'Grid'}</span>
       </div>
       <div className="rp-feed" aria-live="polite">
-        {notes.map((x, k) => (
-          <span key={`${i}-${x.key}`} className={x.tone ? `rp-note ${x.tone}` : 'rp-note'} style={{ animationDelay: `${(300 + k * 250) / speed}ms`, animationDuration: '0.2s' }}>
+        {feed.map((x, k) => (
+          <span key={sm ? `s${x.key}` : `${i}-${x.key}`} className={x.tone ? `rp-note ${x.tone}` : 'rp-note'} style={{ animationDelay: sm ? '0ms' : `${(300 + k * 250) / speed}ms`, animationDuration: '0.2s' }}>
             {x.text}
           </span>
         ))}
@@ -231,10 +317,14 @@ export function Replay({ data }: { data: LeagueData }) {
             setInstant(true)
             setIdx(0)
             setPhase('swap')
+            leaveSmooth()
             setPlaying(true)
           }}
         >
           Restart
+        </button>
+        <button type="button" className="rp-btn ghost" aria-pressed={smoothPlaying} onClick={playSeason}>
+          {smoothPlaying ? 'Pause' : 'Whole season'}
         </button>
         <div className="rp-speed" role="group" aria-label="Speed">
           {SPEEDS.map((x) => (
@@ -245,12 +335,12 @@ export function Replay({ data }: { data: LeagueData }) {
         </div>
         <label className="rp-scrub">
           <span className="sr-only">Race</span>
-          <span className="rp-range" style={{ '--p': i / n } as CSSProperties}>
+          <span className="rp-range" style={{ '--p': sm ? t / n : i / n } as CSSProperties}>
             <span className="rp-rail" aria-hidden="true">
               <span className="rp-rail-fill" />
               <span className="rp-rail-thumb" />
             </span>
-            <input type="range" min={0} max={n} step={1} value={i} onChange={(e) => jump(+e.target.value)} />
+            <input type="range" min={0} max={n} step={1} value={sm ? Math.round(t) : i} onChange={(e) => jump(+e.target.value)} />
           </span>
           <small>{race ? `${i} / ${data.races.length}` : 'Start'}</small>
         </label>
@@ -263,10 +353,10 @@ export function Replay({ data }: { data: LeagueData }) {
         {names.map((p) => {
           const pos = shownOrder.indexOf(p)
           const f = Math.min(1, Math.max(0, totals(p)) / domain)
-          const d = phase === 'swap' ? moves[p] : 0
+          const d = !sm && phase === 'swap' ? moves[p] : 0
           const cls = ['rp-row']
           if (ranked && pos < 3) cls.push(`medal-${pos + 1}`)
-          if (phase === 'move' && race) cls.push('moving')
+          if ((sm ? smoothPlaying : phase === 'move') && race) cls.push('moving')
           if (follow && follow !== p) cls.push('dim')
           const style = {
             '--i': pos,
@@ -291,8 +381,8 @@ export function Replay({ data }: { data: LeagueData }) {
                 </span>
               </span>
               <span className="rp-pts">
-                {race && <span className={gains(p) < 0 ? 'rp-gain neg' : 'rp-gain'}>{gains(p) < 0 ? '−' : '+'}{fmt(Math.abs(gains(p)))}</span>}
-                <Tick value={totals(p)} ms={1500 / speed} instant={instant} />
+                {race && !sm && <span className={gains(p) < 0 ? 'rp-gain neg' : 'rp-gain'}>{gains(p) < 0 ? '−' : '+'}{fmt(Math.abs(gains(p)))}</span>}
+                <Tick value={Math.round(totals(p))} ms={1500 / speed} instant={instant || sm} />
               </span>
             </div>
           )

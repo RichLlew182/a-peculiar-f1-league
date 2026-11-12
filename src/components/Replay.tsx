@@ -370,12 +370,17 @@ export function Replay({ data }: { data: LeagueData }) {
         {/* one continuous track behind the rows, so only the cars (not whole blocks) appear to change places */}
         <div className="rp-backing" aria-hidden="true" />
         <Fireworks key={celebrate} on={celebrate > 0 && done} />
+        {/* the position badges are fixed slots; only the players move between them, so bronze always stays on the podium */}
+        {names.map((_, k) => (
+          <span key={`slot${k}`} aria-hidden="true" className={ranked && k < 3 ? `rp-slot medal-${k + 1}` : 'rp-slot'} style={{ '--i': k } as CSSProperties}>
+            {ranked ? k + 1 : '–'}
+          </span>
+        ))}
         {names.map((p) => {
           const pos = shownOrder.indexOf(p)
           const f = Math.min(1, Math.max(0, totals(p)) / domain)
           const d = !sm && phase === 'swap' ? moves[p] : 0
           const cls = ['rp-row']
-          if (ranked && pos < 3) cls.push(`medal-${pos + 1}`)
           if ((sm ? smoothPlaying : phase === 'move') && race) cls.push('moving')
           if (follow && follow !== p) cls.push('dim')
           const style = {
@@ -385,7 +390,7 @@ export function Replay({ data }: { data: LeagueData }) {
           } as CSSProperties
           return (
             <div key={p} role="listitem" className={cls.join(' ')} style={style} onClick={() => setFollow(follow === p ? null : p)}>
-              <span className="rp-pos">{ranked ? pos + 1 : '–'}</span>
+              <span />
               {d ? <span className={d > 0 ? 'rp-badge up' : 'rp-badge down'}>{d > 0 ? '▲' : '▼'}{Math.abs(d)}</span> : null}
               <span className="rp-nm">
                 <i className="rp-dot" />

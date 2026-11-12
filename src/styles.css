@@ -888,7 +888,7 @@ h3,
   .rp-gain { display: none; }
   .rp-badge { left: calc(var(--rp-pos) + var(--rp-nm) + 3px); top: 50%; transform: translateY(-50%); }
   .rp-scrub small { display: none; }
-  .rp-feed { flex-direction: column; flex-wrap: nowrap; gap: 4px; font-size: 14px; line-height: 20px; min-height: 124px; box-sizing: border-box; align-content: flex-start; }
+  .rp-feed { flex-direction: column; flex-wrap: nowrap; gap: 2px; padding: 4px 0 8px; font-size: 14px; line-height: 18px; min-height: 90px; box-sizing: border-box; align-content: flex-start; }
 }
 @media (prefers-reduced-motion: reduce) {
   .rp-row, .rp-car, .rp-fill { transition-duration: 0.01s !important; }

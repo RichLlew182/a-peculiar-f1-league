@@ -7,7 +7,7 @@ import { Trophy } from './icons'
 
 /** Cars charge forward for MOVE ms, then the rows swap for the overtakes, then the next race starts at STEP ms. */
 const MOVE = 1300
-const STEP = 3600
+const STEP = 2900
 const SPEEDS = [1, 2, 4]
 
 /** A number that counts from its previous value to the new one. */

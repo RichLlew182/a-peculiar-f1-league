@@ -6,6 +6,7 @@ import { ProgressChart } from './components/ProgressChart'
 import { RaceList } from './components/RaceList'
 import { Standings } from './components/Standings'
 import { Stats } from './components/Stats'
+import { trackRoute } from './lib/analytics'
 import { ago } from './lib/format'
 import { hashFor, parseHash, TABS, type Route, type Tab } from './lib/route'
 import { SeasonContext } from './lib/SeasonContext'
@@ -48,6 +49,10 @@ export default function App() {
     window.addEventListener('hashchange', onHash)
     return () => window.removeEventListener('hashchange', onHash)
   }, [])
+
+  useEffect(() => {
+    trackRoute(route)
+  }, [route.season, route.tab, route.player]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const go = (t: Tab) => {
     setRoute({ season: route.season, tab: t })

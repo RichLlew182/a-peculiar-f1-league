@@ -22,7 +22,7 @@ function Bars({ items, max, unit }: { items: { code: string; owners: number }[];
 }
 
 /** Player-related stats are held back until the big reveal. Set to false to show everything. */
-const CONCEAL_PLAYER_STATS = true
+const CONCEAL_PLAYER_STATS = false
 
 /** Facts about races and drivers rather than people: never hidden. */
 const isOpenFact = (id: string) => id === 'ff-in' || id.startsWith('popular-')
